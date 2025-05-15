@@ -1,40 +1,64 @@
 extends Node3D
 
+const FLOOR_MATERIAL:ShaderMaterial = preload("res://floor.tres")
+const SCREEN_SIZE:Vector2 = Vector2(1152, 648)
+
+var intendedCameraHeight:float = 20
+var upperCameraHeight: float = 20
+var effectiveScreenSize:Vector2 = Vector2(54.56548, 30.69308)
+var cursorPosition:Vector2i
+
 func _ready() -> void:
 	updateCamera()
+
+func _process(delta) -> void:
+	$"camera".position.y += (intendedCameraHeight - $"camera".position.y) * delta * 10
+	effectiveScreenSize = Vector2($"camera".position.y * 2.728273735, $"camera".position.y * 1.534653976) # 2y tan 37.5
+	if abs(intendedCameraHeight / $"camera".position.y - 1) < 0.001 and abs(intendedCameraHeight / $"camera".position.y - 1) > 0.000001:
+		$"camera".position.y = intendedCameraHeight
+		upperCameraHeight = intendedCameraHeight
+		updateCamera()
+	
+	FLOOR_MATERIAL.set_shader_parameter("interpolation", clamp($"camera".position.y * 0.05 - 0.75, 0, 1))
+	
+	cursorPosition = floor(U.xz($"camera".position) + (get_viewport().get_mouse_position() / SCREEN_SIZE - Vector2(0.5, 0.5)) * effectiveScreenSize)
+	$"cursor".position = U.fxz(Vector2(cursorPosition) + Vector2(0.5, 0.5))
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
-			$"camera".position -= Vector3(event.relative.x, 0, event.relative.y) * $"camera".position.y * 0.00237
+			$"camera".position -= U.fxz(event.relative) * intendedCameraHeight * 0.00237
 			updateCamera()
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+			placeTile()
 	elif event is InputEventMouseButton:
 		if event.is_pressed():
-			# zoom in
-			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-				$"camera".position.y *= 0.8
-				updateCamera()
-			# zoom out
-			if event.button_index == MOUSE_BUTTON_WHEEL_DOWN and $"camera".position.y < 100:
-				$"camera".position.y *= 1.25
-				updateCamera()
-
+			match event.button_index:
+				MOUSE_BUTTON_WHEEL_UP: # zoom in
+					if intendedCameraHeight > 4:
+						intendedCameraHeight *= 0.8
+						updateCamera()
+				MOUSE_BUTTON_WHEEL_DOWN: # zoom out
+					if intendedCameraHeight < 100:
+						intendedCameraHeight *= 1.25
+						upperCameraHeight *= 1.25
+						updateCamera()
+				MOUSE_BUTTON_LEFT:
+					placeTile()
 
 func updateCamera() -> void:
-	# 2y tan 37.5 * 1152/648
-	# it did say it was the horizontal fov but i guess it lied
-	var screenWidth:float = $"camera".position.y * 2.728273735
-	var screenHeight:float = screenWidth * 0.5625
-	
-	var leftBound:int = floor(($"camera".position.x - 0.5*screenWidth) / Scene.CHUNK_SIZE)
-	var rightBound:int = ceil(($"camera".position.x + 0.5*screenWidth) / Scene.CHUNK_SIZE)
-	var topBound:int = floor(($"camera".position.z - 0.5*screenHeight) / Scene.CHUNK_SIZE)
-	var bottomBound:int = ceil(($"camera".position.z + 0.5*screenHeight) / Scene.CHUNK_SIZE)
+	var intendedEffectiveScreenSize:Vector2 = Vector2(upperCameraHeight * 2.728273735, upperCameraHeight * 1.534653976)
+	var chunksBound:Rect2i = U.rectCorners(floor((U.xz($"camera".position) - 0.5*intendedEffectiveScreenSize) / Scene.CHUNK_SIZE),
+									ceil((U.xz($"camera".position) + 0.5*intendedEffectiveScreenSize) / Scene.CHUNK_SIZE))
+
 	for chunkPosition:Vector2i in $"scene".chunkPositions.duplicate():
-		if chunkPosition.x < leftBound or chunkPosition.x >= rightBound or chunkPosition.y < topBound or chunkPosition.y >= bottomBound:
+		if not chunksBound.has_point(chunkPosition):
 			$"scene".unloadChunk(chunkPosition)
-	for x:int in range(leftBound, rightBound):
-		for y:int in range(topBound, bottomBound):
+	for x:int in range(chunksBound.position.x, chunksBound.end.x):
+		for y:int in range(chunksBound.position.y, chunksBound.end.y):
 			var thisChunkPosition:Vector2i = Vector2i(x, y)
-			if thisChunkPosition not in $"scene".chunkPositions:
-				$"scene".loadChunk(thisChunkPosition)
+			$"scene".loadChunk(thisChunkPosition)
+
+func placeTile() -> void:
+	print(cursorPosition, Scene.CHUNK_SIZE)
+	$"scene".getChunk(floor(Vector2(cursorPosition) / Scene.CHUNK_SIZE)).newEntity(U.v2iposmod(cursorPosition, Scene.CHUNK_SIZE))

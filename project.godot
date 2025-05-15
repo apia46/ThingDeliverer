@@ -15,6 +15,10 @@ run/main_scene="uid://dddwu1sve42so"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Utilities="*res://utilities.gd"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0

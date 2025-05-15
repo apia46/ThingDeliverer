@@ -1,0 +1,32 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://dnjtg7p0n1s7l"]
+
+[ext_resource type="Texture2D" uid="uid://cylbaq8hkng4e" path="res://floor.png" id="1_tikia"]
+
+[sub_resource type="Shader" id="Shader_kdh3y"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.4.stable's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_burley, specular_schlick_ggx;
+
+uniform sampler2D texture_albedo: source_color, filter_linear, repeat_enable;
+uniform float interpolation: hint_range(0, 1);
+
+void vertex() {
+	UV *= VERTEX.xz;
+}
+
+void fragment() {
+	vec2 base_uv = mod(UV, 1);
+	vec2 large_uv = mod(UV * 0.125, 1);
+
+	vec4 base_tex = texture(texture_albedo, base_uv);
+	vec4 large_tex = texture(texture_albedo, large_uv);
+	ALBEDO = mix(base_tex.rgb, large_tex.rgb, interpolation);
+}
+"
+
+[resource]
+render_priority = 0
+shader = SubResource("Shader_kdh3y")
+shader_parameter/texture_albedo = ExtResource("1_tikia")
+shader_parameter/interpolation = 0.0
