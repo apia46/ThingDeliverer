@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://cf7hr7kal2ppx"]
+
+[ext_resource type="Shader" uid="uid://liqaucpi306q" path="res://resources/cube.gdshader" id="1_7ufek"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8viuf"]
+render_priority = 0
+shader = ExtResource("1_7ufek")
+
+[sub_resource type="BoxMesh" id="BoxMesh_xc3wn"]
+material = SubResource("ShaderMaterial_8viuf")
+
+[node name="cube" type="MeshInstance3D"]
+mesh = SubResource("BoxMesh_xc3wn")

@@ -1,6 +1,6 @@
 extends Node3D
 class_name Scene
-const CHUNK = preload("res://chunk.tscn");
+const CHUNK = preload("res://scenes/chunk.tscn");
 const CHUNK_SIZE:int = 32
 
 var chunks:Array[Chunk] = []
@@ -20,5 +20,4 @@ func unloadChunk(chunkPos:Vector2i) -> void:
 	chunks[chunkPositions.find(chunkPos)].visible = false
 
 func getChunk(chunkPos:Vector2i) -> Chunk:
-	print(chunkPos)
 	return chunks[chunkPositions.find(chunkPos)]

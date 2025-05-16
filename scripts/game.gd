@@ -1,6 +1,6 @@
 extends Node3D
 
-const FLOOR_MATERIAL:ShaderMaterial = preload("res://floor.tres")
+const FLOOR_MATERIAL:ShaderMaterial = preload("res://resources/floor.tres")
 const SCREEN_SIZE:Vector2 = Vector2(1152, 648)
 
 var intendedCameraHeight:float = 20
@@ -49,7 +49,7 @@ func _input(event: InputEvent) -> void:
 func updateCamera() -> void:
 	var intendedEffectiveScreenSize:Vector2 = Vector2(upperCameraHeight * 2.728273735, upperCameraHeight * 1.534653976)
 	var chunksBound:Rect2i = U.rectCorners(floor((U.xz($"camera".position) - 0.5*intendedEffectiveScreenSize) / Scene.CHUNK_SIZE),
-									ceil((U.xz($"camera".position) + 0.5*intendedEffectiveScreenSize) / Scene.CHUNK_SIZE))
+											ceil((U.xz($"camera".position) + 0.5*intendedEffectiveScreenSize) / Scene.CHUNK_SIZE))
 
 	for chunkPosition:Vector2i in $"scene".chunkPositions.duplicate():
 		if not chunksBound.has_point(chunkPosition):
@@ -60,5 +60,4 @@ func updateCamera() -> void:
 			$"scene".loadChunk(thisChunkPosition)
 
 func placeTile() -> void:
-	print(cursorPosition, Scene.CHUNK_SIZE)
 	$"scene".getChunk(floor(Vector2(cursorPosition) / Scene.CHUNK_SIZE)).newEntity(U.v2iposmod(cursorPosition, Scene.CHUNK_SIZE))

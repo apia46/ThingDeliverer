@@ -1,7 +1,7 @@
 extends MeshInstance3D
 class_name Chunk
 
-const CUBE:PackedScene = preload("res://cube.tscn")
+const CUBE:PackedScene = preload("res://scenes/cube.tscn")
 
 var entities:Dictionary[Vector2i, MeshInstance3D]
 var chunkPos:Vector2i

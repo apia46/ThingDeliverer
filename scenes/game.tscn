@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dddwu1sve42so"]
+[gd_scene load_steps=6 format=3 uid="uid://dddwu1sve42so"]
 
-[ext_resource type="PackedScene" uid="uid://cs4uk7wcoe057" path="res://scene.tscn" id="1_80nbo"]
-[ext_resource type="Script" uid="uid://b3e7nd381f1kx" path="res://game.gd" id="1_e2o6t"]
+[ext_resource type="Script" uid="uid://b3e7nd381f1kx" path="res://scripts/game.gd" id="1_yqjtg"]
+[ext_resource type="PackedScene" uid="uid://cs4uk7wcoe057" path="res://scenes/scene.tscn" id="2_lnu2h"]
+[ext_resource type="PackedScene" uid="uid://di6yfmmtdym8e" path="res://scenes/ui.tscn" id="3_lnu2h"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e2o6t"]
 albedo_color = Color(1, 0, 0, 1)
@@ -10,9 +11,9 @@ albedo_color = Color(1, 0, 0, 1)
 material = SubResource("StandardMaterial3D_e2o6t")
 
 [node name="game" type="Node3D"]
-script = ExtResource("1_e2o6t")
+script = ExtResource("1_yqjtg")
 
-[node name="scene" parent="." instance=ExtResource("1_80nbo")]
+[node name="scene" parent="." instance=ExtResource("2_lnu2h")]
 
 [node name="light" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.432024, -0.88526, 0.172252, -0.071491, 0.224011, 0.971961, -0.899024, 0.407596, -0.160066, 0, 10, 0)
@@ -26,3 +27,5 @@ transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0, 20, 0
 
 [node name="cursor" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_feb5d")
+
+[node name="ui" parent="." instance=ExtResource("3_lnu2h")]
