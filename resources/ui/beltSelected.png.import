@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cxdqbjljsn3g4"
-path="res://.godot/imported/seperator.png-9c6c055ada2090ffe5b01541e3189a69.ctex"
+uid="uid://bfok7seiqy0t8"
+path="res://.godot/imported/beltSelected.png-e48d83aaa0d20eae1a1cb19b964c5309.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/seperator.png"
-dest_files=["res://.godot/imported/seperator.png-9c6c055ada2090ffe5b01541e3189a69.ctex"]
+source_file="res://resources/ui/beltSelected.png"
+dest_files=["res://.godot/imported/beltSelected.png-e48d83aaa0d20eae1a1cb19b964c5309.ctex"]
 
 [params]
 

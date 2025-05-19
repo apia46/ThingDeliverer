@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://byvhjuk24w60g"
-path="res://.godot/imported/entitybutton.png-1ba591aabf56114f201d88485b2b1d60.ctex"
+uid="uid://dbx607kpgbhhy"
+path="res://.godot/imported/beltUnselected.png-97b41dafe84368b2eadacb4db8a89808.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/entitybutton.png"
-dest_files=["res://.godot/imported/entitybutton.png-1ba591aabf56114f201d88485b2b1d60.ctex"]
+source_file="res://resources/ui/beltUnselected.png"
+dest_files=["res://.godot/imported/beltUnselected.png-97b41dafe84368b2eadacb4db8a89808.ctex"]
 
 [params]
 

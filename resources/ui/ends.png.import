@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dg4f6c0a8kt4o"
-path="res://.godot/imported/rightbutton.png-d2355ce7e9683f27b95e09ae29342480.ctex"
+uid="uid://uuygo8yxh7q6"
+path="res://.godot/imported/ends.png-94a1d30e404570a197c51d1fff219308.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/rightbutton.png"
-dest_files=["res://.godot/imported/rightbutton.png-d2355ce7e9683f27b95e09ae29342480.ctex"]
+source_file="res://resources/ui/ends.png"
+dest_files=["res://.godot/imported/ends.png-94a1d30e404570a197c51d1fff219308.ctex"]
 
 [params]
 

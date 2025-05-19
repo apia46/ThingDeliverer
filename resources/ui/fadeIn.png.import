@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bfok7seiqy0t8"
-path="res://.godot/imported/beltbutton.png-d988045ceb2d07533d9d9db4c0aa0b26.ctex"
+uid="uid://d1mqf8up6h8t8"
+path="res://.godot/imported/fadeIn.png-9e01f744293dd30f6a066d841bf79cfa.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/beltbutton.png"
-dest_files=["res://.godot/imported/beltbutton.png-d988045ceb2d07533d9d9db4c0aa0b26.ctex"]
+source_file="res://resources/ui/fadeIn.png"
+dest_files=["res://.godot/imported/fadeIn.png-9e01f744293dd30f6a066d841bf79cfa.ctex"]
 
 [params]
 

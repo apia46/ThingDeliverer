@@ -1,17 +1,18 @@
-[gd_scene load_steps=9 format=3 uid="uid://di6yfmmtdym8e"]
+[gd_scene load_steps=10 format=3 uid="uid://di6yfmmtdym8e"]
 
-[ext_resource type="Texture2D" uid="uid://uuygo8yxh7q6" path="res://resources/leftEnd.png" id="1_p7vwb"]
-[ext_resource type="Texture2D" uid="uid://bfok7seiqy0t8" path="res://resources/beltbutton.png" id="2_ktti3"]
-[ext_resource type="Texture2D" uid="uid://cxdqbjljsn3g4" path="res://resources/seperator.png" id="3_cgfq5"]
-[ext_resource type="Texture2D" uid="uid://b6j3jxyer1wv2" path="res://resources/leftbutton.png" id="4_7dvkv"]
-[ext_resource type="Texture2D" uid="uid://byvhjuk24w60g" path="res://resources/entitybutton.png" id="5_vdcm2"]
-[ext_resource type="Texture2D" uid="uid://dg4f6c0a8kt4o" path="res://resources/rightbutton.png" id="6_6rmj2"]
-[ext_resource type="Texture2D" uid="uid://bc43jg0bv7yv5" path="res://resources/rightEnd.png" id="7_vsj0x"]
+[ext_resource type="Texture2D" uid="uid://uuygo8yxh7q6" path="res://resources/ui/ends.png" id="1_p7vwb"]
+[ext_resource type="Texture2D" uid="uid://bfok7seiqy0t8" path="res://resources/ui/beltSelected.png" id="2_ktti3"]
+[ext_resource type="Texture2D" uid="uid://dbx607kpgbhhy" path="res://resources/ui/beltUnselected.png" id="2_p7vwb"]
+[ext_resource type="Texture2D" uid="uid://cxdqbjljsn3g4" path="res://resources/ui/seperator.png" id="3_cgfq5"]
+[ext_resource type="Texture2D" uid="uid://b6j3jxyer1wv2" path="res://resources/ui/arrowUnselected.png" id="4_7dvkv"]
+[ext_resource type="Texture2D" uid="uid://byvhjuk24w60g" path="res://resources/ui/entityButton.png" id="5_vdcm2"]
+[ext_resource type="Texture2D" uid="uid://d1mqf8up6h8t8" path="res://resources/ui/fadeIn.png" id="6_8dubc"]
+[ext_resource type="Texture2D" uid="uid://m5kttd0tkd6p" path="res://resources/ui/arrowSelected.png" id="6_ktti3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qsv74"]
 bg_color = Color(0.180392, 0.156863, 0.247059, 1)
 border_width_top = 4
-border_color = Color(0.647059, 0.623529, 0.717647, 1)
+border_color = Color(0.666667, 0.67451, 0.768627, 1)
 
 [node name="ui" type="Control"]
 layout_mode = 3
@@ -52,7 +53,10 @@ theme_override_constants/separation = 0
 [node name="belt" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner"]
 custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
-texture_normal = ExtResource("2_ktti3")
+texture_normal = ExtResource("2_p7vwb")
+texture_pressed = ExtResource("2_ktti3")
+texture_hover = ExtResource("2_ktti3")
+texture_disabled = ExtResource("2_ktti3")
 stretch_mode = 0
 
 [node name="splitter" type="TextureRect" parent="hotbar/hotbarPanel/hotbarInner"]
@@ -60,46 +64,68 @@ custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
 texture = ExtResource("3_cgfq5")
 
-[node name="entities" type="HBoxContainer" parent="hotbar/hotbarPanel/hotbarInner"]
-layout_mode = 2
-
-[node name="left" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner/entities"]
+[node name="left" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner"]
 custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
 texture_normal = ExtResource("4_7dvkv")
+texture_pressed = ExtResource("6_ktti3")
+texture_hover = ExtResource("6_ktti3")
 stretch_mode = 0
 
-[node name="entity" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner/entities"]
+[node name="entitiesContainer" type="Control" parent="hotbar/hotbarPanel/hotbarInner"]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+
+[node name="entities" type="HBoxContainer" parent="hotbar/hotbarPanel/hotbarInner/entitiesContainer"]
+layout_mode = 2
+offset_bottom = 48.0
+
+[node name="entity" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner/entitiesContainer/entities"]
 custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
 texture_normal = ExtResource("5_vdcm2")
 stretch_mode = 0
 
-[node name="entity2" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner/entities"]
+[node name="entity2" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner/entitiesContainer/entities"]
 custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
 texture_normal = ExtResource("5_vdcm2")
 stretch_mode = 0
 
-[node name="entity3" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner/entities"]
+[node name="entity3" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner/entitiesContainer/entities"]
 custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
 texture_normal = ExtResource("5_vdcm2")
 stretch_mode = 0
 
-[node name="entity4" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner/entities"]
+[node name="entity4" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner/entitiesContainer/entities"]
 custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
 texture_normal = ExtResource("5_vdcm2")
 stretch_mode = 0
 
-[node name="right" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner/entities"]
+[node name="entity5" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner/entitiesContainer/entities"]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+texture_normal = ExtResource("5_vdcm2")
+stretch_mode = 0
+
+[node name="TextureRect" type="TextureRect" parent="hotbar/hotbarPanel/hotbarInner/entitiesContainer"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("6_8dubc")
+
+[node name="right" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner"]
 custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
-texture_normal = ExtResource("6_6rmj2")
+texture_normal = ExtResource("4_7dvkv")
+texture_pressed = ExtResource("6_ktti3")
 stretch_mode = 0
+flip_h = true
 
 [node name="rightEnd" type="TextureRect" parent="hotbar"]
 custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
-texture = ExtResource("7_vsj0x")
+texture = ExtResource("1_p7vwb")
+flip_h = true

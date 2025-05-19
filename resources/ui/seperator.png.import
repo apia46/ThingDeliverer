@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://uuygo8yxh7q6"
-path="res://.godot/imported/leftEnd.png-b743d67a320c6ec10d39c84ff1d002af.ctex"
+uid="uid://cxdqbjljsn3g4"
+path="res://.godot/imported/seperator.png-d7e9bfa9c6c10b0c64c4b022f7f933f1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/leftEnd.png"
-dest_files=["res://.godot/imported/leftEnd.png-b743d67a320c6ec10d39c84ff1d002af.ctex"]
+source_file="res://resources/ui/seperator.png"
+dest_files=["res://.godot/imported/seperator.png-d7e9bfa9c6c10b0c64c4b022f7f933f1.ctex"]
 
 [params]
 

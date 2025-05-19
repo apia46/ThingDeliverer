@@ -8,3 +8,7 @@ static func fxz(vector:Vector2) -> Vector3: return Vector3(vector.x, 0, vector.y
 static func rectCorners(start:Vector2i, end:Vector2i) -> Rect2i: return Rect2i(start, end - start)
 
 static func v2iposmod(vector:Vector2i,by) -> Vector2i: return (vector % by + (by if by is Vector2i else Vector2i(by, by))) % by
+
+static func v2(value:float) -> Vector2: return Vector2(value, value)
+
+static func v3(value:float) -> Vector3: return Vector3(value, value, value)

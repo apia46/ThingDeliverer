@@ -21,16 +21,18 @@ func _process(delta) -> void:
 	
 	FLOOR_MATERIAL.set_shader_parameter("interpolation", clamp($"camera".position.y * 0.05 - 0.75, 0, 1))
 	
-	cursorPosition = floor(U.xz($"camera".position) + (get_viewport().get_mouse_position() / SCREEN_SIZE - Vector2(0.5, 0.5)) * effectiveScreenSize)
-	$"cursor".position = U.fxz(Vector2(cursorPosition) + Vector2(0.5, 0.5))
+	cursorPosition = floor(U.xz($"camera".position) + (get_viewport().get_mouse_position() / SCREEN_SIZE - U.v2(0.5)) * effectiveScreenSize)
+	$"cursor".position = U.fxz(cursorPosition) + U.v3(0.5)
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
 			$"camera".position -= U.fxz(event.relative) * intendedCameraHeight * 0.00237
 			updateCamera()
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 			placeTile()
+		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+			deleteTile()
 	elif event is InputEventMouseButton:
 		if event.is_pressed():
 			match event.button_index:
@@ -45,6 +47,8 @@ func _input(event: InputEvent) -> void:
 						updateCamera()
 				MOUSE_BUTTON_LEFT:
 					placeTile()
+				MOUSE_BUTTON_RIGHT:
+					deleteTile()
 
 func updateCamera() -> void:
 	var intendedEffectiveScreenSize:Vector2 = Vector2(upperCameraHeight * 2.728273735, upperCameraHeight * 1.534653976)
@@ -61,3 +65,6 @@ func updateCamera() -> void:
 
 func placeTile() -> void:
 	$"scene".getChunk(floor(Vector2(cursorPosition) / Scene.CHUNK_SIZE)).newEntity(U.v2iposmod(cursorPosition, Scene.CHUNK_SIZE))
+
+func deleteTile() -> void:
+	$"scene".getChunk(floor(Vector2(cursorPosition) / Scene.CHUNK_SIZE)).removeEntity(U.v2iposmod(cursorPosition, Scene.CHUNK_SIZE))
