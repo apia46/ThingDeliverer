@@ -12,14 +12,13 @@ func setProperties(_chunkPos:Vector2i) -> Chunk:
 	return self
 
 func newEntity(pos:Vector2i, rot:int) -> Variant:
-	var entity:Variant = entities.get(pos)
-	if entity: return entity
-	entity = BELT.instantiate()
+	if pos in entities: removeEntity(pos)
+	var entity:Variant = BELT.instantiate()
 	entities[pos] = entity
 	entity.position = U.fxz(pos) + U.v3(0.5)
 	entity.rotation.y = deg_to_rad(rot)
-	entity.get_active_material(1).albedo_color = Color(1,0,0)
-	entity.get_active_material(1).emission = Color(1,0,0)
+	entity.get_active_material(1).albedo_color = Color(1,1,0)
+	entity.get_active_material(1).emission = Color(1,1,0)
 	add_child(entity)
 	return entity
 

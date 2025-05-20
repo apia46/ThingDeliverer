@@ -39,7 +39,7 @@ func _input(event: InputEvent) -> void:
 		if event.is_pressed():
 			match event.button_index:
 				MOUSE_BUTTON_WHEEL_UP: # zoom in
-					if intendedCameraHeight > 4:
+					if intendedCameraHeight > 1:
 						intendedCameraHeight *= 0.8
 						updateCamera()
 				MOUSE_BUTTON_WHEEL_DOWN: # zoom out
@@ -54,8 +54,8 @@ func _input(event: InputEvent) -> void:
 	elif event is InputEventKey:
 		if event.is_pressed():
 			match event.keycode:
-				KEY_E: currentRotation -= 90
-				KEY_Q: currentRotation += 90
+				KEY_E: currentRotation = (currentRotation-90) % 360
+				KEY_Q: currentRotation = (currentRotation+90) % 360
 
 func updateCamera() -> void:
 	var intendedEffectiveScreenSize:Vector2 = Vector2(upperCameraHeight * 2.728273735, upperCameraHeight * 1.534653976)
