@@ -1,11 +1,11 @@
 [gd_scene load_steps=6 format=4 uid="uid://cf7hr7kal2ppx"]
 
-[ext_resource type="Texture2D" uid="uid://vm7owwf7e4dr" path="res://resources/beltTexture.png" id="1_7ufek"]
+[ext_resource type="Texture2D" uid="uid://vm7owwf7e4dr" path="res://resources/beltTexture.png" id="1_vr4mt"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e6bsx"]
 resource_name = "Material"
 cull_mode = 2
-albedo_texture = ExtResource("1_7ufek")
+albedo_texture = ExtResource("1_vr4mt")
 roughness = 0.5
 texture_filter = 2
 
@@ -73,6 +73,6 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_511i7")
 
-[node name="Cube" type="MeshInstance3D"]
+[node name="belt" type="MeshInstance3D"]
 mesh = SubResource("ArrayMesh_8viuf")
 skeleton = NodePath("")

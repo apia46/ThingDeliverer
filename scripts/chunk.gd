@@ -1,9 +1,11 @@
 extends MeshInstance3D
 class_name Chunk
 
-const BELT:PackedScene = preload("res://scenes/cube.tscn")
+const BELT:PackedScene = preload("res://scenes/entityVisuals/belt.tscn")
 
-var entities:Dictionary[Vector2i, MeshInstance3D]
+@onready var scene:Scene = $"/root/game/scene"
+
+var entities:Dictionary[Vector2i, Entity]
 var chunkPos:Vector2i
 
 func setProperties(_chunkPos:Vector2i) -> Chunk:
@@ -11,21 +13,24 @@ func setProperties(_chunkPos:Vector2i) -> Chunk:
 	position = U.v3fxz(chunkPos.x * 32, chunkPos.y * 32)
 	return self
 
-func newEntity(pos:Vector2i, rot:int) -> Variant:
-	var entity:Variant = entities.get(pos)
-	if entity: return entity
-	entity = BELT.instantiate()
+func loadVisuals() -> void:
+	if !visible: for entity:Entity in entities.values(): entity.loadVisuals()
+	visible = true
+
+func unloadVisuals() -> void:
+	if visible: for entity:Entity in entities.values(): entity.unloadVisuals()
+	visible = false
+
+func newEntity(pos:Vector2i, rot:U.ROTATIONS) -> Entity:
+	if pos in entities: removeEntity(pos)
+	var entity:Entity = Belt.new(self, pos, rot)
 	entities[pos] = entity
-	entity.position = U.fxz(pos) + U.v3(0.5)
-	entity.rotation.y = deg_to_rad(rot)
-	entity.get_active_material(1).albedo_color = Color(1,0,0)
-	entity.get_active_material(1).emission = Color(1,0,0)
-	add_child(entity)
+	if visible: entity.loadVisuals()
 	return entity
 
-func removeEntity(pos:Vector2i) -> Variant:
-	var entity:Variant = entities.get(pos)
+func removeEntity(pos:Vector2i) -> Entity:
+	var entity:Entity = entities.get(pos)
 	if entities.erase(pos):
-		entity.queue_free()
+		entity.unloadVisuals()
 		return entity
 	return null

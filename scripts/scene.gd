@@ -13,11 +13,10 @@ func loadChunk(chunkPos:Vector2i) -> void:
 		chunks.append(chunk)
 		chunkPositions.append(chunkPos)
 		add_child(chunk)
-	else:
-		chunks[index].visible = true
+	else: chunks[index].loadVisuals()
 
 func unloadChunk(chunkPos:Vector2i) -> void:
-	chunks[chunkPositions.find(chunkPos)].visible = false
+	chunks[chunkPositions.find(chunkPos)].unloadVisuals()
 
 func getChunk(chunkPos:Vector2i) -> Chunk:
 	return chunks[chunkPositions.find(chunkPos)]

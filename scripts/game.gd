@@ -8,7 +8,7 @@ var upperCameraHeight: float = 20
 var effectiveScreenSize:Vector2 = Vector2(54.56548, 30.69308)
 var cursorPosition:Vector2i
 
-var currentRotation:int = 0
+var currentRotation:U.ROTATIONS = U.ROTATIONS.UP
 
 func _ready() -> void:
 	updateCamera()
@@ -54,14 +54,14 @@ func _input(event: InputEvent) -> void:
 	elif event is InputEventKey:
 		if event.is_pressed():
 			match event.keycode:
-				KEY_E: currentRotation -= 90
-				KEY_Q: currentRotation += 90
+				KEY_E: currentRotation = U.r90(currentRotation)
+				KEY_Q: currentRotation = U.r270(currentRotation)
 
 func updateCamera() -> void:
 	var intendedEffectiveScreenSize:Vector2 = Vector2(upperCameraHeight * 2.728273735, upperCameraHeight * 1.534653976)
 	var chunksBound:Rect2i = U.rectCorners(floor((U.xz($"camera".position) - 0.5*intendedEffectiveScreenSize) / Scene.CHUNK_SIZE),
 											ceil((U.xz($"camera".position) + 0.5*intendedEffectiveScreenSize) / Scene.CHUNK_SIZE))
-
+	
 	for chunkPosition:Vector2i in $"scene".chunkPositions.duplicate():
 		if not chunksBound.has_point(chunkPosition):
 			$"scene".unloadChunk(chunkPosition)
