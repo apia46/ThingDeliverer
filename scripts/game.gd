@@ -8,6 +8,8 @@ var upperCameraHeight: float = 20
 var effectiveScreenSize:Vector2 = Vector2(54.56548, 30.69308)
 var cursorPosition:Vector2i
 
+var currentRotation:int = 0
+
 func _ready() -> void:
 	updateCamera()
 
@@ -49,6 +51,11 @@ func _input(event: InputEvent) -> void:
 					placeTile()
 				MOUSE_BUTTON_RIGHT:
 					deleteTile()
+	elif event is InputEventKey:
+		if event.is_pressed():
+			match event.keycode:
+				KEY_E: currentRotation -= 90
+				KEY_Q: currentRotation += 90
 
 func updateCamera() -> void:
 	var intendedEffectiveScreenSize:Vector2 = Vector2(upperCameraHeight * 2.728273735, upperCameraHeight * 1.534653976)
@@ -64,7 +71,7 @@ func updateCamera() -> void:
 			$"scene".loadChunk(thisChunkPosition)
 
 func placeTile() -> void:
-	$"scene".getChunk(floor(Vector2(cursorPosition) / Scene.CHUNK_SIZE)).newEntity(U.v2iposmod(cursorPosition, Scene.CHUNK_SIZE))
+	$"scene".getChunk(floor(Vector2(cursorPosition) / Scene.CHUNK_SIZE)).newEntity(U.v2iposmod(cursorPosition, Scene.CHUNK_SIZE), currentRotation)
 
 func deleteTile() -> void:
 	$"scene".getChunk(floor(Vector2(cursorPosition) / Scene.CHUNK_SIZE)).removeEntity(U.v2iposmod(cursorPosition, Scene.CHUNK_SIZE))

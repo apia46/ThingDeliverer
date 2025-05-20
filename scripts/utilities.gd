@@ -4,6 +4,7 @@ class_name U
 static func xz(vector:Vector3) -> Vector2: return Vector2(vector.x, vector.z)
 # from swizzled
 static func fxz(vector:Vector2) -> Vector3: return Vector3(vector.x, 0, vector.y)
+static func v3fxz(x:float,z:float) -> Vector3: return Vector3(x, 0, z)
 # rect2i from corners
 static func rectCorners(start:Vector2i, end:Vector2i) -> Rect2i: return Rect2i(start, end - start)
 
