@@ -1,8 +1,6 @@
 extends MeshInstance3D
 class_name Chunk
 
-const BELT:PackedScene = preload("res://scenes/entityVisuals/belt.tscn")
-
 @onready var scene:Scene = $"/root/game/scene"
 
 var entities:Dictionary[Vector2i, Entity]

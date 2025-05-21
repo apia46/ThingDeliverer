@@ -1,7 +1,7 @@
 class_name U
 
 enum ROTATIONS {UP, RIGHT, DOWN, LEFT}
-const ROTATION_RADIANS:Array[float] = [1.57079632679, 0, 4.71238898038, 3.14159265359]
+const ROTATION_RADIANS:Array[float] = [4.71238898038, 3.14159265359, 1.57079632679, 0]
 
 # to swizzled
 static func xz(vector:Vector3) -> Vector2: return Vector2(vector.x, vector.z)
@@ -21,3 +21,10 @@ static func rotToRad(rot:ROTATIONS) -> float: return ROTATION_RADIANS[rot]
 static func r90(rot:ROTATIONS) -> ROTATIONS: return (rot + 1) % 4 as ROTATIONS
 static func r180(rot:ROTATIONS) -> ROTATIONS: return (rot + 2) % 4 as ROTATIONS
 static func r270(rot:ROTATIONS) -> ROTATIONS: return (rot + 3) % 4 as ROTATIONS
+
+static func rotate(vector:Vector2i, rot:ROTATIONS) -> Vector2i:
+	match rot:
+		ROTATIONS.UP: return vector
+		ROTATIONS.RIGHT: return Vector2i(vector.y, -vector.x)
+		ROTATIONS.DOWN: return Vector2i(-vector.x, -vector.y)
+		_, ROTATIONS.LEFT: return Vector2i(-vector.y, vector.x)

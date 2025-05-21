@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://dnpuojpatb1p4"
-path="res://.godot/imported/belt.blend-433c0e1a9232372f48c73673f8c75e04.scn"
+path="res://.godot/imported/belt.blend-89fdde122f9cdc7f093a502d6307f3fa.scn"
 
 [deps]
 
-source_file="res://resources/belt.blend"
-dest_files=["res://.godot/imported/belt.blend-433c0e1a9232372f48c73673f8c75e04.scn"]
+source_file="res://scenes/entityVisuals/belt.blend"
+dest_files=["res://.godot/imported/belt.blend-89fdde122f9cdc7f093a502d6307f3fa.scn"]
 
 [params]
 
