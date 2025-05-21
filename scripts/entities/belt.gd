@@ -8,7 +8,7 @@ const BELT_CW:PackedScene = preload("res://scenes/entityVisuals/beltCW.tscn")
 func loadVisuals() -> void:
 	if getEntityRelative(U.rotate(Vector2i(-1,0), rotation)):
 		visualInstance = BELT_CW.instantiate()
-	elif getEntityRelative(U.rotate(Vector2i(-1,0), rotation)):
+	elif getEntityRelative(U.rotate(Vector2i(1,0), rotation)):
 		visualInstance = BELT_CCW.instantiate()
 	else: visualInstance = BELT_STRAIGHT.instantiate()
 	visualInstance.get_active_material(1).albedo_color = Color(1,1,0)
