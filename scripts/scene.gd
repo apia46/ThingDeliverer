@@ -23,10 +23,11 @@ func unloadChunk(chunkPos:Vector2i) -> void:
 func getChunk(chunkPos:Vector2i) -> Chunk:
 	return chunks[chunkPositions.find(chunkPos)]
 
-func newDebugVisual(pos:Vector2i) -> void:
+func newDebugVisual(pos:Vector2i, color:Color) -> void:
 	var visual:MeshInstance3D = DEBUG_VISUAL.instantiate()
 	add_child(visual)
 	visual.position = U.fxz(pos) + U.v3(0.5)
+	visual.get_active_material(0).albedo_color = color
 	var tween = create_tween()
-	tween.tween_property(visual.get_active_material(0), "albedo_color", Color(1, 1, 1, 0), 0.5)
+	tween.tween_property(visual.get_active_material(0), "albedo_color", color - Color(0, 0, 0, 1), 0.5)
 	tween.tween_callback(visual.queue_free)

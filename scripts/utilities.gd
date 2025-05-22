@@ -25,6 +25,6 @@ static func r270(rot:ROTATIONS) -> ROTATIONS: return (rot + 3) % 4 as ROTATIONS
 static func rotate(vector:Vector2i, rot:ROTATIONS) -> Vector2i:
 	match rot:
 		ROTATIONS.UP: return vector
-		ROTATIONS.RIGHT: return Vector2i(vector.y, -vector.x)
+		ROTATIONS.RIGHT: return Vector2i(-vector.y, vector.x)
 		ROTATIONS.DOWN: return Vector2i(-vector.x, -vector.y)
-		_, ROTATIONS.LEFT: return Vector2i(-vector.y, vector.x)
+		_, ROTATIONS.LEFT: return Vector2i(vector.y, -vector.x)

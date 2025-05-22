@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=4 uid="uid://bndtiyrs1kyb3"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_63iin"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x14h0"]
 resource_local_to_scene = true
 resource_name = "Material"
 transparency = 1
@@ -8,9 +8,9 @@ cull_mode = 2
 albedo_color = Color(0.906332, 0.906332, 0.906332, 1)
 roughness = 0.5
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_l8e32"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_clkc7"]
 _surfaces = [{
-"aabb": AABB(-1, -1, -1, 2, 2, 2),
+"aabb": AABB(-0.5, -0.5, -0.5, 1, 1, 1),
 "format": 34896613377,
 "index_count": 216,
 "index_data": PackedByteArray("AAABAAIAAAADAAEABAADAAAAAgAFAAQABAAFAAMABgAFAAIABgACAAEABQAGAAcACAAFAAcABgAJAAgACAAJAAUABgABAAkACgAJAAEACgABAAsADAAJAAoAAQAMAAsADQAFAAkADQAJAA4ADwAFAA0ADgAJABAADgAQAA8ADAAQAAkADAABABEADAARABAAEgAQABEAEQABABMAEwAUABIAEgAUABAAEwABABQAFQAUAAEAFQABABYAFwAUABUAGAAWAAEAFgAZABcAGAAZABYAFwAZABQAGAABAAMAGQAYABoAGAADABsAGwAZABoAGwADABkAHAAUABkAHQAUABwAHQAQABQAHAAZAB4AGQAdAB4AHQAfABAAHQAZAB8AIAAQAB8AHwAZACEAIQAiACAAIAAiABAAIQAZACIAIwAQACIAIwAPABAAIwAFAA8ABQAjACQAIwAiACUAJQAFACQAJQAiAAUAJgAiABkAJgAZACcAKAAiACYAGQAoACcAKAAFACIAKAAZACkAKAApAAUAKQAZACoAKwAFACkAKgAZAAMAKwADAAUAKgADACsA"),
@@ -22,15 +22,16 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_x14h0"]
-resource_name = "debug_Cube"
+[sub_resource type="ArrayMesh" id="ArrayMesh_hd4xw"]
+resource_local_to_scene = true
+resource_name = "debugVisual_Cube"
 _surfaces = [{
-"aabb": AABB(-1, -1, -1, 2, 2, 2),
+"aabb": AABB(-0.5, -0.5, -0.5, 1, 1, 1),
 "attribute_data": PackedByteArray("MmMyQ/+f/z9FmDJD/1//PzJjRXj/X/9/zJy5R/+f/3+5Z8x8zJzMfP9f/39FmMy8MmO5hzJjzLz/X/+//5//v8ycRbi5ZzKDzJwyg/+f/3+5pzJD/9//P8vcMkP/3/9//5//P8vcRXhF2Mx8/5//fzKjuUcyo8x8MmNF+P9f/78yYzLD/5//v/9f//9FmDLDzJy4x/+f//+5Z8v8zJzL/LlnMwP/nwAAzJwzA/+f/z//XwAAzJxGOEWYzDz/X/8/MmO5BzJjzDy5JzJD/1//P8xcMkP/X/9//x//P8xcRXhFWMx8/x//fzMjuUczI8x8"),
 "format": 34896613399,
 "index_count": 216,
 "index_data": PackedByteArray("AAABAAIAAAADAAEABAADAAAABAAFAAMAAgAFAAQABgACAAEABgAFAAIABgABAAcABQAGAAgABgAHAAkACQAFAAgACQAHAAUACgALAAwADQAKAAwACwAOAA0ADQAOAAoACwAPAA4ACwAKABAACwAQAA8AEAAKABEAEgAPABAAEQAKABMAEgATAA8AEQATABIAFAAVABYAFgAVABcAFAAYABUAFgAXABkAGQAYABQAGgAZABcAGgAYABkAGgAXABsAGAAaABwAGgAbAB0AHQAYABwAHQAbABgAHgAfACAAIAAfACEAHgAiAB8AIAAhACMAIwAiAB4AJAAjACEAJAAiACMAJAAhACUAIgAkACYAJAAlACcAJwAiACYAJwAlACIAKAApACoAKgApACsAKAAsACkAKgArAC0ALQAsACgALgAtACsALgAsAC0ALgArAC8ALAAuADAALgAvADEAMQAsADAAMQAvACwAMgAzADQANAAzADUAMgA2ADMANAA1ADcANwA2ADIAOAA3ADUAOAA2ADcAOAA1ADkANgA4ADoAOAA5ADsAOwA2ADoAOwA5ADYA"),
-"material": SubResource("StandardMaterial3D_63iin"),
+"material": SubResource("StandardMaterial3D_x14h0"),
 "name": "Material",
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
@@ -38,9 +39,8 @@ _surfaces = [{
 "vertex_data": PackedByteArray("///MDDLzVNX///////9U1f//GOEy81TV//8AAP//VNX//8wM5h5U1f//AAAAAFTV//8y8xjhVNX/////AABU1f//5h7MDFTV//8y88wMVNX//wAAAAD//8wMGOEAAP//GOHMDAAA///MDMwMAAD//wAAAAAAAP//AAD//wAA///mHjLzAAD//zLz5h4AAP//MvMy8wAA////////AAD//xjh//8y8///AAD////////MDP//MvP//wAA//8AAP/////////////MDP//5h7//+Ye///MDP///////wAA//8y8///GOH//zLz///MDP//AADMDBjhVNUAAAAAAABU1QAAzAzMDFTVAAD//wAAVNUAAAAA//9U1QAAGOHMDFTVAAAy8+YeVNUAAP////9U1QAA5h4y81TVAAAy8zLzVNXMDOYe////vwAA//////+/zAwy8////7//////////vwAAAAD///+/GOEy8////78y8xjh////v///AAD///+/5h7MDP///78y88wM////v+YeAAAy8/+///8AAP///78y8wAAMvP/v///AAAAAP+/AAAAAP///78y8wAA5h7/vxjhAADMDP+/AAAAAAAA/7/MDAAAGOH/v8wMAADMDP+/qiqqKqoqqiqqKqoqqiqqKqoqqiqqKqoqqiqqKqoqqiqqKqoqqiqqKv+//7//v/+//7//v/+//7//v/+//7//v/+//7//v/+//7//v/+//7//f/+//3//v/9//7//f/+//3//v/9//7//f/+//3//v/9//7//f/+/VNVU1VTVVNVU1VTVVNVU1VTVVNVU1VTVVNVU1VTVVNVU1VTVVNVU1f////////////////////////////////////////////////////8AAP9/AAD/fwAA/38AAP9/AAD/fwAA/38AAP9/AAD/fwAA/38AAP9/")
 }]
 blend_shape_mode = 0
-shadow_mesh = SubResource("ArrayMesh_l8e32")
+shadow_mesh = SubResource("ArrayMesh_clkc7")
 
 [node name="debugVisual" type="MeshInstance3D"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-mesh = SubResource("ArrayMesh_x14h0")
+mesh = SubResource("ArrayMesh_hd4xw")
 skeleton = NodePath("")
