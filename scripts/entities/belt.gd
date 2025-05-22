@@ -6,6 +6,7 @@ const BELT_CCW:PackedScene = preload("res://scenes/entityVisuals/beltCCW.tscn")
 const BELT_CW:PackedScene = preload("res://scenes/entityVisuals/beltCW.tscn")
 
 func loadVisuals() -> void:
+	scene.newDebugVisual(chunk.chunkPos * Scene.CHUNK_SIZE + position + U.rotate(Vector2i(-1,0), rotation))
 	if getEntityRelative(U.rotate(Vector2i(-1,0), rotation)):
 		visualInstance = BELT_CW.instantiate()
 	elif getEntityRelative(U.rotate(Vector2i(1,0), rotation)):

@@ -1,6 +1,8 @@
 extends Node3D
 class_name Scene
+
 const CHUNK = preload("res://scenes/chunk.tscn");
+const DEBUG_VISUAL = preload("res://scenes/debugVisual.tscn");
 const CHUNK_SIZE:int = 32
 
 var chunks:Array[Chunk] = []
@@ -20,3 +22,11 @@ func unloadChunk(chunkPos:Vector2i) -> void:
 
 func getChunk(chunkPos:Vector2i) -> Chunk:
 	return chunks[chunkPositions.find(chunkPos)]
+
+func newDebugVisual(pos:Vector2i) -> void:
+	var visual:MeshInstance3D = DEBUG_VISUAL.instantiate()
+	add_child(visual)
+	visual.position = U.fxz(pos) + U.v3(0.5)
+	var tween = create_tween()
+	tween.tween_property(visual.get_active_material(0), "albedo_color", Color(1, 1, 1, 0), 0.5)
+	tween.tween_callback(visual.queue_free)
