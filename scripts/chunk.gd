@@ -19,16 +19,17 @@ func unloadVisuals() -> void:
 	if visible: for entity:Entity in entities.values(): entity.unloadVisuals()
 	visible = false
 
-func newEntity(pos:Vector2i, rot:U.ROTATIONS) -> Entity:
-	if pos in entities: removeEntity(pos)
-	var entity:Entity = Belt.new(self, pos, rot)
+func newEntity(type:Variant, pos:Vector2i, rot:U.ROTATIONS, authority:=false) -> Entity:
+	var entity:Entity = entities.get(pos)
+	if entity and !removeEntity(pos, authority): return entities[pos]
+	entity = type.new(self, pos, rot)
 	entities[pos] = entity
-	if visible: entity.loadVisuals()
+	entity.ready(visible)
 	return entity
 
-func removeEntity(pos:Vector2i) -> Entity:
+func removeEntity(pos:Vector2i, authority:=false) -> Entity:
 	var entity:Entity = entities.get(pos)
-	if entities.erase(pos):
+	if authority or entity is not PopupThing and entities.erase(pos):
 		entity.unloadVisuals()
 		return entity
 	return null

@@ -1,6 +1,7 @@
 extends RefCounted
 class_name Entity
 
+var game:Game
 var scene:Scene
 var chunk:Chunk
 
@@ -11,8 +12,12 @@ var rotation:U.ROTATIONS
 func _init(_chunk:Chunk, _position:Vector2i, _rotation:U.ROTATIONS) -> void:
 	chunk = _chunk
 	scene = chunk.scene
+	game = scene.game
 	position = _position
 	rotation = _rotation
+
+func ready(visible:bool) -> void:
+	if visible: loadVisuals()
 
 func loadVisuals(_recurse:=true) -> void:
 	if visualInstance:

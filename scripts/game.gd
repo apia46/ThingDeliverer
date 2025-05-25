@@ -1,4 +1,5 @@
 extends Node3D
+class_name Game
 
 const FLOOR_MATERIAL:ShaderMaterial = preload("res://resources/floor.tres")
 const SCREEN_SIZE:Vector2 = Vector2(1152, 648)
@@ -9,6 +10,8 @@ var effectiveScreenSize:Vector2 = Vector2(54.56548, 30.69308)
 var cursorPosition:Vector2i
 
 var currentRotation:U.ROTATIONS = U.ROTATIONS.UP
+
+var timers:Array[Timer] = []
 
 func _ready() -> void:
 	updateCamera()
@@ -32,9 +35,9 @@ func _input(event: InputEvent) -> void:
 			$"camera".position -= U.fxz(event.relative) * intendedCameraHeight * 0.00237
 			updateCamera()
 		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-			placeTile()
+			placeEntity(Belt, cursorPosition)
 		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
-			deleteTile()
+			deleteEntity()
 	elif event is InputEventMouseButton:
 		if event.is_pressed():
 			match event.button_index:
@@ -48,14 +51,15 @@ func _input(event: InputEvent) -> void:
 						upperCameraHeight *= 1.25
 						updateCamera()
 				MOUSE_BUTTON_LEFT:
-					placeTile()
+					placeEntity(Belt, cursorPosition)
 				MOUSE_BUTTON_RIGHT:
-					deleteTile()
+					deleteEntity()
 	elif event is InputEventKey:
 		if event.is_pressed():
 			match event.keycode:
 				KEY_E: currentRotation = U.r90(currentRotation)
 				KEY_Q: currentRotation = U.r270(currentRotation)
+				KEY_F: newInputOutputs()
 
 func updateCamera() -> void:
 	var intendedEffectiveScreenSize:Vector2 = Vector2(upperCameraHeight * 2.728273735, upperCameraHeight * 1.534653976)
@@ -70,8 +74,46 @@ func updateCamera() -> void:
 			var thisChunkPosition:Vector2i = Vector2i(x, y)
 			$"scene".loadChunk(thisChunkPosition)
 
-func placeTile() -> void:
-	$"scene".getChunk(floor(Vector2(cursorPosition) / Scene.CHUNK_SIZE)).newEntity(U.v2iposmod(cursorPosition, Scene.CHUNK_SIZE), currentRotation)
+func getEntity(pos:Vector2i) -> Entity:
+	return $"scene".getChunk(floor(Vector2(pos) / Scene.CHUNK_SIZE)).entities.get(U.v2iposmod(pos, Scene.CHUNK_SIZE))
 
-func deleteTile() -> void:
-	$"scene".getChunk(floor(Vector2(cursorPosition) / Scene.CHUNK_SIZE)).removeEntity(U.v2iposmod(cursorPosition, Scene.CHUNK_SIZE))
+func placeEntity(type:Variant, pos:Vector2i, authority:=false) -> void:
+	$"scene".getChunk(floor(Vector2(pos) / Scene.CHUNK_SIZE)).newEntity(type, U.v2iposmod(pos, Scene.CHUNK_SIZE), currentRotation, authority)
+
+func deleteEntity(authority:=false) -> void:
+	$"scene".getChunk(floor(Vector2(cursorPosition) / Scene.CHUNK_SIZE)).removeEntity(U.v2iposmod(cursorPosition, Scene.CHUNK_SIZE), authority)
+
+func newInputOutputs() -> void:
+	var inputPos:Vector2i = Vector2i(randi_range(-8, 8), randi_range(-8, 8))
+	while getEntity(inputPos): inputPos = Vector2i(randi_range(-8, 8), randi_range(-8, 8))
+	placeEntity(Inputter, inputPos, true)
+	var outputPos:Vector2i = Vector2i(randi_range(-8, 8), randi_range(-8, 8))
+	while getEntity(outputPos): outputPos = Vector2i(randi_range(-8, 8), randi_range(-8, 8))
+	placeEntity(Outputter, outputPos, true)
+
+func addRunningTimer(time:float, running:Callable):
+	var timer = RunningTimer.new()
+	timer.one_shot = true
+	timer.index = len(timers)
+	timer.running = running
+	timer.game = self
+	timer.connect("timeout", timer._timeout)
+	add_child(timer)
+	timer.start(time)
+	timers.append(timer)
+
+class RunningTimer:
+	extends Timer
+	var game:Game
+	var running:Callable
+	var end:Callable
+	var index:int
+	
+	func _process(_delta: float) -> void: if running.get_object(): running.call(time_left)
+	
+	func _timeout() -> void:
+		if end: end.call()
+		queue_free()
+		for i in range(index+1, len(game.timers)):
+			game.timers[i].index -= 1
+		game.timers.pop_at(index)
