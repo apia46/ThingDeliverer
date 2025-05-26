@@ -1,7 +1,7 @@
-extends PopupThing
+extends InputOutput
 class_name Inputter
 
-func loadVisuals(_recurse:=true):
+func loadVisuals():
 	if visualInstance: visualInstance.queue_free()
 	visualInstance = preload("res://scenes/entityVisuals/input.tscn").instantiate()
 	super()

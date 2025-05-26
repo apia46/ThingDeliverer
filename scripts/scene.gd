@@ -25,7 +25,7 @@ func getChunk(chunkPos:Vector2i) -> Chunk:
 	return chunks[chunkPositions.find(chunkPos)]
 
 func newDebugVisual(pos:Vector2i, color:Color) -> void:
-	@warning_ignore("unreachable_code") return
+	if !game.isDebug: return
 	var visual:MeshInstance3D = DEBUG_VISUAL.instantiate()
 	add_child(visual)
 	visual.position = U.fxz(pos) + U.v3(0.5)

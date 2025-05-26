@@ -13,6 +13,10 @@ var currentRotation:U.ROTATIONS = U.ROTATIONS.UP
 
 var timers:Array[Timer] = []
 
+var paths:int = 0
+
+var isDebug:bool = false
+
 func _ready() -> void:
 	updateCamera()
 
@@ -35,7 +39,7 @@ func _input(event: InputEvent) -> void:
 			$"camera".position -= U.fxz(event.relative) * intendedCameraHeight * 0.00237
 			updateCamera()
 		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-			placeEntity(Belt, cursorPosition)
+			placeEntity(Belt, cursorPosition, currentRotation)
 		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 			deleteEntity()
 	elif event is InputEventMouseButton:
@@ -51,7 +55,7 @@ func _input(event: InputEvent) -> void:
 						upperCameraHeight *= 1.25
 						updateCamera()
 				MOUSE_BUTTON_LEFT:
-					placeEntity(Belt, cursorPosition)
+					placeEntity(Belt, cursorPosition, currentRotation)
 				MOUSE_BUTTON_RIGHT:
 					deleteEntity()
 	elif event is InputEventKey:
@@ -60,6 +64,7 @@ func _input(event: InputEvent) -> void:
 				KEY_E: currentRotation = U.r90(currentRotation)
 				KEY_Q: currentRotation = U.r270(currentRotation)
 				KEY_F: newInputOutputs()
+				KEY_F3: isDebug = !isDebug
 
 func updateCamera() -> void:
 	var intendedEffectiveScreenSize:Vector2 = Vector2(upperCameraHeight * 2.728273735, upperCameraHeight * 1.534653976)
@@ -77,19 +82,24 @@ func updateCamera() -> void:
 func getEntity(pos:Vector2i) -> Entity:
 	return $"scene".getChunk(floor(Vector2(pos) / Scene.CHUNK_SIZE)).entities.get(U.v2iposmod(pos, Scene.CHUNK_SIZE))
 
-func placeEntity(type:Variant, pos:Vector2i, authority:=false) -> void:
-	$"scene".getChunk(floor(Vector2(pos) / Scene.CHUNK_SIZE)).newEntity(type, U.v2iposmod(pos, Scene.CHUNK_SIZE), currentRotation, authority)
+func placeEntity(type:Variant, pos:Vector2i, rot:U.ROTATIONS, authority:=false) -> Entity:
+	return $"scene".getChunk(floor(Vector2(pos) / Scene.CHUNK_SIZE)).newEntity(type, U.v2iposmod(pos, Scene.CHUNK_SIZE), rot, authority)
 
 func deleteEntity(authority:=false) -> void:
 	$"scene".getChunk(floor(Vector2(cursorPosition) / Scene.CHUNK_SIZE)).removeEntity(U.v2iposmod(cursorPosition, Scene.CHUNK_SIZE), authority)
 
 func newInputOutputs() -> void:
-	var inputPos:Vector2i = Vector2i(randi_range(-8, 8), randi_range(-8, 8))
-	while getEntity(inputPos): inputPos = Vector2i(randi_range(-8, 8), randi_range(-8, 8))
-	placeEntity(Inputter, inputPos, true)
-	var outputPos:Vector2i = Vector2i(randi_range(-8, 8), randi_range(-8, 8))
-	while getEntity(outputPos): outputPos = Vector2i(randi_range(-8, 8), randi_range(-8, 8))
-	placeEntity(Outputter, outputPos, true)
+	var inputPos:Vector2i = Vector2i(randi_range(-8, 7), randi_range(-8, 7))
+	while getEntity(inputPos): inputPos = Vector2i(randi_range(-8, 7), randi_range(-8, 7))
+	var input:Inputter = placeEntity(Inputter, inputPos, randi_range(0, 3), true)
+	input.pathPoint = PathPoint.new(paths, 0)
+	
+	var outputPos:Vector2i = Vector2i(randi_range(-8, 7), randi_range(-8, 7))
+	while getEntity(outputPos): outputPos = Vector2i(randi_range(-8, 7), randi_range(-8, 7))
+	var output:Outputter = placeEntity(Outputter, outputPos, randi_range(0, 3), true)
+	output.pathPoint = PathPoint.new(paths, -1)
+	
+	paths += 1
 
 func addRunningTimer(time:float, running:Callable):
 	var timer = RunningTimer.new()

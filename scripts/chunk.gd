@@ -29,7 +29,7 @@ func newEntity(type:Variant, pos:Vector2i, rot:U.ROTATIONS, authority:=false) ->
 
 func removeEntity(pos:Vector2i, authority:=false) -> Entity:
 	var entity:Entity = entities.get(pos)
-	if authority or entity is not PopupThing and entities.erase(pos):
-		entity.unloadVisuals()
+	if authority or entity is not InputOutput and entities.erase(pos):
+		entity.delete()
 		return entity
 	return null

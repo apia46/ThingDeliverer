@@ -1,5 +1,7 @@
 extends Entity
-class_name PopupThing
+class_name InputOutput
+
+var pathPoint:PathPoint
 
 func ready(visible:bool) -> void:
 	game.addRunningTimer(1, setHeight)

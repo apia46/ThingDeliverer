@@ -19,7 +19,10 @@ func _init(_chunk:Chunk, _position:Vector2i, _rotation:U.ROTATIONS) -> void:
 func ready(visible:bool) -> void:
 	if visible: loadVisuals()
 
-func loadVisuals(_recurse:=true) -> void:
+func delete() -> void:
+	unloadVisuals()
+
+func loadVisuals() -> void:
 	if visualInstance:
 		visualInstance.position = U.fxz(position) + U.v3(0.5)
 		visualInstance.rotation.y = U.rotToRad(rotation)
@@ -37,4 +40,6 @@ func getEntityRelative(difference:Vector2i, debug:=false):
 
 func positionAbsolute() -> Vector2i: return position + chunk.chunkPos*Scene.CHUNK_SIZE
 
-static func updateEntityVisuals(entity:Entity) -> void: if entity: entity.loadVisuals(false)
+static func updateEntityVisuals(entity:Entity) -> void: if entity: entity.loadVisuals()
+
+func getPathPoint(_pos:Vector2i) -> PathPoint: return self.pathPoint # jank
