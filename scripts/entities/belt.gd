@@ -18,14 +18,15 @@ func ready(visible) -> void:
 	checkPrevious(true)
 
 func checkPrevious(isNew:bool=false) -> void:
-	var previousEntity:Entity = facingThis(getEntityRelative(U.rotate(Vector2i(-1,0), rotation), true))
-	previousDirection = U.ROTATIONS.LEFT
+	var previousEntity:Entity = facingThis(getEntityRelative(U.rotate(Vector2i(0,1), rotation), true))
+	previousDirection = U.ROTATIONS.DOWN
 	if !previousEntity:
 		previousEntity = facingThis(getEntityRelative(U.rotate(Vector2i(1,0), rotation), true))
 		previousDirection = U.ROTATIONS.RIGHT
 	if !previousEntity:
-		previousEntity = facingThis(getEntityRelative(U.rotate(Vector2i(0,1), rotation), true))
-		previousDirection = U.ROTATIONS.DOWN
+		previousEntity = facingThis(getEntityRelative(U.rotate(Vector2i(-1, 0), rotation), true))
+		previousDirection = U.ROTATIONS.LEFT
+	if !previousEntity: previousDirection = U.ROTATIONS.DOWN
 	
 	if previousEntity:
 		var previousPathPoint:PathPoint = previousEntity.getPathPoint(positionAbsolute())
@@ -60,12 +61,9 @@ func loadVisuals() -> void:
 	if changingInstance:
 		if visualInstance: visualInstance.queue_free()
 		match previousDirection:
-			U.ROTATIONS.LEFT:
-				visualInstance = BELT_CCW.instantiate()
-			U.ROTATIONS.RIGHT:
-				visualInstance = BELT_CW.instantiate()
-			_:
-				visualInstance = BELT_STRAIGHT.instantiate()
+			U.ROTATIONS.LEFT: visualInstance = BELT_CCW.instantiate()
+			U.ROTATIONS.RIGHT: visualInstance = BELT_CW.instantiate()
+			_: visualInstance = BELT_STRAIGHT.instantiate()
 	
 	if pathPoint and pathPoint.complete:
 		visualInstance.get_active_material(1).albedo_color = ACTIVATED_COLOR
@@ -89,7 +87,7 @@ func delete() -> void:
 func facingThis(entity:Entity) -> Entity: # TODO:refactor
 	if !entity: return null
 	scene.newDebugVisual(entity.positionAbsolute() + U.rotate(Vector2i(0,-1), entity.rotation), Color(0, 1, 0.4))
-	return entity if entity.positionAbsolute() + U.rotate(Vector2i(0,-1), entity.rotation) == positionAbsolute() and entity is Belt or entity is Inputter else null
+	return entity if (entity is Belt or entity is Inputter) and entity.positionAbsolute() + U.rotate(Vector2i(0,-1), entity.rotation) == positionAbsolute() else null
 
 func updateNext():
 	var next:Entity = getEntityRelative(U.rotate(Vector2i(0,-1), rotation), true)

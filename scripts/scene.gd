@@ -4,6 +4,8 @@ class_name Scene
 const CHUNK = preload("res://scenes/chunk.tscn");
 const DEBUG_VISUAL = preload("res://scenes/debugVisual.tscn");
 const CHUNK_SIZE:int = 32
+const ALLOCATED_SPACE_SIZE:int = 8
+@warning_ignore("integer_division") const ALLOCATED_SPACES_PER_CHUNK:int = CHUNK_SIZE / ALLOCATED_SPACE_SIZE
 
 @onready var game:Game = $"/root/game"
 var chunks:Array[Chunk] = []

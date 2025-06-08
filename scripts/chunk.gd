@@ -4,7 +4,14 @@ class_name Chunk
 @onready var scene:Scene = $"/root/game/scene"
 
 var entities:Dictionary[Vector2i, Entity]
+var allocatedSpaces:Array[AllocatedSpace]
 var chunkPos:Vector2i
+
+func _ready() -> void:
+	for y in 4: for x in 4:
+		allocatedSpaces.append(AllocatedSpace.new(Vector2i(x,y), self))
+	for space in allocatedSpaces: 
+		space.updateConnections()
 
 func setProperties(_chunkPos:Vector2i) -> Chunk:
 	chunkPos = _chunkPos

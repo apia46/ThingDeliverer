@@ -3,6 +3,7 @@ class_name Game
 
 const FLOOR_MATERIAL:ShaderMaterial = preload("res://resources/floor.tres")
 const SCREEN_SIZE:Vector2 = Vector2(1152, 648)
+const CAMERA_MOVE_SPEED:float = 5
 
 var intendedCameraHeight:float = 20
 var upperCameraHeight: float = 20
@@ -19,21 +20,28 @@ var isDebug:bool = false
 
 func _ready() -> void:
 	updateCamera()
+	$"scene".getChunk(Vector2i(0,0)).allocatedSpaces[0].unlock()
 
-func _process(delta) -> void:
+func _process(delta:float) -> void:
+	if Input.is_key_pressed(KEY_A):$"camera".position.x -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight; updateCamera()
+	if Input.is_key_pressed(KEY_W):$"camera".position.z -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight; updateCamera()
+	if Input.is_key_pressed(KEY_S):$"camera".position.z += delta * CAMERA_MOVE_SPEED * intendedCameraHeight; updateCamera()
+	if Input.is_key_pressed(KEY_D):$"camera".position.x += delta * CAMERA_MOVE_SPEED * intendedCameraHeight; updateCamera()
+	
 	$"camera".position.y += (intendedCameraHeight - $"camera".position.y) * delta * 10
 	effectiveScreenSize = Vector2($"camera".position.y * 2.728273735, $"camera".position.y * 1.534653976) # 2y tan 37.5
 	if abs(intendedCameraHeight / $"camera".position.y - 1) < 0.001 and abs(intendedCameraHeight / $"camera".position.y - 1) > 0.000001:
 		$"camera".position.y = intendedCameraHeight
 		upperCameraHeight = intendedCameraHeight
 		updateCamera()
+	$"map".update()
 	
 	FLOOR_MATERIAL.set_shader_parameter("interpolation", clamp($"camera".position.y * 0.05 - 0.75, 0, 1))
 	
 	cursorPosition = floor(U.xz($"camera".position) + (get_viewport().get_mouse_position() / SCREEN_SIZE - U.v2(0.5)) * effectiveScreenSize)
 	$"cursor".position = U.fxz(cursorPosition) + U.v3(0.5)
 
-func _input(event: InputEvent) -> void:
+func _input(event:InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
 			$"camera".position -= U.fxz(event.relative) * intendedCameraHeight * 0.00237
@@ -45,19 +53,10 @@ func _input(event: InputEvent) -> void:
 	elif event is InputEventMouseButton:
 		if event.is_pressed():
 			match event.button_index:
-				MOUSE_BUTTON_WHEEL_UP: # zoom in
-					if intendedCameraHeight > 1:
-						intendedCameraHeight *= 0.8
-						updateCamera()
-				MOUSE_BUTTON_WHEEL_DOWN: # zoom out
-					if intendedCameraHeight < 100:
-						intendedCameraHeight *= 1.25
-						upperCameraHeight *= 1.25
-						updateCamera()
-				MOUSE_BUTTON_LEFT:
-					placeEntity(Belt, cursorPosition, currentRotation)
-				MOUSE_BUTTON_RIGHT:
-					deleteEntity()
+				MOUSE_BUTTON_WHEEL_UP: tryZoomIn()
+				MOUSE_BUTTON_WHEEL_DOWN: tryZoomOut()
+				MOUSE_BUTTON_LEFT: placeEntity(Belt, cursorPosition, currentRotation)
+				MOUSE_BUTTON_RIGHT: deleteEntity()
 	elif event is InputEventKey:
 		if event.is_pressed():
 			match event.keycode:
@@ -65,6 +64,21 @@ func _input(event: InputEvent) -> void:
 				KEY_Q: currentRotation = U.r270(currentRotation)
 				KEY_F: newInputOutputs()
 				KEY_F3: isDebug = !isDebug
+				KEY_SHIFT:
+					if intendedCameraHeight > 50: intendedCameraHeight = 20
+					else: intendedCameraHeight = 76.2939453125; upperCameraHeight = 76.2939453125
+					updateCamera()
+
+func tryZoomIn() -> void:
+	if intendedCameraHeight > 1:
+		intendedCameraHeight *= 0.8
+		updateCamera()
+
+func tryZoomOut() -> void:
+	if intendedCameraHeight < 100:
+		intendedCameraHeight *= 1.25
+		upperCameraHeight *= 1.25
+		updateCamera()
 
 func updateCamera() -> void:
 	var intendedEffectiveScreenSize:Vector2 = Vector2(upperCameraHeight * 2.728273735, upperCameraHeight * 1.534653976)

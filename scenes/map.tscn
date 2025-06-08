@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=4 uid="uid://dtcxfhtjsnftr"]
+
+[ext_resource type="Texture2D" uid="uid://b6h3bsr5a4wn5" path="res://resources/allocatedSpaceOverlay.png" id="1_4xfga"]
+[ext_resource type="Script" uid="uid://c4wjicoowlw8l" path="res://scenes/map.gd" id="1_paxxb"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_paxxb"]
+texture = ExtResource("1_4xfga")
+texture_region_size = Vector2i(34, 34)
+0:0/0 = 0
+1:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+3:1/0 = 0
+2:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_gldc4"]
+tile_size = Vector2i(32, 32)
+sources/0 = SubResource("TileSetAtlasSource_paxxb")
+
+[node name="map" type="Node2D"]
+script = ExtResource("1_paxxb")
+
+[node name="allocatedSpaceMap" type="TileMapLayer" parent="."]
+position = Vector2(-8, -8)
+scale = Vector2(8, 8)
+tile_map_data = PackedByteArray("AAD//wAAAQAAAAAAAAD//wEAAQAAAAAAAAAAAAIAAQAAAAAAAAABAAIAAQAAAAAAAAACAAIAAQAAAAAAAAADAAEAAQAAAAAAAAADAAAAAQAAAAAAAAACAAAAAQAAAAAAAAABAAEAAQAAAAAAAAACAAEAAQAAAAAAAAD//wIAAQAAAAAAAAADAAIAAQAAAAAAAAD+/wMAAQAAAAAAAAA=")
+tile_set = SubResource("TileSet_gldc4")

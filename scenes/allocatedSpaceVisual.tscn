@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1nx86qwvxun6"]
+
+[ext_resource type="Texture2D" uid="uid://b6h3bsr5a4wn5" path="res://resources/allocatedSpaceOverlay.png" id="1_0nl8w"]
+
+[node name="allocatedSpaceVisual" type="Sprite3D"]
+texture_filter = 0
+texture = ExtResource("1_0nl8w")
+
+[node name="up" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0.706966)
+text = "true"
+font_size = 192
+
+[node name="right" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0.706966)
+text = "true"
+font_size = 192
+
+[node name="down" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0.706966)
+text = "true"
+font_size = 192
+
+[node name="left" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0.706966)
+text = "true"
+font_size = 192
