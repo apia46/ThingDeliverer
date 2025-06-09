@@ -12,7 +12,7 @@ uniform sampler2D texture_albedo: source_color, filter_linear, repeat_enable;
 uniform float interpolation: hint_range(0, 1);
 
 void vertex() {
-	UV *= VERTEX.xz;
+	UV *= VERTEX.xz * 2.0;
 }
 
 void fragment() {

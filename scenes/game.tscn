@@ -8,6 +8,7 @@
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_lnu2h"]
 sky_top_color = Color(0.647059, 0.654902, 0.670588, 1)
 sky_energy_multiplier = 3.3
+ground_bottom_color = Color(0.133333, 0.133333, 0.133333, 1)
 use_debanding = false
 
 [sub_resource type="Sky" id="Sky_lbhrr"]

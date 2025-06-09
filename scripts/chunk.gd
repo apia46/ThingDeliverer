@@ -1,7 +1,8 @@
-extends MeshInstance3D
+extends Node3D
 class_name Chunk
 
 @onready var scene:Scene = $"/root/game/scene"
+@onready var floorTiles:GridMap = $"floorTiles"
 
 var entities:Dictionary[Vector2i, Entity]
 var allocatedSpaces:Array[AllocatedSpace]

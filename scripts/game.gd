@@ -20,7 +20,10 @@ var isDebug:bool = false
 
 func _ready() -> void:
 	updateCamera()
-	$"scene".getChunk(Vector2i(0,0)).allocatedSpaces[0].unlock()
+	$"scene".getChunk(Vector2i(0,0)).allocatedSpaces[5].unlock()
+	$"scene".getChunk(Vector2i(0,0)).allocatedSpaces[6].unlock()
+	$"scene".getChunk(Vector2i(0,0)).allocatedSpaces[9].unlock()
+	$"scene".getChunk(Vector2i(0,0)).allocatedSpaces[10].unlock()
 
 func _process(delta:float) -> void:
 	if Input.is_key_pressed(KEY_A):$"camera".position.x -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight; updateCamera()

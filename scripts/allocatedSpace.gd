@@ -60,6 +60,8 @@ func updateConnections() -> void:
 func updateVisual() -> void:
 	if unlocked: map.setAllocatedSpaceMap(chunk.chunkPos * 4 + position, Vector2i(U.b3toint(isLeftConnected)|int(leftConnect.unlocked) + 2,U.b3toint(isUpConnected)|int(!upConnect.unlocked)))
 	else: map.setAllocatedSpaceMap(chunk.chunkPos * 4 + position, Vector2i(U.b3toint(isLeftConnected),U.b3toint(isUpConnected)))
+	
+	if unlocked: chunk.floorTiles.set_cell_item(Vector3i(position.x, 0, position.y), 0)
 
 func unlock() -> void:
 	unlocked = true
