@@ -10,20 +10,25 @@ var upperCameraHeight: float = 20
 var effectiveScreenSize:Vector2 = Vector2(54.56548, 30.69308)
 var cursorPosition:Vector2i
 
-var currentRotation:U.ROTATIONS = U.ROTATIONS.UP
+var currentRotation:U.ROTATIONS = U.ROTATIONS.UP:
+	set(value):
+		currentRotation = value
+		updateCursor()
 
 var timers:Array[Timer] = []
 
-var paths:int = 0
+var paths:Array[Path] = []
 
 var isDebug:bool = false
 
 func _ready() -> void:
 	updateCamera()
-	$"scene".getChunk(Vector2i(0,0)).allocatedSpaces[5].unlock()
-	$"scene".getChunk(Vector2i(0,0)).allocatedSpaces[6].unlock()
-	$"scene".getChunk(Vector2i(0,0)).allocatedSpaces[9].unlock()
-	$"scene".getChunk(Vector2i(0,0)).allocatedSpaces[10].unlock()
+	$"scene".getSpace(Vector2i(0,0)).unlock()
+	$"scene".getSpace(Vector2i(-1,0)).unlock()
+	$"scene".getSpace(Vector2i(0,-1)).unlock()
+	$"scene".getSpace(Vector2i(-1,-1)).unlock()
+	newInputOutputs()
+	updateCursor()
 
 func _process(delta:float) -> void:
 	if Input.is_key_pressed(KEY_A):$"camera".position.x -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight; updateCamera()
@@ -37,7 +42,6 @@ func _process(delta:float) -> void:
 		$"camera".position.y = intendedCameraHeight
 		upperCameraHeight = intendedCameraHeight
 		updateCamera()
-	$"map".update()
 	
 	FLOOR_MATERIAL.set_shader_parameter("interpolation", clamp($"camera".position.y * 0.05 - 0.75, 0, 1))
 	
@@ -50,16 +54,16 @@ func _input(event:InputEvent) -> void:
 			$"camera".position -= U.fxz(event.relative) * intendedCameraHeight * 0.00237
 			updateCamera()
 		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-			placeEntity(Belt, cursorPosition, currentRotation)
+			place()
 		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
-			deleteEntity()
+			delete()
 	elif event is InputEventMouseButton:
 		if event.is_pressed():
 			match event.button_index:
 				MOUSE_BUTTON_WHEEL_UP: tryZoomIn()
 				MOUSE_BUTTON_WHEEL_DOWN: tryZoomOut()
-				MOUSE_BUTTON_LEFT: placeEntity(Belt, cursorPosition, currentRotation)
-				MOUSE_BUTTON_RIGHT: deleteEntity()
+				MOUSE_BUTTON_LEFT:place()
+				MOUSE_BUTTON_RIGHT: delete()
 	elif event is InputEventKey:
 		if event.is_pressed():
 			match event.keycode:
@@ -71,6 +75,17 @@ func _input(event:InputEvent) -> void:
 					if intendedCameraHeight > 50: intendedCameraHeight = 20
 					else: intendedCameraHeight = 76.2939453125; upperCameraHeight = 76.2939453125
 					updateCamera()
+
+func place() -> Entity:
+	var entityPresent: Entity = $"scene".getEntity(cursorPosition)
+	if entityPresent is InputOutput: return null
+	if !$"scene".getSpace(cursorPosition).unlocked: return null
+	return $"scene".placeEntity(Belt, cursorPosition, currentRotation)
+
+func delete() -> Entity:
+	var entityPresent: Entity = $"scene".getEntity(cursorPosition)
+	if entityPresent is InputOutput: return null
+	return $"scene".deleteEntity(cursorPosition)
 
 func tryZoomIn() -> void:
 	if intendedCameraHeight > 1:
@@ -84,7 +99,7 @@ func tryZoomOut() -> void:
 		updateCamera()
 
 func updateCamera() -> void:
-	var intendedEffectiveScreenSize:Vector2 = Vector2(upperCameraHeight * 2.728273735, upperCameraHeight * 1.534653976)
+	var intendedEffectiveScreenSize:Vector2 = Vector2((upperCameraHeight + 16) * 2.728273735, (upperCameraHeight + 16) * 1.534653976)
 	var chunksBound:Rect2i = U.rectCorners(floor((U.xz($"camera".position) - 0.5*intendedEffectiveScreenSize) / Scene.CHUNK_SIZE),
 											ceil((U.xz($"camera".position) + 0.5*intendedEffectiveScreenSize) / Scene.CHUNK_SIZE))
 	
@@ -96,27 +111,27 @@ func updateCamera() -> void:
 			var thisChunkPosition:Vector2i = Vector2i(x, y)
 			$"scene".loadChunk(thisChunkPosition)
 
-func getEntity(pos:Vector2i) -> Entity:
-	return $"scene".getChunk(floor(Vector2(pos) / Scene.CHUNK_SIZE)).entities.get(U.v2iposmod(pos, Scene.CHUNK_SIZE))
-
-func placeEntity(type:Variant, pos:Vector2i, rot:U.ROTATIONS, authority:=false) -> Entity:
-	return $"scene".getChunk(floor(Vector2(pos) / Scene.CHUNK_SIZE)).newEntity(type, U.v2iposmod(pos, Scene.CHUNK_SIZE), rot, authority)
-
-func deleteEntity(authority:=false) -> void:
-	$"scene".getChunk(floor(Vector2(cursorPosition) / Scene.CHUNK_SIZE)).removeEntity(U.v2iposmod(cursorPosition, Scene.CHUNK_SIZE), authority)
+func randomUnlockedTile() -> Vector2i:
+	return $"scene".unlockedSpaces[randi_range(0, len($"scene".unlockedSpaces) - 1)].positionAbsolute() + Vector2i(randi_range(0, Scene.SPACE_SIZE - 1), randi_range(0, Scene.SPACE_SIZE - 1))
 
 func newInputOutputs() -> void:
-	var inputPos:Vector2i = Vector2i(randi_range(-8, 7), randi_range(-8, 7))
-	while getEntity(inputPos): inputPos = Vector2i(randi_range(-8, 7), randi_range(-8, 7))
-	var input:Inputter = placeEntity(Inputter, inputPos, randi_range(0, 3), true)
-	input.pathPoint = PathPoint.new(paths, 0)
+	var path = Path.new(len(paths))
+	paths.append(path)
 	
-	var outputPos:Vector2i = Vector2i(randi_range(-8, 7), randi_range(-8, 7))
-	while getEntity(outputPos): outputPos = Vector2i(randi_range(-8, 7), randi_range(-8, 7))
-	var output:Outputter = placeEntity(Outputter, outputPos, randi_range(0, 3), true)
-	output.pathPoint = PathPoint.new(paths, -1)
+	var inputPos:Vector2i = randomUnlockedTile()
+	while $"scene".getEntity(inputPos): inputPos = randomUnlockedTile()
+	var input:Inputter = $"scene".placeEntity(Inputter, inputPos, randi_range(0, 3))
+	input.pathPoint = PathPoint.new(path, 0)
 	
-	paths += 1
+	var outputPos:Vector2i = randomUnlockedTile()
+	while $"scene".getEntity(outputPos): outputPos = randomUnlockedTile()
+	var output:Outputter = $"scene".placeEntity(Outputter, outputPos, randi_range(0, 3))
+	output.pathPoint = PathPoint.new(path, -1)
+
+func pathComplete(path:Path) -> void:
+	if path.completed: return
+	path.completed = true
+	newInputOutputs()
 
 func addRunningTimer(time:float, running:Callable):
 	var timer = RunningTimer.new()
@@ -128,6 +143,10 @@ func addRunningTimer(time:float, running:Callable):
 	add_child(timer)
 	timer.start(time)
 	timers.append(timer)
+
+func updateCursor():
+	$"cursor".mesh = preload("res://meshes/beltStraight.tres")
+	$"cursor".rotation.y = U.rotToRad(currentRotation)
 
 class RunningTimer:
 	extends Timer

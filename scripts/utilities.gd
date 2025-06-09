@@ -34,3 +34,6 @@ enum BOOL3 {UNKNOWN, FALSE, TRUE}
 static func toBool(bool3:BOOL3) -> bool: return bool3 == BOOL3.TRUE
 static func toBool3(condition:Variant) -> BOOL3: return BOOL3.TRUE if condition else BOOL3.FALSE
 static func b3toint(bool3:BOOL3) -> int: return int(toBool(bool3))
+
+static func v2iunwrap(vector:Vector2i, gridSize:int) -> int:
+	return vector.y * gridSize + vector.x

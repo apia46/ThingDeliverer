@@ -1,12 +1,12 @@
 extends RefCounted
 class_name PathPoint
 
-var path:int
+var path:Path
 var point:int
 var complete:bool=false
 var previousEntity:Entity
 
-func _init(_path:int, _point:int, _previousEntity:Entity=null):
+func _init(_path:Path, _point:int, _previousEntity:Entity=null):
 	path = _path
 	point = _point
 	previousEntity = _previousEntity

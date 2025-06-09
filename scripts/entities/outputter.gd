@@ -12,6 +12,7 @@ func checkPrevious():
 		var previousPathPoint:PathPoint = previousEntity.getPathPoint(positionAbsolute())
 		if previousPathPoint and pathPoint.isDirectlyAfter(previousPathPoint):
 			pathPoint.previousEntity = previousEntity
+			game.pathComplete(pathPoint.path)
 			pathPoint.pathComplete(self)
 
 

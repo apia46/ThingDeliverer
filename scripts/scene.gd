@@ -4,11 +4,12 @@ class_name Scene
 const CHUNK = preload("res://scenes/chunk.tscn");
 const DEBUG_VISUAL = preload("res://scenes/debugVisual.tscn");
 const CHUNK_SIZE:int = 32
-const ALLOCATED_SPACE_SIZE:int = 8
-@warning_ignore("integer_division") const ALLOCATED_SPACES_PER_CHUNK:int = CHUNK_SIZE / ALLOCATED_SPACE_SIZE
+const SPACE_SIZE:int = 8
+@warning_ignore("integer_division") const SPACES_PER_CHUNK:int = CHUNK_SIZE / SPACE_SIZE
 
 @onready var game:Game = $"/root/game"
 var chunks:Array[Chunk] = []
+var unlockedSpaces:Array[Space] = []
 var chunkPositions:Array[Vector2i] = []
 
 func loadChunk(chunkPos:Vector2i) -> void:
@@ -25,6 +26,18 @@ func unloadChunk(chunkPos:Vector2i) -> void:
 
 func getChunk(chunkPos:Vector2i) -> Chunk:
 	return chunks[chunkPositions.find(chunkPos)]
+
+func getEntity(pos:Vector2i) -> Entity:
+	return getChunk(floor(Vector2(pos) / CHUNK_SIZE)).entities.get(U.v2iposmod(pos, Scene.CHUNK_SIZE))
+
+func placeEntity(type:Variant, pos:Vector2i, rot:U.ROTATIONS) -> Entity:
+	return getChunk(floor(Vector2(pos) / CHUNK_SIZE)).newEntity(type, U.v2iposmod(pos, Scene.CHUNK_SIZE), rot)
+
+func deleteEntity(pos:Vector2i) -> void:
+	getChunk(floor(Vector2(pos) / CHUNK_SIZE)).removeEntity(U.v2iposmod(pos, Scene.CHUNK_SIZE))
+
+func getSpace(pos:Vector2i) -> Space:
+	return getChunk(floor(Vector2(pos) / CHUNK_SIZE)).spaces[U.v2iunwrap(U.v2iposmod(floor(Vector2(pos) / SPACE_SIZE), Scene.SPACES_PER_CHUNK), Scene.SPACES_PER_CHUNK)]
 
 func newDebugVisual(pos:Vector2i, color:Color) -> void:
 	if !game.isDebug: return
