@@ -13,6 +13,8 @@ var pathPoint:PathPoint
 var currentlyDisplayedPreviousDirection:U.ROTATIONS
 var previousDirection:U.ROTATIONS
 
+var itemDisplay:Items.Display
+
 func ready(visible) -> void:
 	super(visible)
 	checkPrevious(true)
@@ -68,6 +70,7 @@ func loadVisuals() -> void:
 	if pathPoint and pathPoint.complete:
 		visualInstance.get_active_material(1).albedo_color = ACTIVATED_COLOR
 		visualInstance.get_active_material(1).emission = ACTIVATED_COLOR
+		if !itemDisplay: itemDisplay = chunk.scene.items.addDisplay(Items.TYPES.BOX, positionAbsolute(), rotation)
 	else:
 		visualInstance.get_active_material(1).albedo_color = DEACTIVATED_COLOR
 		visualInstance.get_active_material(1).emission = DEACTIVATED_COLOR

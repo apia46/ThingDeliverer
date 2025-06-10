@@ -8,6 +8,7 @@ const SPACE_SIZE:int = 8
 @warning_ignore("integer_division") const SPACES_PER_CHUNK:int = CHUNK_SIZE / SPACE_SIZE
 
 @onready var game:Game = $"/root/game"
+@onready var items:Items = $"items"
 var chunks:Array[Chunk] = []
 var unlockedSpaces:Array[Space] = []
 var chunkPositions:Array[Vector2i] = []

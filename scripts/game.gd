@@ -10,6 +10,8 @@ var upperCameraHeight: float = 20
 var effectiveScreenSize:Vector2 = Vector2(54.56548, 30.69308)
 var cursorPosition:Vector2i
 
+var cycle:float = 0
+
 var currentRotation:U.ROTATIONS = U.ROTATIONS.UP:
 	set(value):
 		currentRotation = value
@@ -35,7 +37,8 @@ func _process(delta:float) -> void:
 	if Input.is_key_pressed(KEY_W):$"camera".position.z -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight; updateCamera()
 	if Input.is_key_pressed(KEY_S):$"camera".position.z += delta * CAMERA_MOVE_SPEED * intendedCameraHeight; updateCamera()
 	if Input.is_key_pressed(KEY_D):$"camera".position.x += delta * CAMERA_MOVE_SPEED * intendedCameraHeight; updateCamera()
-	
+	if Input.is_key_pressed(KEY_R): tryZoomIn()
+	if Input.is_key_pressed(KEY_F): tryZoomOut()
 	$"camera".position.y += (intendedCameraHeight - $"camera".position.y) * delta * 10
 	effectiveScreenSize = Vector2($"camera".position.y * 2.728273735, $"camera".position.y * 1.534653976) # 2y tan 37.5
 	if abs(intendedCameraHeight / $"camera".position.y - 1) < 0.001 and abs(intendedCameraHeight / $"camera".position.y - 1) > 0.000001:
@@ -47,6 +50,11 @@ func _process(delta:float) -> void:
 	
 	cursorPosition = floor(U.xz($"camera".position) + (get_viewport().get_mouse_position() / SCREEN_SIZE - U.v2(0.5)) * effectiveScreenSize)
 	$"cursor".position = U.fxz(cursorPosition) + U.v3(0.5)
+	
+	cycle += delta
+	if cycle >= 1:
+		cycle -= 1
+	$"scene".items.updateDisplays()
 
 func _input(event:InputEvent) -> void:
 	if event is InputEventMouseMotion:

@@ -1,6 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://cs4uk7wcoe057"]
+[gd_scene load_steps=5 format=3 uid="uid://cs4uk7wcoe057"]
 
 [ext_resource type="Script" uid="uid://daxxr7g1yewgd" path="res://scripts/scene.gd" id="1_ulcgi"]
+[ext_resource type="Script" uid="uid://ntqrayxwdx4u" path="res://scripts/items.gd" id="2_4msxo"]
+[ext_resource type="ArrayMesh" uid="uid://dwijxmx3xnije" path="res://meshes/beltStraight.tres" id="3_4msxo"]
+
+[sub_resource type="MultiMesh" id="MultiMesh_5fb3c"]
+mesh = ExtResource("3_4msxo")
 
 [node name="scene" type="Node3D"]
 script = ExtResource("1_ulcgi")
+
+[node name="items" type="Node3D" parent="."]
+script = ExtResource("2_4msxo")
+
+[node name="box" type="MultiMeshInstance3D" parent="items"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, 0.5)
+multimesh = SubResource("MultiMesh_5fb3c")
