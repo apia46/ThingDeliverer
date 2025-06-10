@@ -29,6 +29,13 @@ static func rotate(vector:Vector2i, rot:ROTATIONS) -> Vector2i:
 		ROTATIONS.DOWN: return Vector2i(-vector.x, -vector.y)
 		_, ROTATIONS.LEFT: return Vector2i(vector.y, -vector.x)
 
+static func rotatef(vector:Vector2, rot:ROTATIONS) -> Vector2:
+	match rot:
+		ROTATIONS.UP: return vector
+		ROTATIONS.RIGHT: return Vector2(-vector.y, vector.x)
+		ROTATIONS.DOWN: return Vector2(-vector.x, -vector.y)
+		_, ROTATIONS.LEFT: return Vector2(vector.y, -vector.x)
+
 enum BOOL3 {UNKNOWN, FALSE, TRUE}
 
 static func toBool(bool3:BOOL3) -> bool: return bool3 == BOOL3.TRUE

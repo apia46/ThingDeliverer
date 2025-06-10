@@ -2,9 +2,10 @@
 
 [ext_resource type="Script" uid="uid://daxxr7g1yewgd" path="res://scripts/scene.gd" id="1_ulcgi"]
 [ext_resource type="Script" uid="uid://ntqrayxwdx4u" path="res://scripts/items.gd" id="2_4msxo"]
-[ext_resource type="ArrayMesh" uid="uid://dwijxmx3xnije" path="res://meshes/beltStraight.tres" id="3_4msxo"]
+[ext_resource type="ArrayMesh" uid="uid://dn8vl6dtajem2" path="res://meshes/box.tres" id="3_4msxo"]
 
 [sub_resource type="MultiMesh" id="MultiMesh_5fb3c"]
+transform_format = 1
 mesh = ExtResource("3_4msxo")
 
 [node name="scene" type="Node3D"]

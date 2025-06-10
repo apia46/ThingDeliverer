@@ -13,7 +13,7 @@ func updateDisplays():
 		var multimesh:MultiMesh = multiMeshIntances[i].multimesh
 		multimesh.instance_count = len(type)
 		for display in type:
-			multimesh.set_instance_transform_2d(display.index, Transform2D(0, display.position))
+			multimesh.set_instance_transform(display.index, Transform3D(Basis.IDENTITY, U.fxz(display.position) + U.fxz(U.rotatef(Vector2(0, -game.cycle), display.direction))))
 		
 		i += 1
 
@@ -22,9 +22,10 @@ func addDisplay(type:TYPES, pos:Vector2i, direction: U.ROTATIONS) -> Display:
 	displays[type].append(display)
 	return display
 
-func removeDisplay(display:Display) -> void:
+func removeDisplay(display:Display) -> Display:
 	displays[display.type].pop_at(display.index)
 	for i in range(display.index, len(displays[display.type])): displays[display.type][i].index -= 1
+	return null
 
 class Display:
 	extends RefCounted
@@ -38,5 +39,4 @@ class Display:
 		position = _position
 		direction = _direction
 		index = _index
-		print(index)
 	
