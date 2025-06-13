@@ -60,10 +60,22 @@ func _input(event:InputEvent) -> void:
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
 			$"camera".position -= U.fxz(event.relative) * intendedCameraHeight * 0.00237
 			updateCamera()
-		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-			place()
-		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
-			delete()
+		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+			# placeDrag, deletedrag
+			cursorPosition = floor(U.xz($"camera".position) + (event.position / SCREEN_SIZE - U.v2(0.5)) * effectiveScreenSize)
+			var previousCursorPosition:Vector2i = floor(U.xz($"camera".position) + ((event.position - event.relative) / SCREEN_SIZE - U.v2(0.5)) * effectiveScreenSize)
+			if abs(event.relative.x) > abs(event.relative.y):
+				var dragSign = sign(cursorPosition.x - previousCursorPosition.x)
+				for i in abs(cursorPosition.x - previousCursorPosition.x) + 1:
+					cursorPosition = previousCursorPosition + Vector2i(i * dragSign, 0)
+					if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT): place()
+					else: delete()
+			else:
+				var dragSign = sign(cursorPosition.y - previousCursorPosition.y)
+				for i in abs(cursorPosition.y - previousCursorPosition.y) + 1:
+					cursorPosition = previousCursorPosition + Vector2i(0, i * dragSign)
+					if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT): place()
+					else: delete()
 	elif event is InputEventMouseButton:
 		if event.is_pressed():
 			match event.button_index:
@@ -111,7 +123,7 @@ func updateCamera() -> void:
 											ceil((U.xz($"camera".position) + 0.5*intendedEffectiveScreenSize) / Scene.CHUNK_SIZE))
 	
 	for chunkPosition:Vector2i in $"scene".chunkPositions.duplicate():
-		if not chunksBound.has_point(chunkPosition):
+		if not chunksBound.has_point(chunkPosition) and $"scene".loadedChunks > 255:
 			$"scene".unloadChunk(chunkPosition)
 	for x:int in range(chunksBound.position.x, chunksBound.end.x):
 		for y:int in range(chunksBound.position.y, chunksBound.end.y):
@@ -121,18 +133,30 @@ func updateCamera() -> void:
 func randomUnlockedTile() -> Vector2i:
 	return $"scene".unlockedSpaces[randi_range(0, len($"scene".unlockedSpaces) - 1)].positionAbsolute() + Vector2i(randi_range(0, Scene.SPACE_SIZE - 1), randi_range(0, Scene.SPACE_SIZE - 1))
 
+func isABadLocation(pos:Vector2i, rot:U.ROTATIONS) -> bool:
+	if $"scene".getEntity(pos): return true
+	if !$"scene".getSpace(pos + U.rotate(Vector2i(0,-1), rot)).unlocked: return true
+	if $"scene".getEntity(pos + U.rotate(Vector2i(0,-1), rot)): return true
+	return false
+
 func newInputOutputs() -> void:
 	var path = Path.new(len(paths))
 	paths.append(path)
 	
 	var inputPos:Vector2i = randomUnlockedTile()
-	while $"scene".getEntity(inputPos): inputPos = randomUnlockedTile()
-	var input:Inputter = $"scene".placeEntity(Inputter, inputPos, randi_range(0, 3))
+	var inputRot:U.ROTATIONS = randi_range(0,3) as U.ROTATIONS
+	while isABadLocation(inputPos, inputRot):
+		inputPos = randomUnlockedTile()
+		inputRot = randi_range(0,3) as U.ROTATIONS
+	var input:Inputter = $"scene".placeEntity(Inputter, inputPos, inputRot)
 	input.pathPoint = PathPoint.new(path, 0)
 	
 	var outputPos:Vector2i = randomUnlockedTile()
-	while $"scene".getEntity(outputPos): outputPos = randomUnlockedTile()
-	var output:Outputter = $"scene".placeEntity(Outputter, outputPos, randi_range(0, 3))
+	var outputRot:U.ROTATIONS = randi_range(0,3) as U.ROTATIONS
+	while outputPos.distance_squared_to(inputPos) < 36 or isABadLocation(outputPos, outputRot):
+		outputPos = randomUnlockedTile()
+		outputRot = randi_range(0,3) as U.ROTATIONS
+	var output:Outputter = $"scene".placeEntity(Outputter, outputPos, outputRot)
 	output.pathPoint = PathPoint.new(path, -1)
 
 func pathComplete(path:Path) -> void:

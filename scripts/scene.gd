@@ -12,6 +12,7 @@ const SPACE_SIZE:int = 8
 var chunks:Array[Chunk] = []
 var unlockedSpaces:Array[Space] = []
 var chunkPositions:Array[Vector2i] = []
+var loadedChunks:int = 0
 
 func loadChunk(chunkPos:Vector2i) -> void:
 	var index:int = chunkPositions.find(chunkPos)
@@ -21,14 +22,17 @@ func loadChunk(chunkPos:Vector2i) -> void:
 		chunkPositions.append(chunkPos)
 		add_child(chunk)
 	else: chunks[index].loadVisuals()
+	loadedChunks += 1
 
 func unloadChunk(chunkPos:Vector2i) -> void:
 	chunks[chunkPositions.find(chunkPos)].unloadVisuals()
+	loadedChunks -= 1
 
 func getChunk(chunkPos:Vector2i) -> Chunk:
 	return chunks[chunkPositions.find(chunkPos)]
 
 func getEntity(pos:Vector2i) -> Entity:
+	if game.isDebug: newDebugVisual(pos, Color(1, 0, 0.4))
 	return getChunk(floor(Vector2(pos) / CHUNK_SIZE)).entities.get(U.v2iposmod(pos, Scene.CHUNK_SIZE))
 
 func placeEntity(type:Variant, pos:Vector2i, rot:U.ROTATIONS) -> Entity:
