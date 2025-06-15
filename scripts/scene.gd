@@ -9,6 +9,7 @@ const SPACE_SIZE:int = 8
 
 @onready var game:Game = $"/root/game"
 @onready var items:Items = $"items"
+@onready var spaceVisuals:SpaceVisuals = $"spaceVisuals"
 var chunks:Array[Chunk] = []
 var unlockedSpaces:Array[Space] = []
 var chunkPositions:Array[Vector2i] = []

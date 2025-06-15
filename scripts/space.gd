@@ -6,7 +6,7 @@ const SPACE_CONNECTION_PROBABILITY = 0.17
 var position:Vector2i
 var chunk:Chunk
 
-var floorVisual:MeshInstance3D
+var spaceVisual:SpaceVisuals.SpaceVisual
 
 var unlocked:bool = false
 
@@ -59,8 +59,6 @@ func unlock() -> void:
 	if U.toBool(isRightConnected) and !rightConnect.unlocked: rightConnect.unlock()
 	if U.toBool(isDownConnected) and !downConnect.unlocked: downConnect.unlock()
 	if U.toBool(isLeftConnected) and !leftConnect.unlocked: leftConnect.unlock()
-	floorVisual = preload("res://scenes/floor.tscn").instantiate()
-	chunk.add_child(floorVisual)
-	floorVisual.position = U.fxz(position * Scene.SPACE_SIZE + Vector2i(4,4))
+	spaceVisual = chunk.scene.spaceVisuals.addSpaceVisual(positionAbsolute() + Vector2i(4,4))
 
 func positionAbsolute() -> Vector2i: return position * Scene.SPACE_SIZE + chunk.chunkPos*Scene.CHUNK_SIZE
