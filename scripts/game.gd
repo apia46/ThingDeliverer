@@ -5,6 +5,8 @@ const FLOOR_MATERIAL:ShaderMaterial = preload("res://resources/floor.tres")
 const SCREEN_SIZE:Vector2 = Vector2(1152, 648)
 const CAMERA_MOVE_SPEED:float = 5
 
+@onready var scene = $"scene"
+
 var intendedCameraHeight:float = 20
 var upperCameraHeight: float = 20
 var effectiveScreenSize:Vector2 = Vector2(54.56548, 30.69308)
@@ -24,26 +26,21 @@ var paths:Array[Path] = []
 var isDebug:bool = false
 
 func _ready() -> void:
-	updateCamera()
-	$"scene".getSpace(Vector2i(0,0)).unlock()
-	$"scene".getSpace(Vector2i(-1,0)).unlock()
-	$"scene".getSpace(Vector2i(0,-1)).unlock()
-	$"scene".getSpace(Vector2i(-1,-1)).unlock()
+	scene.newSpace(Vector2i(0,0))
 	newInputOutputs()
 	updateCursor()
 
 func _process(delta:float) -> void:
-	if Input.is_key_pressed(KEY_A):$"camera".position.x -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight; updateCamera()
-	if Input.is_key_pressed(KEY_W):$"camera".position.z -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight; updateCamera()
-	if Input.is_key_pressed(KEY_S):$"camera".position.z += delta * CAMERA_MOVE_SPEED * intendedCameraHeight; updateCamera()
-	if Input.is_key_pressed(KEY_D):$"camera".position.x += delta * CAMERA_MOVE_SPEED * intendedCameraHeight; updateCamera()
+	if Input.is_key_pressed(KEY_A):$"camera".position.x -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+	if Input.is_key_pressed(KEY_W):$"camera".position.z -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+	if Input.is_key_pressed(KEY_S):$"camera".position.z += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+	if Input.is_key_pressed(KEY_D):$"camera".position.x += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
 	
 	$"camera".position.y += (intendedCameraHeight - $"camera".position.y) * delta * 10
 	effectiveScreenSize = Vector2($"camera".position.y * 2.728273735, $"camera".position.y * 1.534653976) # 2y tan 37.5
 	if abs(intendedCameraHeight / $"camera".position.y - 1) < 0.001 and abs(intendedCameraHeight / $"camera".position.y - 1) > 0.000001:
 		$"camera".position.y = intendedCameraHeight
 		upperCameraHeight = intendedCameraHeight
-		updateCamera()
 	
 	FLOOR_MATERIAL.set_shader_parameter("interpolation", clamp($"camera".position.y * 0.05 - 0.75, 0, 1))
 	
@@ -53,13 +50,12 @@ func _process(delta:float) -> void:
 	cycle += 4 * delta
 	if cycle >= 1:
 		cycle -= 1
-	$"scene".items.updateDisplays()
+	scene.items.updateDisplays()
 
 func _input(event:InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
 			$"camera".position -= U.fxz(event.relative) * intendedCameraHeight * 0.00237
-			updateCamera()
 		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 			# placeDrag, deletedrag
 			cursorPosition = floor(U.xz($"camera".position) + (event.position / SCREEN_SIZE - U.v2(0.5)) * effectiveScreenSize)
@@ -93,50 +89,34 @@ func _input(event:InputEvent) -> void:
 				KEY_SHIFT:
 					if intendedCameraHeight > 50: intendedCameraHeight = 20
 					else: intendedCameraHeight = 76.2939453125; upperCameraHeight = 76.2939453125
-					updateCamera()
 
 func place() -> Entity:
-	var entityPresent: Entity = $"scene".getEntity(cursorPosition)
+	var entityPresent: Entity = scene.getEntity(cursorPosition)
 	if entityPresent is InputOutput: return null
-	if !$"scene".getSpace(cursorPosition).unlocked: return null
-	return $"scene".placeEntity(Belt, cursorPosition, currentRotation)
+	if !scene.getSpace(cursorPosition): return null
+	return scene.placeEntity(Belt, cursorPosition, currentRotation)
 
 func delete() -> Entity:
-	var entityPresent: Entity = $"scene".getEntity(cursorPosition)
+	var entityPresent: Entity = scene.getEntity(cursorPosition)
 	if entityPresent is InputOutput: return null
-	return $"scene".deleteEntity(cursorPosition)
+	return scene.deleteEntity(cursorPosition)
 
 func tryZoomIn() -> void:
 	if intendedCameraHeight > 1:
 		intendedCameraHeight *= 0.8
-		updateCamera()
 
 func tryZoomOut() -> void:
 	if intendedCameraHeight < 100:
 		intendedCameraHeight *= 1.25
 		upperCameraHeight *= 1.25
-		updateCamera()
-
-func updateCamera() -> void:
-	var intendedEffectiveScreenSize:Vector2 = Vector2((upperCameraHeight + 16) * 2.728273735, (upperCameraHeight + 16) * 1.534653976)
-	var chunksBound:Rect2i = U.rectCorners(floor((U.xz($"camera".position) - 0.5*intendedEffectiveScreenSize) / Scene.CHUNK_SIZE),
-											ceil((U.xz($"camera".position) + 0.5*intendedEffectiveScreenSize) / Scene.CHUNK_SIZE))
-	
-	for chunkPosition:Vector2i in $"scene".chunkPositions.duplicate():
-		if not chunksBound.has_point(chunkPosition) and $"scene".loadedChunks > 255:
-			$"scene".unloadChunk(chunkPosition)
-	for x:int in range(chunksBound.position.x, chunksBound.end.x):
-		for y:int in range(chunksBound.position.y, chunksBound.end.y):
-			var thisChunkPosition:Vector2i = Vector2i(x, y)
-			$"scene".loadChunk(thisChunkPosition)
 
 func randomUnlockedTile() -> Vector2i:
-	return $"scene".unlockedSpaces[randi_range(0, len($"scene".unlockedSpaces) - 1)].positionAbsolute() + Vector2i(randi_range(0, Scene.SPACE_SIZE - 1), randi_range(0, Scene.SPACE_SIZE - 1))
+	return scene.spaces[scene.spaces.keys()[randi_range(0, len(scene.spaces) - 1)]].positionAbsolute() + Vector2i(randi_range(0, Scene.SPACE_SIZE - 1), randi_range(0, Scene.SPACE_SIZE - 1))
 
 func isABadLocation(pos:Vector2i, rot:U.ROTATIONS) -> bool:
-	if $"scene".getEntity(pos): return true
-	if !$"scene".getSpace(pos + U.rotate(Vector2i(0,-1), rot)).unlocked: return true
-	if $"scene".getEntity(pos + U.rotate(Vector2i(0,-1), rot)): return true
+	if scene.getEntity(pos): return true
+	if !scene.getSpace(pos + U.rotate(Vector2i(0,-1), rot)): return true
+	if scene.getEntity(pos + U.rotate(Vector2i(0,-1), rot)): return true
 	return false
 
 func newInputOutputs() -> void:
@@ -148,7 +128,7 @@ func newInputOutputs() -> void:
 	while isABadLocation(inputPos, inputRot):
 		inputPos = randomUnlockedTile()
 		inputRot = randi_range(0,3) as U.ROTATIONS
-	var input:Inputter = $"scene".placeEntity(Inputter, inputPos, inputRot)
+	var input:Inputter = scene.placeEntity(Inputter, inputPos, inputRot)
 	input.pathPoint = PathPoint.new(path, 0)
 	
 	var outputPos:Vector2i = randomUnlockedTile()
@@ -156,7 +136,7 @@ func newInputOutputs() -> void:
 	while outputPos.distance_squared_to(inputPos) < 36 or isABadLocation(outputPos, outputRot):
 		outputPos = randomUnlockedTile()
 		outputRot = randi_range(0,3) as U.ROTATIONS
-	var output:Outputter = $"scene".placeEntity(Outputter, outputPos, outputRot)
+	var output:Outputter = scene.placeEntity(Outputter, outputPos, outputRot)
 	output.pathPoint = PathPoint.new(path, -1)
 
 func pathComplete(path:Path) -> void:

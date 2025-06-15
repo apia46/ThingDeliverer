@@ -3,62 +3,49 @@ class_name Space
 
 const SPACE_CONNECTION_PROBABILITY = 0.17
 
+var scene:Scene
+
 var position:Vector2i
-var chunk:Chunk
 
 var spaceVisual:SpaceVisuals.SpaceVisual
 
-var unlocked:bool = false
-
-var isUpConnected:U.BOOL3
-var upConnect:Space
-var isLeftConnected:U.BOOL3
-var leftConnect:Space
-
-var isRightConnected:U.BOOL3 = U.BOOL3.UNKNOWN
-var rightConnect:Space
-var isDownConnected:U.BOOL3 = U.BOOL3.UNKNOWN
-var downConnect:Space
-
-func _init(_position:Vector2i, _chunk:Chunk) -> void:
+func _init(_position:Vector2i, _scene:Scene) -> void:
 	position = _position
-	chunk = _chunk
-	isLeftConnected = U.toBool3(randf() < SPACE_CONNECTION_PROBABILITY)
-	isUpConnected = U.toBool3(randf() < SPACE_CONNECTION_PROBABILITY)
+	scene = _scene
+	spaceVisual = scene.spaceVisuals.addSpaceVisual(positionAbsolute() + Vector2i(4,4))
 
 func getSpaceRelative(difference:Vector2i) -> Space:
-	var posChunk:Vector2i = position + difference
-	if Rect2i(0, 0, Scene.SPACES_PER_CHUNK, Scene.SPACES_PER_CHUNK).has_point(posChunk):
-		return chunk.spaces.get(U.v2iunwrap(posChunk, Scene.SPACES_PER_CHUNK))
-	else: return chunk.scene.getChunk(chunk.chunkPos + Vector2i(floor(posChunk/float(Scene.SPACES_PER_CHUNK)))).spaces.get(U.v2iunwrap(U.v2iposmod(posChunk, Scene.SPACES_PER_CHUNK), Scene.SPACES_PER_CHUNK))
+	return scene.getSpace(position + difference)
 
-func updateConnections() -> void:
-	if !isRightConnected:
-		var space = getSpaceRelative(Vector2i(1,0))
-		if space and U.toBool(space.isLeftConnected):
-			isRightConnected = U.BOOL3.TRUE
-			rightConnect = space
-	if !isDownConnected:
-		var space = getSpaceRelative(Vector2i(0,1))
-		if space and U.toBool(space.isUpConnected):
-			isDownConnected = U.BOOL3.TRUE
-			downConnect = space
-	if !leftConnect:
-		leftConnect = getSpaceRelative(Vector2i(-1,0))
-		leftConnect.rightConnect = self
-		leftConnect.isRightConnected = isLeftConnected
-	if !upConnect:
-		upConnect = getSpaceRelative(Vector2i(0,-1))
-		upConnect.downConnect = self
-		upConnect.isDownConnected = isUpConnected
+# it feels weird removing this entire system
+# maybe it will still be useful..?
+#func updateConnections() -> void:
+#	if !isRightConnected:
+#		var space = getSpaceRelative(Vector2i(1,0))
+#		if space and U.toBool(space.isLeftConnected):
+#			isRightConnected = U.BOOL3.TRUE
+#			rightConnect = space
+#	if !isDownConnected:
+#		var space = getSpaceRelative(Vector2i(0,1))
+#		if space and U.toBool(space.isUpConnected):
+#			isDownConnected = U.BOOL3.TRUE
+#			downConnect = space
+#	if !leftConnect:
+#		leftConnect = getSpaceRelative(Vector2i(-1,0))
+#		if leftConnect:
+#			leftConnect.rightConnect = self
+#			leftConnect.isRightConnected = isLeftConnected
+#	if !upConnect:
+#		upConnect = getSpaceRelative(Vector2i(0,-1))
+#		if upConnect:
+#			upConnect.downConnect = self
+#			upConnect.isDownConnected = isUpConnected
 
-func unlock() -> void:
-	unlocked = true
-	chunk.scene.unlockedSpaces.append(self)
-	if U.toBool(isUpConnected) and !upConnect.unlocked: upConnect.unlock()
-	if U.toBool(isRightConnected) and !rightConnect.unlocked: rightConnect.unlock()
-	if U.toBool(isDownConnected) and !downConnect.unlocked: downConnect.unlock()
-	if U.toBool(isLeftConnected) and !leftConnect.unlocked: leftConnect.unlock()
-	spaceVisual = chunk.scene.spaceVisuals.addSpaceVisual(positionAbsolute() + Vector2i(4,4))
+#func unlock() -> void:
+#	unlocked = true
+#	if U.toBool(isUpConnected) and upConnect and !upConnect.unlocked: upConnect.unlock()
+#	if U.toBool(isRightConnected) and rightConnect and !rightConnect.unlocked: rightConnect.unlock()
+#	if U.toBool(isDownConnected) and downConnect and !downConnect.unlocked: downConnect.unlock()
+#	if U.toBool(isLeftConnected) and leftConnect and !leftConnect.unlocked: leftConnect.unlock()
 
-func positionAbsolute() -> Vector2i: return position * Scene.SPACE_SIZE + chunk.chunkPos*Scene.CHUNK_SIZE
+func positionAbsolute() -> Vector2i: return position

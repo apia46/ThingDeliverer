@@ -1,9 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://vjll7u27jgg4"]
-
-[ext_resource type="Script" uid="uid://ccbupqlgc4bbv" path="res://scripts/chunk.gd" id="2_c3gog"]
+[gd_scene format=3 uid="uid://vjll7u27jgg4"]
 
 [node name="chunk" type="Node3D"]
-script = ExtResource("2_c3gog")
 
 [node name="Label3D" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0, 1, 0)

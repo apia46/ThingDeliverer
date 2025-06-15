@@ -70,11 +70,11 @@ func loadVisuals() -> void:
 	if pathPoint and pathPoint.complete:
 		visualInstance.get_active_material(1).albedo_color = ACTIVATED_COLOR
 		visualInstance.get_active_material(1).emission = ACTIVATED_COLOR
-		if !itemDisplay: itemDisplay = chunk.scene.items.addDisplay(Items.TYPES.BOX, positionAbsolute(), rotation)
+		if !itemDisplay: itemDisplay = scene.items.addDisplay(Items.TYPES.BOX, positionAbsolute(), rotation)
 	else:
 		visualInstance.get_active_material(1).albedo_color = DEACTIVATED_COLOR
 		visualInstance.get_active_material(1).emission = DEACTIVATED_COLOR
-		if itemDisplay: itemDisplay = chunk.scene.items.removeDisplay(itemDisplay)
+		if itemDisplay: itemDisplay = scene.items.removeDisplay(itemDisplay)
 	
 	if game.isDebug:
 		visualInstance.get_node("debugText").visible = !!pathPoint
@@ -85,7 +85,7 @@ func loadVisuals() -> void:
 
 func delete() -> void:
 	if pathPoint: pathPoint.previousEntity.getPathPoint(positionAbsolute()).pathUncomplete(pathPoint.previousEntity)
-	if itemDisplay: chunk.scene.items.removeDisplay(itemDisplay)
+	if itemDisplay: scene.items.removeDisplay(itemDisplay)
 	updateNext()
 	super()
 
