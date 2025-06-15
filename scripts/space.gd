@@ -12,7 +12,7 @@ var spaceVisual:SpaceVisuals.SpaceVisual
 func _init(_position:Vector2i, _scene:Scene) -> void:
 	position = _position
 	scene = _scene
-	spaceVisual = scene.spaceVisuals.addSpaceVisual(positionAbsolute() + Vector2i(4,4))
+	spaceVisual = scene.spaceVisuals.addSpaceVisual(position + Vector2i(4,4))
 
 func getSpaceRelative(difference:Vector2i) -> Space:
 	return scene.getSpace(position + difference)
@@ -47,5 +47,3 @@ func getSpaceRelative(difference:Vector2i) -> Space:
 #	if U.toBool(isRightConnected) and rightConnect and !rightConnect.unlocked: rightConnect.unlock()
 #	if U.toBool(isDownConnected) and downConnect and !downConnect.unlocked: downConnect.unlock()
 #	if U.toBool(isLeftConnected) and leftConnect and !leftConnect.unlocked: leftConnect.unlock()
-
-func positionAbsolute() -> Vector2i: return position

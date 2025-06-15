@@ -27,6 +27,9 @@ var isDebug:bool = false
 
 func _ready() -> void:
 	scene.newSpace(Vector2i(0,0))
+	scene.newSpace(Vector2i(8,0))
+	scene.newSpace(Vector2i(0,8))
+	scene.newSpace(Vector2i(8,8))
 	newInputOutputs()
 	updateCursor()
 
@@ -111,7 +114,9 @@ func tryZoomOut() -> void:
 		upperCameraHeight *= 1.25
 
 func randomUnlockedTile() -> Vector2i:
-	return scene.spaces[scene.spaces.keys()[randi_range(0, len(scene.spaces) - 1)]].positionAbsolute() + Vector2i(randi_range(0, Scene.SPACE_SIZE - 1), randi_range(0, Scene.SPACE_SIZE - 1))
+	var space = scene.spaces[scene.spaces.keys()[randi_range(0, len(scene.spaces) - 1)]]
+	print(space.position)
+	return space.position + Vector2i(randi_range(0, Scene.SPACE_SIZE - 1), randi_range(0, Scene.SPACE_SIZE - 1))
 
 func isABadLocation(pos:Vector2i, rot:U.ROTATIONS) -> bool:
 	if scene.getEntity(pos): return true

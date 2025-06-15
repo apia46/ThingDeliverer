@@ -33,11 +33,13 @@ func deleteEntity(pos:Vector2i) -> Entity:
 	return null
 
 func getSpace(pos:Vector2i) -> Space:
-	var space = spaces.get(Vector2i(floor(Vector2(pos) / SPACE_SIZE)))
+	var togetfrom = pos - U.v2iposmod(pos,SPACE_SIZE)
+	var space = spaces.get(togetfrom)
 	if !space: return null
 	return space
 
 func newSpace(pos:Vector2i) -> Space:
+	assert(U.v2iposmod(pos,SPACE_SIZE) == Vector2i(0,0))
 	if getSpace(pos): return getSpace(pos)
 	var space = Space.new(pos, self)
 	spaces[pos] = space

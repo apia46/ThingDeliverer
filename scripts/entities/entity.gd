@@ -30,10 +30,8 @@ func unloadVisuals() -> void:
 	if visualInstance: visualInstance.queue_free()
 
 func getEntityRelative(difference:Vector2i, debug:=false):
-	if debug: scene.newDebugVisual(positionAbsolute() + difference, Color(0, 0.4, 1))
+	if debug: scene.newDebugVisual(position + difference, Color(0, 0.4, 1))
 	return scene.getEntity(position + difference)
-
-func positionAbsolute() -> Vector2i: return position
 
 static func updateEntityVisuals(entity:Entity) -> void: if entity: entity.loadVisuals()
 

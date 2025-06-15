@@ -23,9 +23,9 @@ func isBefore(candidateAfter:PathPoint) -> bool:
 func pathComplete(thisEntity:Entity): # such a hack
 	complete = true
 	thisEntity.loadVisuals()
-	if previousEntity: previousEntity.getPathPoint(thisEntity.positionAbsolute()).pathComplete(previousEntity)
+	if previousEntity: previousEntity.getPathPoint(thisEntity.position).pathComplete(previousEntity)
 
 func pathUncomplete(thisEntity:Entity):
 	complete = false
 	thisEntity.loadVisuals()
-	if previousEntity: previousEntity.getPathPoint(thisEntity.positionAbsolute()).pathUncomplete(previousEntity)
+	if previousEntity: previousEntity.getPathPoint(thisEntity.position).pathUncomplete(previousEntity)

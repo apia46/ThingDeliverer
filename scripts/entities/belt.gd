@@ -31,7 +31,7 @@ func checkPrevious(isNew:bool=false) -> void:
 	if !previousEntity: previousDirection = U.ROTATIONS.DOWN
 	
 	if previousEntity:
-		var previousPathPoint:PathPoint = previousEntity.getPathPoint(positionAbsolute())
+		var previousPathPoint:PathPoint = previousEntity.getPathPoint(position)
 		if previousPathPoint:
 			if pathPoint and pathPoint.isBefore(previousPathPoint): # path cuts itself off
 				pathPoint = null
@@ -70,7 +70,7 @@ func loadVisuals() -> void:
 	if pathPoint and pathPoint.complete:
 		visualInstance.get_active_material(1).albedo_color = ACTIVATED_COLOR
 		visualInstance.get_active_material(1).emission = ACTIVATED_COLOR
-		if !itemDisplay: itemDisplay = scene.items.addDisplay(Items.TYPES.BOX, positionAbsolute(), rotation)
+		if !itemDisplay: itemDisplay = scene.items.addDisplay(Items.TYPES.BOX, position, rotation)
 	else:
 		visualInstance.get_active_material(1).albedo_color = DEACTIVATED_COLOR
 		visualInstance.get_active_material(1).emission = DEACTIVATED_COLOR
@@ -84,15 +84,15 @@ func loadVisuals() -> void:
 	currentlyDisplayedPreviousDirection = previousDirection
 
 func delete() -> void:
-	if pathPoint: pathPoint.previousEntity.getPathPoint(positionAbsolute()).pathUncomplete(pathPoint.previousEntity)
+	if pathPoint: pathPoint.previousEntity.getPathPoint(position).pathUncomplete(pathPoint.previousEntity)
 	if itemDisplay: scene.items.removeDisplay(itemDisplay)
 	updateNext()
 	super()
 
 func facingThis(entity:Entity) -> Entity: # TODO:refactor
 	if !entity: return null
-	scene.newDebugVisual(entity.positionAbsolute() + U.rotate(Vector2i(0,-1), entity.rotation), Color(0, 1, 0.4))
-	return entity if (entity is Belt or entity is Inputter) and entity.positionAbsolute() + U.rotate(Vector2i(0,-1), entity.rotation) == positionAbsolute() else null
+	scene.newDebugVisual(entity.position + U.rotate(Vector2i(0,-1), entity.rotation), Color(0, 1, 0.4))
+	return entity if (entity is Belt or entity is Inputter) and entity.position + U.rotate(Vector2i(0,-1), entity.rotation) == position else null
 
 func updateNext():
 	var next:Entity = getEntityRelative(U.rotate(Vector2i(0,-1), rotation), true)
