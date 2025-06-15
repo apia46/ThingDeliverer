@@ -22,7 +22,7 @@ func placeEntity(type:Variant, pos:Vector2i, rot:U.ROTATIONS) -> Entity:
 	if entity: deleteEntity(pos)
 	entity = type.new(self, pos, rot)
 	entities[pos] = entity
-	entity.ready(visible)
+	entity.ready()
 	return entity
 
 func deleteEntity(pos:Vector2i) -> Entity:

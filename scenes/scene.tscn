@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://ntqrayxwdx4u" path="res://scripts/items.gd" id="2_4msxo"]
 [ext_resource type="ArrayMesh" uid="uid://dn8vl6dtajem2" path="res://meshes/box.tres" id="3_4msxo"]
 [ext_resource type="ArrayMesh" uid="uid://ciuvfptn6u6cr" path="res://meshes/space.tres" id="4_5fb3c"]
-[ext_resource type="Script" uid="uid://c0sdghjdp8bqm" path="res://scenes/spaceVisuals.gd" id="5_gjmho"]
+[ext_resource type="Script" uid="uid://c0sdghjdp8bqm" path="res://scripts/spaceVisuals.gd" id="5_gjmho"]
 
 [sub_resource type="MultiMesh" id="MultiMesh_5fb3c"]
 transform_format = 1

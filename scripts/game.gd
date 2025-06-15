@@ -23,7 +23,7 @@ var timers:Array[Timer] = []
 
 var paths:Array[Path] = []
 
-var isDebug:bool = false
+var isDebug:bool = true
 
 func _ready() -> void:
 	scene.newSpace(Vector2i(0,0))
@@ -134,7 +134,9 @@ func newInputOutputs() -> void:
 		inputPos = randomUnlockedTile()
 		inputRot = randi_range(0,3) as U.ROTATIONS
 	var input:Inputter = scene.placeEntity(Inputter, inputPos, inputRot)
-	input.pathPoint = PathPoint.new(path, 0)
+	input.pathNode = PathNode.new(input)
+	input.pathNode.path = path
+	input.pathNode.index = 0
 	
 	var outputPos:Vector2i = randomUnlockedTile()
 	var outputRot:U.ROTATIONS = randi_range(0,3) as U.ROTATIONS
@@ -142,11 +144,11 @@ func newInputOutputs() -> void:
 		outputPos = randomUnlockedTile()
 		outputRot = randi_range(0,3) as U.ROTATIONS
 	var output:Outputter = scene.placeEntity(Outputter, outputPos, outputRot)
-	output.pathPoint = PathPoint.new(path, -1)
+	output.pathNode = PathNode.new(output)
 
 func pathComplete(path:Path) -> void:
-	if path.completed: return
-	path.completed = true
+	if path.complete: return
+	path.complete = true
 	newInputOutputs()
 
 func addRunningTimer(time:float, running:Callable):

@@ -14,8 +14,7 @@ func _init(_scene:Scene, _position:Vector2i, _rotation:U.ROTATIONS) -> void:
 	position = _position
 	rotation = _rotation
 
-func ready(visible:bool) -> void:
-	if visible: loadVisuals()
+func ready() -> void: loadVisuals()
 
 func delete() -> void:
 	unloadVisuals()
@@ -29,10 +28,21 @@ func loadVisuals() -> void:
 func unloadVisuals() -> void:
 	if visualInstance: visualInstance.queue_free()
 
-func getEntityRelative(difference:Vector2i, debug:=false):
+func getEntityRelative(difference:Vector2i, debug:=false) -> Entity:
 	if debug: scene.newDebugVisual(position + difference, Color(0, 0.4, 1))
 	return scene.getEntity(position + difference)
 
 static func updateEntityVisuals(entity:Entity) -> void: if entity: entity.loadVisuals()
 
-func getPathPoint(_pos:Vector2i) -> PathPoint: return self.pathPoint # jank
+func asNodeOutputTo(_pos:Vector2i) -> PathNode: return null
+func asNodeInputFrom(_pos:Vector2i) -> PathNode: return null
+
+func getNodeInputFromRelative(difference:Vector2i) -> PathNode:
+	var entity = scene.getEntity(position + U.rotate(difference, rotation))
+	return entity.asNodeOutputTo(position) if entity else null
+
+func getNodeOutputFromRelative(difference:Vector2i) -> PathNode:
+	var entity = scene.getEntity(position + U.rotate(difference, rotation))
+	return entity.asNodeInputFrom(position) if entity else null
+
+func checkPrevious() -> void: pass

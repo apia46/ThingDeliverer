@@ -1,11 +1,12 @@
 extends Entity
 class_name InputOutput
 
-var pathPoint:PathPoint
+var pathNode:PathNode
 
-func ready(visible:bool) -> void:
+func ready() -> void:
+	pathNode = PathNode.new(self)
 	game.addRunningTimer(1, setHeight)
-	super(visible)
+	super()
 
 func setHeight(timeLeft) -> void:
 	if !visualInstance: return

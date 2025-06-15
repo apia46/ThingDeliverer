@@ -8,51 +8,37 @@ const BELT_CW:PackedScene = preload("res://scenes/entityVisuals/beltCW.tscn")
 const DEACTIVATED_COLOR = Color(0x0D063AFF)
 const ACTIVATED_COLOR = Color(0xFFD800FF)
 
-var pathPoint:PathPoint
+var pathNode:PathNode
 
 var currentlyDisplayedPreviousDirection:U.ROTATIONS
 var previousDirection:U.ROTATIONS
 
 var itemDisplay:Items.Display
 
-func ready(visible) -> void:
-	super(visible)
-	checkPrevious(true)
+func ready() -> void:
+	pathNode = PathNode.new(self)
+	super()
+	checkPrevious()
 
-func checkPrevious(isNew:bool=false) -> void:
-	var previousEntity:Entity = facingThis(getEntityRelative(U.rotate(Vector2i(0,1), rotation), true))
+func checkPrevious() -> void:
+	var previousNode:PathNode = getNodeInputFromRelative(Vector2i(0,1))
 	previousDirection = U.ROTATIONS.DOWN
-	if !previousEntity:
-		previousEntity = facingThis(getEntityRelative(U.rotate(Vector2i(1,0), rotation), true))
+	if !previousNode:
+		previousNode = getNodeInputFromRelative(Vector2i(1,0))
 		previousDirection = U.ROTATIONS.RIGHT
-	if !previousEntity:
-		previousEntity = facingThis(getEntityRelative(U.rotate(Vector2i(-1, 0), rotation), true))
+	if !previousNode:
+		previousNode = getNodeInputFromRelative(Vector2i(-1,0))
 		previousDirection = U.ROTATIONS.LEFT
-	if !previousEntity: previousDirection = U.ROTATIONS.DOWN
+	if !previousNode: previousDirection = U.ROTATIONS.DOWN
 	
-	if previousEntity:
-		var previousPathPoint:PathPoint = previousEntity.getPathPoint(position)
-		if previousPathPoint:
-			if pathPoint and pathPoint.isBefore(previousPathPoint): # path cuts itself off
-				pathPoint = null
-				updateNext()
-			elif !pathPoint or !pathPoint.isDirectlyAfter(previousPathPoint): # no updates needed if so
-				pathPoint = previousPathPoint.generateNext(previousEntity)
-				updateNext()
-		else:
-			if pathPoint:
-				pathPoint = null
-				updateNext()
-			else:
-				pathPoint = null
-				if isNew: updateNext()
-	else:
-		if pathPoint:
-			pathPoint = null
-			updateNext()
-		else:
-			pathPoint = null
-			if isNew: updateNext()
+	if previousNode:
+		if previousNode.path:
+			if pathNode.path and pathNode.isBefore(previousNode): # path cuts itself off
+				pathNode.disconnectFromPath()
+			elif !pathNode.path or !pathNode.isDirectlyAfter(previousNode): # no updates needed if so
+				pathNode.joinAfter(previousNode)
+		else: pathNode.disconnectFromPath()
+	else: pathNode.disconnectFromPath()
 	
 	loadVisuals()
 
@@ -67,7 +53,7 @@ func loadVisuals() -> void:
 			U.ROTATIONS.RIGHT: visualInstance = BELT_CW.instantiate()
 			_: visualInstance = BELT_STRAIGHT.instantiate()
 	
-	if pathPoint and pathPoint.complete:
+	if pathNode.path and pathNode.path.complete:
 		visualInstance.get_active_material(1).albedo_color = ACTIVATED_COLOR
 		visualInstance.get_active_material(1).emission = ACTIVATED_COLOR
 		if !itemDisplay: itemDisplay = scene.items.addDisplay(Items.TYPES.BOX, position, rotation)
@@ -77,23 +63,16 @@ func loadVisuals() -> void:
 		if itemDisplay: itemDisplay = scene.items.removeDisplay(itemDisplay)
 	
 	if game.isDebug:
-		visualInstance.get_node("debugText").visible = !!pathPoint
-		if pathPoint: visualInstance.get_node("debugText").text = str(pathPoint.path) + "-" + str(pathPoint.point)
+		visualInstance.get_node("debugText").visible = !!pathNode.path
+		if pathNode.path: visualInstance.get_node("debugText").text = str(pathNode.path) + "-" + str(pathNode.index)
 	
 	if changingInstance: super()
 	currentlyDisplayedPreviousDirection = previousDirection
 
 func delete() -> void:
-	if pathPoint: pathPoint.previousEntity.getPathPoint(position).pathUncomplete(pathPoint.previousEntity)
+	pathNode.disconnectFromPath()
 	if itemDisplay: scene.items.removeDisplay(itemDisplay)
-	updateNext()
 	super()
 
-func facingThis(entity:Entity) -> Entity: # TODO:refactor
-	if !entity: return null
-	scene.newDebugVisual(entity.position + U.rotate(Vector2i(0,-1), entity.rotation), Color(0, 1, 0.4))
-	return entity if (entity is Belt or entity is Inputter) and entity.position + U.rotate(Vector2i(0,-1), entity.rotation) == position else null
-
-func updateNext():
-	var next:Entity = getEntityRelative(U.rotate(Vector2i(0,-1), rotation), true)
-	if next is Belt or next is Outputter: next.checkPrevious()
+func asNodeOutputTo(pos:Vector2i) -> PathNode: return pathNode if pos == position + U.rotate(Vector2i(0,-1), rotation) else null
+func asNodeInputfrom(pos:Vector2i) -> PathNode: return pathNode if pos == position + U.rotate(Vector2i(0,1), rotation) else null
