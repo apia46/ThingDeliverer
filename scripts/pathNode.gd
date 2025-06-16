@@ -17,11 +17,14 @@ func joinAfter(node:PathNode) -> void:
 	index = node.index + 1
 	previousNode = node
 	node.nextNode = self
-	if nextNode: nextNode.entity.checkPrevious()
+	entity.updateNext()
 
 func disconnectFromPath() -> void:
 	if !path: return
 	if previousNode: previousNode.nextNode = null
+	if path.completed: path.uncomplete()
+	path = null
+	entity.loadVisuals()
 	if nextNode:
 		nextNode.previousNode = null
 		nextNode.entity.checkPrevious()
@@ -32,4 +35,8 @@ func isDirectlyAfter(candidatePrevious:PathNode) -> bool:
 func isBefore(candidateAfter:PathNode) -> bool:
 	return candidateAfter and path and path == candidateAfter.path and index < candidateAfter.index
 
-func isPathComplete() -> bool: return path and path.complete
+func isPathComplete() -> bool: return path and path.completed
+
+func propagatePathCompleteness():
+	entity.loadVisuals()
+	if nextNode: nextNode.propagatePathCompleteness()

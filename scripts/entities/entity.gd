@@ -17,6 +17,7 @@ func _init(_scene:Scene, _position:Vector2i, _rotation:U.ROTATIONS) -> void:
 func ready() -> void: loadVisuals()
 
 func delete() -> void:
+	updateNext()
 	unloadVisuals()
 
 func loadVisuals() -> void:
@@ -46,3 +47,4 @@ func getNodeOutputFromRelative(difference:Vector2i) -> PathNode:
 	return entity.asNodeInputFrom(position) if entity else null
 
 func checkPrevious() -> void: pass
+func updateNext() -> void: pass

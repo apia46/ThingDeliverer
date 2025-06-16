@@ -8,15 +8,11 @@ func loadVisuals() -> void:
 
 func checkPrevious() -> void:
 	var previousNode:PathNode = getNodeInputFromRelative(Vector2i(0,-1))
-	if previousNode.path:
-		if pathNode.isDirectlyAfter(previousNode):
+	if previousNode:
+		pathNode.previousNode = previousNode
+		previousNode.nextNode = pathNode
+		if previousNode.path and pathNode.isDirectlyAfter(previousNode):
 			pathNode.joinAfter(previousNode)
-			game.pathComplete(pathNode.path)
+			pathNode.path.complete()
 
-
-func facingThis(entity:Entity) -> Entity: # TODO:refactor
-	if !entity: return null
-	scene.newDebugVisual(entity.position + U.rotate(Vector2i(0,-1), entity.rotation), Color(0, 1, 0.4))
-	return entity if (entity is Belt or entity is Inputter) and entity.position + U.rotate(Vector2i(0,-1), entity.rotation) == position else null
-
-func asNodeInputFrom(pos:Vector2i) -> PathNode: return pathNode if pos == position + U.rotate(Vector2i(0,1), rotation) else null
+func asNodeInputFrom(pos:Vector2i) -> PathNode: return pathNode if pos == position + U.rotate(Vector2i(0,-1), rotation) else null

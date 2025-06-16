@@ -42,6 +42,10 @@ func checkPrevious() -> void:
 	
 	loadVisuals()
 
+func updateNext() -> void:
+	var node = getNodeOutputFromRelative(Vector2i(0,-1))
+	if node: node.entity.checkPrevious()
+
 # direction changes
 func loadVisuals() -> void:
 	#print(str(!visualInstance) + str(currentlyDisplayedPreviousDirection) + str(previousDirection))
@@ -53,7 +57,7 @@ func loadVisuals() -> void:
 			U.ROTATIONS.RIGHT: visualInstance = BELT_CW.instantiate()
 			_: visualInstance = BELT_STRAIGHT.instantiate()
 	
-	if pathNode.path and pathNode.path.complete:
+	if pathNode.path and pathNode.path.completed:
 		visualInstance.get_active_material(1).albedo_color = ACTIVATED_COLOR
 		visualInstance.get_active_material(1).emission = ACTIVATED_COLOR
 		if !itemDisplay: itemDisplay = scene.items.addDisplay(Items.TYPES.BOX, position, rotation)
@@ -75,4 +79,4 @@ func delete() -> void:
 	super()
 
 func asNodeOutputTo(pos:Vector2i) -> PathNode: return pathNode if pos == position + U.rotate(Vector2i(0,-1), rotation) else null
-func asNodeInputfrom(pos:Vector2i) -> PathNode: return pathNode if pos == position + U.rotate(Vector2i(0,1), rotation) else null
+func asNodeInputFrom(pos:Vector2i) -> PathNode: return pathNode # TODO:it doesnt really matter but like

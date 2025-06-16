@@ -114,9 +114,7 @@ func tryZoomOut() -> void:
 		upperCameraHeight *= 1.25
 
 func randomUnlockedTile() -> Vector2i:
-	var space = scene.spaces[scene.spaces.keys()[randi_range(0, len(scene.spaces) - 1)]]
-	print(space.position)
-	return space.position + Vector2i(randi_range(0, Scene.SPACE_SIZE - 1), randi_range(0, Scene.SPACE_SIZE - 1))
+	return scene.spaces[scene.spaces.keys()[randi_range(0, len(scene.spaces) - 1)]].position + Vector2i(randi_range(0, Scene.SPACE_SIZE - 1), randi_range(0, Scene.SPACE_SIZE - 1))
 
 func isABadLocation(pos:Vector2i, rot:U.ROTATIONS) -> bool:
 	if scene.getEntity(pos): return true
@@ -125,7 +123,7 @@ func isABadLocation(pos:Vector2i, rot:U.ROTATIONS) -> bool:
 	return false
 
 func newInputOutputs() -> void:
-	var path = Path.new(len(paths))
+	var path = Path.new(len(paths), self)
 	paths.append(path)
 	
 	var inputPos:Vector2i = randomUnlockedTile()
@@ -137,6 +135,7 @@ func newInputOutputs() -> void:
 	input.pathNode = PathNode.new(input)
 	input.pathNode.path = path
 	input.pathNode.index = 0
+	path.start = input.pathNode
 	
 	var outputPos:Vector2i = randomUnlockedTile()
 	var outputRot:U.ROTATIONS = randi_range(0,3) as U.ROTATIONS
@@ -145,10 +144,10 @@ func newInputOutputs() -> void:
 		outputRot = randi_range(0,3) as U.ROTATIONS
 	var output:Outputter = scene.placeEntity(Outputter, outputPos, outputRot)
 	output.pathNode = PathNode.new(output)
+	output.pathNode.path = path
 
-func pathComplete(path:Path) -> void:
-	if path.complete: return
-	path.complete = true
+func pathComplete() -> void:
+	for pathcheck in paths: if !pathcheck.completed:return
 	newInputOutputs()
 
 func addRunningTimer(time:float, running:Callable):

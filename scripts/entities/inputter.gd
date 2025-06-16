@@ -11,4 +11,8 @@ func loadVisuals() -> void:
 	elif itemDisplay: itemDisplay = scene.items.removeDisplay(itemDisplay)
 	super()
 
+func updateNext() -> void:
+	var node = getNodeInputFromRelative(Vector2i(0,-1))
+	if node: node.entity.checkPrevious()
+
 func asNodeOutputTo(pos:Vector2i) -> PathNode: return pathNode if pos == position + U.rotate(Vector2i(0,-1), rotation) else null
