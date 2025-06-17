@@ -16,18 +16,18 @@ var previousDirection:U.ROTATIONS
 var itemDisplay:Items.Display
 
 func ready() -> void:
-	pathNode = PathNode.new(self)
+	pathNode = PathNode.new(self, position)
 	super()
 	checkPrevious()
 
 func checkPrevious() -> void:
-	var previousNode:PathNode = getNodeInputFromRelative(Vector2i(0,1))
+	var previousNode:PathNode = getNodeInputFromRelative(pathNode, Vector2i(0,1))
 	previousDirection = U.ROTATIONS.DOWN
 	if !previousNode:
-		previousNode = getNodeInputFromRelative(Vector2i(1,0))
+		previousNode = getNodeInputFromRelative(pathNode, Vector2i(1,0))
 		previousDirection = U.ROTATIONS.RIGHT
 	if !previousNode:
-		previousNode = getNodeInputFromRelative(Vector2i(-1,0))
+		previousNode = getNodeInputFromRelative(pathNode, Vector2i(-1,0))
 		previousDirection = U.ROTATIONS.LEFT
 	if !previousNode: previousDirection = U.ROTATIONS.DOWN
 	
@@ -43,7 +43,7 @@ func checkPrevious() -> void:
 	loadVisuals()
 
 func updateNext() -> void:
-	var node = getNodeOutputFromRelative(Vector2i(0,-1))
+	var node = getNodeOutputFromRelative(pathNode, Vector2i(0,-1))
 	if node: node.entity.checkPrevious()
 
 # direction changes
@@ -78,5 +78,5 @@ func delete() -> void:
 	if itemDisplay: scene.items.removeDisplay(itemDisplay)
 	super()
 
-func asNodeOutputTo(pos:Vector2i) -> PathNode: return pathNode if pos == position + U.rotate(Vector2i(0,-1), rotation) else null
-func asNodeInputFrom(pos:Vector2i) -> PathNode: return pathNode # TODO:it doesnt really matter but like
+func asNodeOutputTo(node:PathNode) -> PathNode: return pathNode if node.position == position + U.rotate(Vector2i(0,-1), rotation) else null
+func asNodeInputFrom(node:PathNode) -> PathNode: return pathNode if node.position != position + U.rotate(Vector2i(0,-1), rotation) else null

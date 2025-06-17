@@ -4,7 +4,7 @@ class_name InputOutput
 var pathNode:PathNode
 
 func ready() -> void:
-	pathNode = PathNode.new(self)
+	pathNode = PathNode.new(self, position)
 	game.addRunningTimer(1, setHeight)
 	super()
 

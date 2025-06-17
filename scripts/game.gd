@@ -132,7 +132,7 @@ func newInputOutputs() -> void:
 		inputPos = randomUnlockedTile()
 		inputRot = randi_range(0,3) as U.ROTATIONS
 	var input:Inputter = scene.placeEntity(Inputter, inputPos, inputRot)
-	input.pathNode = PathNode.new(input)
+	input.pathNode = PathNode.new(input, inputPos)
 	input.pathNode.path = path
 	input.pathNode.index = 0
 	path.start = input.pathNode
@@ -143,7 +143,7 @@ func newInputOutputs() -> void:
 		outputPos = randomUnlockedTile()
 		outputRot = randi_range(0,3) as U.ROTATIONS
 	var output:Outputter = scene.placeEntity(Outputter, outputPos, outputRot)
-	output.pathNode = PathNode.new(output)
+	output.pathNode = PathNode.new(output, outputPos)
 	output.pathNode.path = path
 
 func pathComplete() -> void:

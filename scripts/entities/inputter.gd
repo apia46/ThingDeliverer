@@ -12,7 +12,7 @@ func loadVisuals() -> void:
 	super()
 
 func updateNext() -> void:
-	var node = getNodeInputFromRelative(Vector2i(0,-1))
+	var node = getNodeInputFromRelative(pathNode, Vector2i(0,-1))
 	if node: node.entity.checkPrevious()
 
-func asNodeOutputTo(pos:Vector2i) -> PathNode: return pathNode if pos == position + U.rotate(Vector2i(0,-1), rotation) else null
+func asNodeOutputTo(node:PathNode) -> PathNode: return pathNode if node.position == position + U.rotate(Vector2i(0,-1), rotation) else null

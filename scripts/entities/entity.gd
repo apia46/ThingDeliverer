@@ -35,16 +35,16 @@ func getEntityRelative(difference:Vector2i, debug:=false) -> Entity:
 
 static func updateEntityVisuals(entity:Entity) -> void: if entity: entity.loadVisuals()
 
-func asNodeOutputTo(_pos:Vector2i) -> PathNode: return null
-func asNodeInputFrom(_pos:Vector2i) -> PathNode: return null
+func asNodeOutputTo(_node:PathNode) -> PathNode: return null
+func asNodeInputFrom(_node:PathNode) -> PathNode: return null
 
-func getNodeInputFromRelative(difference:Vector2i) -> PathNode:
-	var entity = scene.getEntity(position + U.rotate(difference, rotation))
-	return entity.asNodeOutputTo(position) if entity else null
+func getNodeInputFromRelative(node:PathNode, difference:Vector2i) -> PathNode:
+	var entity = scene.getEntity(node.position + U.rotate(difference, rotation))
+	return entity.asNodeOutputTo(node) if entity else null
 
-func getNodeOutputFromRelative(difference:Vector2i) -> PathNode:
-	var entity = scene.getEntity(position + U.rotate(difference, rotation))
-	return entity.asNodeInputFrom(position) if entity else null
+func getNodeOutputFromRelative(node:PathNode, difference:Vector2i) -> PathNode:
+	var entity = scene.getEntity(node.position + U.rotate(difference, rotation))
+	return entity.asNodeInputFrom(node) if entity else null
 
 func checkPrevious() -> void: pass
 func updateNext() -> void: pass

@@ -7,7 +7,7 @@ func loadVisuals() -> void:
 	super()
 
 func checkPrevious() -> void:
-	var previousNode:PathNode = getNodeInputFromRelative(Vector2i(0,-1))
+	var previousNode:PathNode = getNodeInputFromRelative(pathNode, Vector2i(0,-1))
 	if previousNode:
 		pathNode.previousNode = previousNode
 		previousNode.nextNode = pathNode
@@ -15,4 +15,4 @@ func checkPrevious() -> void:
 			pathNode.joinAfter(previousNode)
 			pathNode.path.complete()
 
-func asNodeInputFrom(pos:Vector2i) -> PathNode: return pathNode if pos == position + U.rotate(Vector2i(0,-1), rotation) else null
+func asNodeInputFrom(node:PathNode) -> PathNode: return pathNode if node.position != position + U.rotate(Vector2i(0,1), rotation) else null

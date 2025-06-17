@@ -5,11 +5,14 @@ var path:Path
 var index:int
 var entity:Entity
 
+var position:Vector2i
+
 var previousNode:PathNode
 var nextNode:PathNode
 
-func _init(_entity:Entity):
+func _init(_entity:Entity, _position:Vector2i):
 	entity = _entity
+	position = _position
 
 func joinAfter(node:PathNode) -> void:
 	if isDirectlyAfter(node): return
