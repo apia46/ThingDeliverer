@@ -14,6 +14,8 @@ var cursorPosition:Vector2i
 
 var cycle:float = 0
 
+var objectToPlace:Object = UndergroundInput
+
 var currentRotation:U.ROTATIONS = U.ROTATIONS.UP:
 	set(value):
 		currentRotation = value
@@ -97,7 +99,7 @@ func place() -> Entity:
 	var entityPresent: Entity = scene.getEntity(cursorPosition)
 	if entityPresent is InputOutput: return null
 	if !scene.getSpace(cursorPosition): return null
-	return scene.placeEntity(Belt, cursorPosition, currentRotation)
+	return scene.placeEntity(objectToPlace, cursorPosition, currentRotation)
 
 func delete() -> Entity:
 	var entityPresent: Entity = scene.getEntity(cursorPosition)

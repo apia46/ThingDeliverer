@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://dqnfsbrn6ev76"]
+
+[ext_resource type="ArrayMesh" uid="uid://frcwnfqd154m" path="res://meshes/undergroundInput.tres" id="1_ffjb6"]
+
+[node name="undergroundInput" type="MeshInstance3D"]
+mesh = ExtResource("1_ffjb6")
+skeleton = NodePath("")
