@@ -14,18 +14,18 @@ var cursorPosition:Vector2i
 
 var cycle:float = 0
 
-var objectToPlace:Object = UndergroundInput
+var objectToPlace:Object = Belt
 
 var currentRotation:U.ROTATIONS = U.ROTATIONS.UP:
 	set(value):
 		currentRotation = value
-		updateCursor()
+		setCursor()
 
 var timers:Array[Timer] = []
 
 var paths:Array[Path] = []
 
-var isDebug:bool = true
+var isDebug:bool = false
 
 func _ready() -> void:
 	scene.newSpace(Vector2i(0,0))
@@ -33,7 +33,7 @@ func _ready() -> void:
 	scene.newSpace(Vector2i(0,8))
 	scene.newSpace(Vector2i(8,8))
 	newInputOutputs()
-	updateCursor()
+	setCursor(Belt)
 
 func _process(delta:float) -> void:
 	if Input.is_key_pressed(KEY_A):$"camera".position.x -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
@@ -99,7 +99,12 @@ func place() -> Entity:
 	var entityPresent: Entity = scene.getEntity(cursorPosition)
 	if entityPresent is InputOutput: return null
 	if !scene.getSpace(cursorPosition): return null
-	return scene.placeEntity(objectToPlace, cursorPosition, currentRotation)
+	if objectToPlace == UndergroundOutput and entityPresent is UndergroundInput: return null
+	if objectToPlace == Belt and entityPresent is UndergroundOutput: return null
+	var result = scene.placeEntity(objectToPlace, cursorPosition, currentRotation)
+	if result is UndergroundInput: setCursor(UndergroundOutput)
+	elif result is UndergroundOutput: setCursor(Belt)
+	return result
 
 func delete() -> Entity:
 	var entityPresent: Entity = scene.getEntity(cursorPosition)
@@ -163,8 +168,14 @@ func addRunningTimer(time:float, running:Callable):
 	timer.start(time)
 	timers.append(timer)
 
-func updateCursor():
-	$"cursor".mesh = preload("res://meshes/beltStraight.tres")
+func setCursor(object:Variant=null) -> void:
+	if object:
+		if (object == UndergroundOutput) != (objectToPlace == UndergroundOutput): currentRotation = U.r180(currentRotation)
+		objectToPlace = object
+		match objectToPlace:
+			Belt: $"cursor".mesh = preload("res://meshes/beltStraight.tres")
+			UndergroundInput: $"cursor".mesh = preload("res://meshes/undergroundInput.tres")
+			UndergroundOutput: $"cursor".mesh = preload("res://meshes/undergroundOutput.tres")
 	$"cursor".rotation.y = U.rotToRad(currentRotation)
 
 class RunningTimer:

@@ -1,14 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://di6yfmmtdym8e"]
+[gd_scene load_steps=9 format=3 uid="uid://di6yfmmtdym8e"]
 
 [ext_resource type="Script" uid="uid://dr4q4w60f0ren" path="res://scripts/ui.gd" id="1_7dvkv"]
 [ext_resource type="Texture2D" uid="uid://uuygo8yxh7q6" path="res://resources/ui/ends.png" id="1_p7vwb"]
 [ext_resource type="Texture2D" uid="uid://bfok7seiqy0t8" path="res://resources/ui/beltSelected.png" id="2_ktti3"]
 [ext_resource type="Texture2D" uid="uid://dbx607kpgbhhy" path="res://resources/ui/beltUnselected.png" id="2_p7vwb"]
 [ext_resource type="Texture2D" uid="uid://cxdqbjljsn3g4" path="res://resources/ui/seperator.png" id="3_cgfq5"]
-[ext_resource type="Texture2D" uid="uid://b6j3jxyer1wv2" path="res://resources/ui/arrowUnselected.png" id="4_7dvkv"]
-[ext_resource type="Texture2D" uid="uid://byvhjuk24w60g" path="res://resources/ui/entityButton.png" id="5_vdcm2"]
-[ext_resource type="Texture2D" uid="uid://d1mqf8up6h8t8" path="res://resources/ui/fadeIn.png" id="6_8dubc"]
-[ext_resource type="Texture2D" uid="uid://m5kttd0tkd6p" path="res://resources/ui/arrowSelected.png" id="6_ktti3"]
+[ext_resource type="Texture2D" uid="uid://75jslkjx6ebq" path="res://resources/ui/undergroundSelected.png" id="7_p7vwb"]
 [ext_resource type="Texture2D" uid="uid://dq6lwha8kj606" path="res://resources/ui/undergroundUnselected.png" id="8_cgfq5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qsv74"]
@@ -32,9 +29,9 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -158.0
+offset_left = -72.0
 offset_top = -52.0
-offset_right = 158.0
+offset_right = 72.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/separation = 0
@@ -67,86 +64,20 @@ custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
 texture = ExtResource("3_cgfq5")
 
-[node name="left" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner"]
-custom_minimum_size = Vector2(16, 0)
-layout_mode = 2
-texture_normal = ExtResource("4_7dvkv")
-texture_pressed = ExtResource("6_ktti3")
-texture_hover = ExtResource("6_ktti3")
-stretch_mode = 0
-
-[node name="entitiesContainer" type="Control" parent="hotbar/hotbarPanel/hotbarInner"]
-clip_contents = true
-custom_minimum_size = Vector2(256, 0)
-layout_mode = 2
-
-[node name="entities" type="HBoxContainer" parent="hotbar/hotbarPanel/hotbarInner/entitiesContainer"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -180.0
-offset_top = -24.0
-offset_right = 180.0
-offset_bottom = 24.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="entity" type="TextureRect" parent="hotbar/hotbarPanel/hotbarInner/entitiesContainer/entities"]
-custom_minimum_size = Vector2(48, 0)
-layout_mode = 2
-texture = ExtResource("5_vdcm2")
-
-[node name="entity2" type="TextureRect" parent="hotbar/hotbarPanel/hotbarInner/entitiesContainer/entities"]
-custom_minimum_size = Vector2(48, 0)
-layout_mode = 2
-texture = ExtResource("5_vdcm2")
-
-[node name="entity3" type="TextureRect" parent="hotbar/hotbarPanel/hotbarInner/entitiesContainer/entities"]
-custom_minimum_size = Vector2(48, 0)
-layout_mode = 2
-texture = ExtResource("5_vdcm2")
-
-[node name="selectedEntity" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner/entitiesContainer/entities"]
+[node name="underground" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner"]
 custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
 texture_normal = ExtResource("8_cgfq5")
+texture_pressed = ExtResource("7_p7vwb")
+texture_hover = ExtResource("7_p7vwb")
+texture_disabled = ExtResource("7_p7vwb")
 stretch_mode = 0
-
-[node name="entity5" type="TextureRect" parent="hotbar/hotbarPanel/hotbarInner/entitiesContainer/entities"]
-custom_minimum_size = Vector2(48, 0)
-layout_mode = 2
-texture = ExtResource("5_vdcm2")
-
-[node name="entity6" type="TextureRect" parent="hotbar/hotbarPanel/hotbarInner/entitiesContainer/entities"]
-custom_minimum_size = Vector2(48, 0)
-layout_mode = 2
-texture = ExtResource("5_vdcm2")
-
-[node name="entity7" type="TextureRect" parent="hotbar/hotbarPanel/hotbarInner/entitiesContainer/entities"]
-custom_minimum_size = Vector2(48, 0)
-layout_mode = 2
-texture = ExtResource("5_vdcm2")
-
-[node name="TextureRect" type="TextureRect" parent="hotbar/hotbarPanel/hotbarInner/entitiesContainer"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-texture = ExtResource("6_8dubc")
-
-[node name="right" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner"]
-custom_minimum_size = Vector2(16, 0)
-layout_mode = 2
-texture_normal = ExtResource("4_7dvkv")
-texture_pressed = ExtResource("6_ktti3")
-texture_hover = ExtResource("6_ktti3")
-stretch_mode = 0
-flip_h = true
 
 [node name="rightEnd" type="TextureRect" parent="hotbar"]
 custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
 texture = ExtResource("1_p7vwb")
 flip_h = true
+
+[connection signal="pressed" from="hotbar/hotbarPanel/hotbarInner/belt" to="." method="belt"]
+[connection signal="pressed" from="hotbar/hotbarPanel/hotbarInner/underground" to="." method="underground"]

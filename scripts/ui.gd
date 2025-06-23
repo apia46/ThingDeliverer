@@ -1,9 +1,13 @@
 extends Control
 
+@onready var game = get_node("/root/game");
 
-func hotbarLeft():
-	pass # Replace with function body.
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey and event.is_pressed():
+		match event.keycode:
+			KEY_1: belt()
+			KEY_2: underground()
 
+func belt() -> void: game.setCursor(Belt)
 
-func hotbarRight():
-	pass # Replace with function body.
+func underground() -> void: game.setCursor(UndergroundInput)
