@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://di6yfmmtdym8e"]
+[gd_scene load_steps=12 format=3 uid="uid://di6yfmmtdym8e"]
 
 [ext_resource type="Script" uid="uid://dr4q4w60f0ren" path="res://scripts/ui.gd" id="1_7dvkv"]
 [ext_resource type="Texture2D" uid="uid://uuygo8yxh7q6" path="res://resources/ui/ends.png" id="1_p7vwb"]
@@ -12,6 +12,19 @@
 bg_color = Color(0.180392, 0.156863, 0.247059, 1)
 border_width_top = 4
 border_color = Color(0.666667, 0.67451, 0.768627, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cgfq5"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p7vwb"]
+bg_color = Color(0.180392, 0.156863, 0.247059, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ktti3"]
+bg_color = Color(1, 0.847059, 0, 1)
 
 [node name="ui" type="Control"]
 layout_mode = 3
@@ -78,6 +91,27 @@ custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
 texture = ExtResource("1_p7vwb")
 flip_h = true
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_right = 200.0
+offset_bottom = 20.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_cgfq5")
+
+[node name="ProgressBar" type="ProgressBar" parent="PanelContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_styles/background = SubResource("StyleBoxFlat_p7vwb")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ktti3")
+max_value = 180.0
+value = 120.0
+allow_greater = true
+show_percentage = false
 
 [connection signal="pressed" from="hotbar/hotbarPanel/hotbarInner/belt" to="." method="belt"]
 [connection signal="pressed" from="hotbar/hotbarPanel/hotbarInner/underground" to="." method="underground"]

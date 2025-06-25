@@ -58,12 +58,12 @@ func loadVisuals() -> void:
 			_: visualInstance = BELT_STRAIGHT.instantiate()
 	
 	if pathNode.path and pathNode.path.completed:
-		visualInstance.get_active_material(1).albedo_color = ACTIVATED_COLOR
-		visualInstance.get_active_material(1).emission = ACTIVATED_COLOR
+		#visualInstance.get_active_material(1).albedo_color = ACTIVATED_COLOR
+		#visualInstance.get_active_material(1).emission = ACTIVATED_COLOR
 		if !itemDisplay: itemDisplay = scene.items.addDisplay(Items.TYPES.BOX, position, rotation)
 	else:
-		visualInstance.get_active_material(1).albedo_color = DEACTIVATED_COLOR
-		visualInstance.get_active_material(1).emission = DEACTIVATED_COLOR
+		#visualInstance.get_active_material(1).albedo_color = DEACTIVATED_COLOR
+		#visualInstance.get_active_material(1).emission = DEACTIVATED_COLOR
 		if itemDisplay: itemDisplay = scene.items.removeDisplay(itemDisplay)
 	
 	if game.isDebug:
@@ -74,9 +74,11 @@ func loadVisuals() -> void:
 	currentlyDisplayedPreviousDirection = previousDirection
 
 func delete() -> void:
-	pathNode.disconnectFromPath()
+	pathNode.disconnectFromPath(true)
 	if itemDisplay: scene.items.removeDisplay(itemDisplay)
 	super()
 
 func asNodeOutputTo(node:PathNode) -> PathNode: return pathNode if node.position == position + U.rotate(Vector2i(0,-1), rotation) else null
-func asNodeInputFrom(node:PathNode) -> PathNode: return pathNode if node.position != position + U.rotate(Vector2i(0,-1), rotation) else null
+func asNodeInputFrom(node:PathNode) -> PathNode:
+	print("here")
+	return pathNode if node.position != position + U.rotate(Vector2i(0,-1), rotation) else null

@@ -22,14 +22,14 @@ func joinAfter(node:PathNode) -> void:
 	node.nextNode = self
 	entity.updateNext()
 
-func disconnectFromPath() -> void:
+func disconnectFromPath(delete:=false) -> void:
 	if !path: return
-	if previousNode: previousNode.nextNode = null
+	if delete and previousNode: previousNode.nextNode = null
 	if path.completed: path.uncomplete()
 	path = null
 	entity.loadVisuals()
 	if nextNode:
-		nextNode.previousNode = null
+		if delete: nextNode.previousNode = null
 		nextNode.entity.checkPrevious()
 
 func isDirectlyAfter(candidatePrevious:PathNode) -> bool:

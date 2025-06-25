@@ -1,17 +1,21 @@
 extends Node3D
 class_name Items
 
+const ONE_OVER_LOG_TWO = 1 / log(2)
+
 enum TYPES {BOX}
 @onready var game = get_node("/root/game")
 @onready var multiMeshIntances:Array[MultiMeshInstance3D] = [$"box"]
 
 var displays:Array[Array] = [[]]
-
+var displayCounts = [32]
 func updateDisplays():
 	var i:int = 0
 	for type:Array[Display] in displays:
 		var multimesh:MultiMesh = multiMeshIntances[i].multimesh
-		multimesh.instance_count = len(type)
+		if len(type) >= displayCounts[i]:
+			displayCounts[i] = displayCounts[i] << 1
+			multimesh.instance_count = displayCounts[i]
 		for display in type:
 			multimesh.set_instance_transform(display.index, Transform3D(Basis.IDENTITY, U.fxz(display.position) + U.fxz(U.rotatef(Vector2(0, -game.cycle), display.direction))))
 		

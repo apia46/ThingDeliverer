@@ -17,12 +17,12 @@ func getEntity(pos:Vector2i) -> Entity:
 	if entity: return entity
 	return null
 
-func placeEntity(type:Variant, pos:Vector2i, rot:U.ROTATIONS) -> Entity:
+func placeEntity(type:Variant, pos:Vector2i, rot:U.ROTATIONS, toReady:=true) -> Entity:
 	var entity:Entity = entities.get(pos)
 	if entity: deleteEntity(pos)
 	entity = type.new(self, pos, rot)
 	entities[pos] = entity
-	entity.ready()
+	if toReady: entity.ready()
 	return entity
 
 func deleteEntity(pos:Vector2i) -> Entity:

@@ -10,7 +10,6 @@ roughness = 0.5
 texture_filter = 2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_123is"]
-resource_local_to_scene = true
 resource_name = "Material.004"
 cull_mode = 2
 albedo_color = Color(0.906332, 0.906332, 0.906332, 1)
@@ -44,7 +43,6 @@ _surfaces = [{
 blend_shape_mode = 0
 
 [resource]
-resource_local_to_scene = true
 resource_name = "belt_Cube_002"
 _surfaces = [{
 "aabb": AABB(-0.53125, -0.5, -0.4375, 1.0625, 0.193598, 0.875),
