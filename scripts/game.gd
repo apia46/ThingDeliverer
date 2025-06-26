@@ -6,6 +6,7 @@ const SCREEN_SIZE:Vector2 = Vector2(1152, 648)
 const CAMERA_MOVE_SPEED:float = 5
 
 @onready var scene = $"scene"
+@onready var ui = $"ui"
 
 var intendedCameraHeight:float = 20
 var upperCameraHeight: float = 20
@@ -13,9 +14,14 @@ var effectiveScreenSize:Vector2 = Vector2(54.56548, 30.69308)
 var cursorPosition:Vector2i
 
 var cycle:float = 0
+var timeLeft:float = 120
 
 var objectToPlace:Object = Belt
 var undergroundInputStoredNode:PathNode
+var undergroundsAvailable = 0:
+	set(value):
+		undergroundsAvailable = value
+		ui.updateUndergroundsCount(undergroundsAvailable)
 
 var currentRotation:U.ROTATIONS = U.ROTATIONS.UP:
 	set(value):
@@ -57,6 +63,9 @@ func _process(delta:float) -> void:
 	if cycle >= 1:
 		cycle -= 1
 	scene.items.updateDisplays()
+	
+	timeLeft -= delta
+	ui.updateTimer(timeLeft)
 
 func _input(event:InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -104,6 +113,8 @@ func place() -> Entity:
 	if objectToPlace == Belt and entityPresent is UndergroundOutput: return null
 	var result = scene.placeEntity(objectToPlace, cursorPosition, currentRotation, objectToPlace != UndergroundOutput)
 	if result is UndergroundInput:
+		if undergroundsAvailable == 0: return
+		undergroundsAvailable -= 1
 		undergroundInputStoredNode = result.pathNode
 		setCursor(UndergroundOutput)
 	elif result is UndergroundOutput:
@@ -117,6 +128,7 @@ func place() -> Entity:
 func delete() -> Entity:
 	var entityPresent: Entity = scene.getEntity(cursorPosition)
 	if entityPresent is InputOutput: return null
+	if entityPresent is UndergroundInput: undergroundsAvailable += 1
 	return scene.deleteEntity(cursorPosition)
 
 func tryZoomIn() -> void:
@@ -163,6 +175,8 @@ func newInputOutputs() -> void:
 
 func pathComplete() -> void:
 	for pathcheck in paths: if !pathcheck.completed:return
+	timeLeft += 10
+	undergroundsAvailable += 1
 	newInputOutputs()
 
 func addRunningTimer(time:float, running:Callable):

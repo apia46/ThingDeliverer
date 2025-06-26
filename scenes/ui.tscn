@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://di6yfmmtdym8e"]
+[gd_scene load_steps=17 format=3 uid="uid://di6yfmmtdym8e"]
 
 [ext_resource type="Script" uid="uid://dr4q4w60f0ren" path="res://scripts/ui.gd" id="1_7dvkv"]
 [ext_resource type="Texture2D" uid="uid://uuygo8yxh7q6" path="res://resources/ui/ends.png" id="1_p7vwb"]
@@ -7,11 +7,33 @@
 [ext_resource type="Texture2D" uid="uid://cxdqbjljsn3g4" path="res://resources/ui/seperator.png" id="3_cgfq5"]
 [ext_resource type="Texture2D" uid="uid://75jslkjx6ebq" path="res://resources/ui/undergroundSelected.png" id="7_p7vwb"]
 [ext_resource type="Texture2D" uid="uid://dq6lwha8kj606" path="res://resources/ui/undergroundUnselected.png" id="8_cgfq5"]
+[ext_resource type="FontFile" uid="uid://mgbewlhf6ayn" path="res://resources/ui/SpaceMono-Bold.woff" id="8_ktti3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qsv74"]
 bg_color = Color(0.180392, 0.156863, 0.247059, 1)
 border_width_top = 4
 border_color = Color(0.666667, 0.67451, 0.768627, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7dvkv"]
+bg_color = Color(0.180392, 0.156863, 0.247059, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.666667, 0.67451, 0.768627, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="FontVariation" id="FontVariation_vdcm2"]
+base_font = ExtResource("8_ktti3")
+spacing_top = -5
+spacing_bottom = -5
+
+[sub_resource type="LabelSettings" id="LabelSettings_vdcm2"]
+line_spacing = 0.0
+font = SubResource("FontVariation_vdcm2")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cgfq5"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -19,12 +41,18 @@ border_width_left = 4
 border_width_top = 4
 border_width_right = 4
 border_width_bottom = 4
+border_color = Color(0.666667, 0.67451, 0.768627, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p7vwb"]
 bg_color = Color(0.180392, 0.156863, 0.247059, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ktti3"]
 bg_color = Color(1, 0.847059, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_cgfq5"]
+line_spacing = 0.0
+font = ExtResource("8_ktti3")
+font_size = 18
 
 [node name="ui" type="Control"]
 layout_mode = 3
@@ -86,13 +114,30 @@ texture_hover = ExtResource("7_p7vwb")
 texture_disabled = ExtResource("7_p7vwb")
 stretch_mode = 0
 
+[node name="undergroundsCount" type="Label" parent="hotbar/hotbarPanel/hotbarInner/underground"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -18.0
+offset_top = -14.0
+offset_right = 18.0
+offset_bottom = 4.0
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_7dvkv")
+text = "0"
+label_settings = SubResource("LabelSettings_vdcm2")
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="rightEnd" type="TextureRect" parent="hotbar"]
 custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
 texture = ExtResource("1_p7vwb")
 flip_h = true
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="timerPanel" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -103,7 +148,8 @@ offset_bottom = 20.0
 grow_horizontal = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_cgfq5")
 
-[node name="ProgressBar" type="ProgressBar" parent="PanelContainer"]
+[node name="timerBar" type="ProgressBar" parent="timerPanel"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
 theme_override_styles/background = SubResource("StyleBoxFlat_p7vwb")
@@ -112,6 +158,19 @@ max_value = 180.0
 value = 120.0
 allow_greater = true
 show_percentage = false
+
+[node name="timer" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+offset_left = 380.0
+offset_top = -5.0
+offset_right = 772.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "02:00"
+label_settings = SubResource("LabelSettings_cgfq5")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="pressed" from="hotbar/hotbarPanel/hotbarInner/belt" to="." method="belt"]
 [connection signal="pressed" from="hotbar/hotbarPanel/hotbarInner/underground" to="." method="underground"]

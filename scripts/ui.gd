@@ -9,5 +9,13 @@ func _input(event: InputEvent) -> void:
 			KEY_2: underground()
 
 func belt() -> void: game.setCursor(Belt)
-
 func underground() -> void: game.setCursor(UndergroundInput)
+
+func updateTimer(time:float) -> void:
+	%timerBar.value = time
+	%timer.text = U.timeToText(time)
+
+func updateUndergroundsCount(amount:int) -> void:
+	%undergroundsCount.text = str(amount)
+	if amount == 0: %undergroundsCount.get_theme_stylebox("normal").border_color = Color("#aaacc4")
+	else: %undergroundsCount.get_theme_stylebox("normal").border_color = Color("#ffd800")

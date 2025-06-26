@@ -44,3 +44,8 @@ static func b3toint(bool3:BOOL3) -> int: return int(toBool(bool3))
 
 static func v2iunwrap(vector:Vector2i, gridSize:int) -> int:
 	return vector.y * gridSize + vector.x
+
+static func timeToText(time:float):
+	var minutes = int(time / 60)
+	var seconds = int(time - 60*minutes)
+	return str(minutes) + ":" + str(seconds).pad_zeros(2)
