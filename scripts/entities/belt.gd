@@ -79,6 +79,4 @@ func delete() -> void:
 	super()
 
 func asNodeOutputTo(node:PathNode) -> PathNode: return pathNode if node.position == position + U.rotate(Vector2i(0,-1), rotation) else null
-func asNodeInputFrom(node:PathNode) -> PathNode:
-	print("here")
-	return pathNode if node.position != position + U.rotate(Vector2i(0,-1), rotation) else null
+func asNodeInputFrom(node:PathNode) -> PathNode: return pathNode if node.position != position + U.rotate(Vector2i(0,-1), rotation) else null

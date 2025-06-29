@@ -19,3 +19,12 @@ func updateUndergroundsCount(amount:int) -> void:
 	%undergroundsCount.text = str(amount)
 	if amount == 0: %undergroundsCount.get_theme_stylebox("normal").border_color = Color("#aaacc4")
 	else: %undergroundsCount.get_theme_stylebox("normal").border_color = Color("#ffd800")
+
+func updateRoundsCount(amount:int) -> void:
+	%roundsCount.text = "Round " + str(amount)
+
+func updatePathsCount(amount:int, total:int) -> void:
+	%pathsCount.text = str(amount) + "/" + str(total)
+
+func showEndRoundScreen() -> void:
+	%endRoundScreen.visible = true

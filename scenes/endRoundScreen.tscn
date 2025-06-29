@@ -1,0 +1,118 @@
+[gd_scene load_steps=9 format=3 uid="uid://cxlfdyydtrumi"]
+
+[ext_resource type="FontFile" uid="uid://mgbewlhf6ayn" path="res://resources/ui/SpaceMono-Bold.woff" id="1_agm60"]
+[ext_resource type="Texture2D" uid="uid://75jslkjx6ebq" path="res://resources/ui/undergroundSelected.png" id="2_qal0e"]
+[ext_resource type="FontFile" uid="uid://cbeu4lg1vkpgk" path="res://resources/ui/SpaceMono-Regular.woff" id="3_jeis1"]
+[ext_resource type="Texture2D" uid="uid://byvhjuk24w60g" path="res://resources/ui/entityButton.png" id="4_k1xcv"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_hl1qf"]
+font = ExtResource("1_agm60")
+font_size = 48
+
+[sub_resource type="LabelSettings" id="LabelSettings_elc13"]
+font = ExtResource("1_agm60")
+font_size = 24
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vb2fb"]
+bg_color = Color(0.180392, 0.156863, 0.247059, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="LabelSettings" id="LabelSettings_14ou0"]
+font = ExtResource("3_jeis1")
+font_size = 24
+
+[node name="endRoundScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "End of Round"
+label_settings = SubResource("LabelSettings_hl1qf")
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Pick your whatever
+"
+label_settings = SubResource("LabelSettings_elc13")
+horizontal_alignment = 1
+
+[node name="options" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="option" type="PanelContainer" parent="VBoxContainer/options"]
+custom_minimum_size = Vector2(400, 80)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vb2fb")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/options/option"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/options/option/MarginContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/options/option/MarginContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_qal0e")
+expand_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/options/option/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "5x underground(s)"
+label_settings = SubResource("LabelSettings_14ou0")
+horizontal_alignment = 1
+
+[node name="option2" type="PanelContainer" parent="VBoxContainer/options"]
+custom_minimum_size = Vector2(400, 80)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vb2fb")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/options/option2"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/options/option2/MarginContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/options/option2/MarginContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("4_k1xcv")
+expand_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/options/option2/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "1x new space(s)"
+label_settings = SubResource("LabelSettings_14ou0")
+horizontal_alignment = 1

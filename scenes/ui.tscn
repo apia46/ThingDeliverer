@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://di6yfmmtdym8e"]
+[gd_scene load_steps=22 format=3 uid="uid://di6yfmmtdym8e"]
 
 [ext_resource type="Script" uid="uid://dr4q4w60f0ren" path="res://scripts/ui.gd" id="1_7dvkv"]
 [ext_resource type="Texture2D" uid="uid://uuygo8yxh7q6" path="res://resources/ui/ends.png" id="1_p7vwb"]
@@ -8,8 +8,9 @@
 [ext_resource type="Texture2D" uid="uid://75jslkjx6ebq" path="res://resources/ui/undergroundSelected.png" id="7_p7vwb"]
 [ext_resource type="Texture2D" uid="uid://dq6lwha8kj606" path="res://resources/ui/undergroundUnselected.png" id="8_cgfq5"]
 [ext_resource type="FontFile" uid="uid://mgbewlhf6ayn" path="res://resources/ui/SpaceMono-Bold.woff" id="8_ktti3"]
+[ext_resource type="PackedScene" uid="uid://cxlfdyydtrumi" path="res://scenes/endRoundScreen.tscn" id="9_cgfq5"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qsv74"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vdcm2"]
 bg_color = Color(0.180392, 0.156863, 0.247059, 1)
 border_width_top = 4
 border_color = Color(0.666667, 0.67451, 0.768627, 1)
@@ -49,10 +50,28 @@ bg_color = Color(0.180392, 0.156863, 0.247059, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ktti3"]
 bg_color = Color(1, 0.847059, 0, 1)
 
+[sub_resource type="FontVariation" id="FontVariation_ktti3"]
+base_font = ExtResource("8_ktti3")
+spacing_top = -9
+spacing_bottom = -7
+
 [sub_resource type="LabelSettings" id="LabelSettings_cgfq5"]
 line_spacing = 0.0
-font = ExtResource("8_ktti3")
+font = SubResource("FontVariation_ktti3")
 font_size = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qsv74"]
+bg_color = Color(0.180392, 0.156863, 0.247059, 1)
+border_width_bottom = 4
+border_color = Color(0.666667, 0.67451, 0.768627, 1)
+
+[sub_resource type="FontVariation" id="FontVariation_6rmj2"]
+base_font = ExtResource("8_ktti3")
+spacing_top = -4
+spacing_bottom = -4
+
+[sub_resource type="LabelSettings" id="LabelSettings_ktti3"]
+font = SubResource("FontVariation_6rmj2")
 
 [node name="ui" type="Control"]
 layout_mode = 3
@@ -84,7 +103,7 @@ texture = ExtResource("1_p7vwb")
 
 [node name="hotbarPanel" type="PanelContainer" parent="hotbar"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_qsv74")
+theme_override_styles/panel = SubResource("StyleBoxFlat_vdcm2")
 
 [node name="hotbarInner" type="HBoxContainer" parent="hotbar/hotbarPanel"]
 custom_minimum_size = Vector2(0, 48)
@@ -100,7 +119,7 @@ texture_hover = ExtResource("2_ktti3")
 texture_disabled = ExtResource("2_ktti3")
 stretch_mode = 0
 
-[node name="splitter" type="TextureRect" parent="hotbar/hotbarPanel/hotbarInner"]
+[node name="seperator" type="TextureRect" parent="hotbar/hotbarPanel/hotbarInner"]
 custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
 texture = ExtResource("3_cgfq5")
@@ -137,18 +156,23 @@ layout_mode = 2
 texture = ExtResource("1_p7vwb")
 flip_h = true
 
-[node name="timerPanel" type="PanelContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -200.0
-offset_right = 200.0
-offset_bottom = 20.0
+offset_left = -32.0
+offset_right = 32.0
+offset_bottom = 40.0
 grow_horizontal = 2
+theme_override_constants/separation = 0
+
+[node name="timerPanel" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_cgfq5")
 
-[node name="timerBar" type="ProgressBar" parent="timerPanel"]
+[node name="timerBar" type="ProgressBar" parent="VBoxContainer/timerPanel"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
@@ -159,18 +183,61 @@ value = 120.0
 allow_greater = true
 show_percentage = false
 
-[node name="timer" type="Label" parent="."]
+[node name="timer" type="Label" parent="VBoxContainer/timerPanel"]
 unique_name_in_owner = true
 layout_mode = 2
-offset_left = 380.0
-offset_top = -5.0
-offset_right = 772.0
-offset_bottom = 23.0
-grow_horizontal = 2
 text = "02:00"
 label_settings = SubResource("LabelSettings_cgfq5")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="leftEnd" type="TextureRect" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+texture = ExtResource("1_p7vwb")
+flip_v = true
+
+[node name="roundsPanel" type="PanelContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_qsv74")
+
+[node name="roundsInner" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/roundsPanel"]
+layout_mode = 2
+
+[node name="roundsCount" type="Label" parent="VBoxContainer/HBoxContainer/roundsPanel/roundsInner"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Round 1"
+label_settings = SubResource("LabelSettings_ktti3")
+
+[node name="seperator" type="TextureRect" parent="VBoxContainer/HBoxContainer/roundsPanel/roundsInner"]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+texture = ExtResource("3_cgfq5")
+
+[node name="pathsCount" type="Label" parent="VBoxContainer/HBoxContainer/roundsPanel/roundsInner"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0/4"
+label_settings = SubResource("LabelSettings_ktti3")
+
+[node name="rightEnd" type="TextureRect" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+texture = ExtResource("1_p7vwb")
+flip_h = true
+flip_v = true
+
+[node name="endRoundScreen" parent="." instance=ExtResource("9_cgfq5")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
 
 [connection signal="pressed" from="hotbar/hotbarPanel/hotbarInner/belt" to="." method="belt"]
 [connection signal="pressed" from="hotbar/hotbarPanel/hotbarInner/underground" to="." method="underground"]

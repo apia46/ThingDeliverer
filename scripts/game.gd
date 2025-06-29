@@ -31,6 +31,10 @@ var currentRotation:U.ROTATIONS = U.ROTATIONS.UP:
 var timers:Array[Timer] = []
 
 var paths:Array[Path] = []
+var rounds:int = 1
+var pathsThisRound:int = 0
+var pathsPerRound:int = 4
+var timerPaused:bool = false
 
 var isDebug:bool = false
 
@@ -64,8 +68,9 @@ func _process(delta:float) -> void:
 		cycle -= 1
 	scene.items.updateDisplays()
 	
-	timeLeft -= delta
-	ui.updateTimer(timeLeft)
+	if !timerPaused:
+		timeLeft -= delta
+		ui.updateTimer(timeLeft)
 
 func _input(event:InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -144,9 +149,16 @@ func randomUnlockedTile() -> Vector2i:
 	return scene.spaces[scene.spaces.keys()[randi_range(0, len(scene.spaces) - 1)]].position + Vector2i(randi_range(0, Scene.SPACE_SIZE - 1), randi_range(0, Scene.SPACE_SIZE - 1))
 
 func isABadLocation(pos:Vector2i, rot:U.ROTATIONS) -> bool:
+	# should have space
 	if scene.getEntity(pos): return true
+	# should be possible
 	if !scene.getSpace(pos + U.rotate(Vector2i(0,-1), rot)): return true
 	if scene.getEntity(pos + U.rotate(Vector2i(0,-1), rot)): return true
+	# not too close to edge
+	if !scene.getSpace(pos + Vector2i(-3, 0)) and randf() > 0.8: return true
+	if !scene.getSpace(pos + Vector2i(3, 0)) and randf() > 0.8: return true
+	if !scene.getSpace(pos + Vector2i(0, 3)) and randf() > 0.8: return true
+	if !scene.getSpace(pos + Vector2i(0, -3)) and randf() > 0.8: return true
 	return false
 
 func newInputOutputs() -> void:
@@ -177,6 +189,14 @@ func pathComplete() -> void:
 	for pathcheck in paths: if !pathcheck.completed:return
 	timeLeft += 10
 	undergroundsAvailable += 1
+	pathsThisRound += 1
+	if pathsThisRound == pathsPerRound:
+		rounds += 1
+		ui.updateRoundsCount(rounds)
+		pathsThisRound = 0
+		timerPaused = true
+		ui.showEndRoundScreen()
+	ui.updatePathsCount(pathsThisRound, pathsPerRound)
 	newInputOutputs()
 
 func addRunningTimer(time:float, running:Callable):
