@@ -40,7 +40,7 @@ func getSpace(pos:Vector2i) -> Space:
 
 func newSpace(pos:Vector2i) -> Space:
 	assert(U.v2iposmod(pos,SPACE_SIZE) == Vector2i(0,0))
-	if getSpace(pos): return getSpace(pos)
+	if getSpace(pos): return null
 	var space = Space.new(pos, self)
 	spaces[pos] = space
 	return space

@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://75jslkjx6ebq" path="res://resources/ui/undergroundSelected.png" id="7_p7vwb"]
 [ext_resource type="Texture2D" uid="uid://dq6lwha8kj606" path="res://resources/ui/undergroundUnselected.png" id="8_cgfq5"]
 [ext_resource type="FontFile" uid="uid://mgbewlhf6ayn" path="res://resources/ui/SpaceMono-Bold.woff" id="8_ktti3"]
-[ext_resource type="PackedScene" uid="uid://cxlfdyydtrumi" path="res://scenes/endRoundScreen.tscn" id="9_cgfq5"]
+[ext_resource type="PackedScene" uid="uid://dwcm4ycttlsw1" path="res://scenes/endRoundScreen.tscn" id="9_cgfq5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vdcm2"]
 bg_color = Color(0.180392, 0.156863, 0.247059, 1)
@@ -81,6 +81,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_7dvkv")
+
+[node name="endRoundScreen" parent="." instance=ExtResource("9_cgfq5")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
 
 [node name="hotbar" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -178,15 +183,15 @@ layout_mode = 2
 size_flags_vertical = 1
 theme_override_styles/background = SubResource("StyleBoxFlat_p7vwb")
 theme_override_styles/fill = SubResource("StyleBoxFlat_ktti3")
-max_value = 180.0
-value = 120.0
+max_value = 60.0
+value = 30.0
 allow_greater = true
 show_percentage = false
 
 [node name="timer" type="Label" parent="VBoxContainer/timerPanel"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "02:00"
+text = "00:30"
 label_settings = SubResource("LabelSettings_cgfq5")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -233,11 +238,6 @@ layout_mode = 2
 texture = ExtResource("1_p7vwb")
 flip_h = true
 flip_v = true
-
-[node name="endRoundScreen" parent="." instance=ExtResource("9_cgfq5")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
 
 [connection signal="pressed" from="hotbar/hotbarPanel/hotbarInner/belt" to="." method="belt"]
 [connection signal="pressed" from="hotbar/hotbarPanel/hotbarInner/underground" to="." method="underground"]

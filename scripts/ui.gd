@@ -11,20 +11,18 @@ func _input(event: InputEvent) -> void:
 func belt() -> void: game.setCursor(Belt)
 func underground() -> void: game.setCursor(UndergroundInput)
 
-func updateTimer(time:float) -> void:
-	%timerBar.value = time
-	%timer.text = U.timeToText(time)
+func updateTimer() -> void:
+	%timerBar.value = game.timeLeft
+	%timer.text = U.timeToText(game.timeLeft)
 
-func updateUndergroundsCount(amount:int) -> void:
-	%undergroundsCount.text = str(amount)
-	if amount == 0: %undergroundsCount.get_theme_stylebox("normal").border_color = Color("#aaacc4")
+func updateUndergroundsCount() -> void:
+	%undergroundsCount.text = str(game.undergroundsAvailable)
+	if game.undergroundsAvailable == 0: %undergroundsCount.get_theme_stylebox("normal").border_color = Color("#aaacc4")
 	else: %undergroundsCount.get_theme_stylebox("normal").border_color = Color("#ffd800")
 
-func updateRoundsCount(amount:int) -> void:
-	%roundsCount.text = "Round " + str(amount)
+func updateRoundsCount() -> void: %roundsCount.text = "Round " + str(game.rounds)
 
-func updatePathsCount(amount:int, total:int) -> void:
-	%pathsCount.text = str(amount) + "/" + str(total)
+func updatePathsCount() -> void: %pathsCount.text = str(game.pathsThisRound) + "/" + str(game.pathsPerRound)
 
-func showEndRoundScreen() -> void:
-	%endRoundScreen.visible = true
+func showEndRoundScreen() -> void: %endRoundScreen.visible = true
+func hideEndRoundScreen() -> void: %endRoundScreen.visible = false

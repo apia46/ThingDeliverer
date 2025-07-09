@@ -1,9 +1,13 @@
-[gd_scene load_steps=9 format=3 uid="uid://cxlfdyydtrumi"]
+[gd_scene load_steps=14 format=3 uid="uid://dwcm4ycttlsw1"]
 
 [ext_resource type="FontFile" uid="uid://mgbewlhf6ayn" path="res://resources/ui/SpaceMono-Bold.woff" id="1_agm60"]
+[ext_resource type="Script" uid="uid://cpjc0gipy7vj5" path="res://scripts/endRoundScreen.gd" id="1_klblk"]
 [ext_resource type="Texture2D" uid="uid://75jslkjx6ebq" path="res://resources/ui/undergroundSelected.png" id="2_qal0e"]
 [ext_resource type="FontFile" uid="uid://cbeu4lg1vkpgk" path="res://resources/ui/SpaceMono-Regular.woff" id="3_jeis1"]
 [ext_resource type="Texture2D" uid="uid://byvhjuk24w60g" path="res://resources/ui/entityButton.png" id="4_k1xcv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vj7qv"]
+bg_color = Color(0, 0, 0, 0.501961)
 
 [sub_resource type="LabelSettings" id="LabelSettings_hl1qf"]
 font = ExtResource("1_agm60")
@@ -24,13 +28,20 @@ corner_radius_bottom_left = 8
 font = ExtResource("3_jeis1")
 font_size = 24
 
-[node name="endRoundScreen" type="Control"]
-layout_mode = 3
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_klblk"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_20d63"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_itomd"]
+
+[node name="endRoundScreen" type="Panel"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vj7qv")
+script = ExtResource("1_klblk")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -90,7 +101,12 @@ text = "5x underground(s)"
 label_settings = SubResource("LabelSettings_14ou0")
 horizontal_alignment = 1
 
+[node name="Button" type="Button" parent="VBoxContainer/options/option"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_klblk")
+
 [node name="option2" type="PanelContainer" parent="VBoxContainer/options"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(400, 80)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_vb2fb")
@@ -113,6 +129,45 @@ expand_mode = 2
 [node name="Label" type="Label" parent="VBoxContainer/options/option2/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "1x new space(s)"
+text = "other option"
 label_settings = SubResource("LabelSettings_14ou0")
 horizontal_alignment = 1
+
+[node name="Button2" type="Button" parent="VBoxContainer/options/option2"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_20d63")
+
+[node name="option3" type="PanelContainer" parent="VBoxContainer/options"]
+custom_minimum_size = Vector2(400, 80)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vb2fb")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/options/option3"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/options/option3/MarginContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/options/option3/MarginContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("4_k1xcv")
+expand_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/options/option3/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "third opption"
+label_settings = SubResource("LabelSettings_14ou0")
+horizontal_alignment = 1
+
+[node name="Button3" type="Button" parent="VBoxContainer/options/option3"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_itomd")
+
+[connection signal="pressed" from="VBoxContainer/options/option/Button" to="." method="optionChosen" binds= [0]]
+[connection signal="pressed" from="VBoxContainer/options/option2/Button2" to="." method="optionChosen" binds= [1]]
+[connection signal="pressed" from="VBoxContainer/options/option3/Button3" to="." method="optionChosen" binds= [2]]
