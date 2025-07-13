@@ -22,12 +22,12 @@ func getSpaceRelative(difference:Vector2i) -> Space:
 #func updateConnections() -> void:
 #	if !isRightConnected:
 #		var space = getSpaceRelative(Vector2i(1,0))
-#		if space and U.toBool(space.isLeftConnected):
+#		if space and U.isTrue(space.isLeftConnected):
 #			isRightConnected = U.BOOL3.TRUE
 #			rightConnect = space
 #	if !isDownConnected:
 #		var space = getSpaceRelative(Vector2i(0,1))
-#		if space and U.toBool(space.isUpConnected):
+#		if space and U.isTrue(space.isUpConnected):
 #			isDownConnected = U.BOOL3.TRUE
 #			downConnect = space
 #	if !leftConnect:
@@ -43,7 +43,7 @@ func getSpaceRelative(difference:Vector2i) -> Space:
 
 #func unlock() -> void:
 #	unlocked = true
-#	if U.toBool(isUpConnected) and upConnect and !upConnect.unlocked: upConnect.unlock()
-#	if U.toBool(isRightConnected) and rightConnect and !rightConnect.unlocked: rightConnect.unlock()
-#	if U.toBool(isDownConnected) and downConnect and !downConnect.unlocked: downConnect.unlock()
-#	if U.toBool(isLeftConnected) and leftConnect and !leftConnect.unlocked: leftConnect.unlock()
+#	if U.isTrue(isUpConnected) and upConnect and !upConnect.unlocked: upConnect.unlock()
+#	if U.isTrue(isRightConnected) and rightConnect and !rightConnect.unlocked: rightConnect.unlock()
+#	if U.isTrue(isDownConnected) and downConnect and !downConnect.unlocked: downConnect.unlock()
+#	if U.isTrue(isLeftConnected) and leftConnect and !leftConnect.unlocked: leftConnect.unlock()
