@@ -6,6 +6,7 @@ const CAMERA_MOVE_SPEED:float = 5
 
 @onready var scene = $"scene"
 @onready var ui = $"ui"
+@onready var cursor = $"ui/SubViewportContainer/cursorViewport/cursor"
 
 var intendedCameraHeight:float = 20
 var upperCameraHeight: float = 20
@@ -35,6 +36,12 @@ var pathsThisRound:int = 0
 var pathsPerRound:int = 5
 var paused:bool = false
 
+var cameraPosition:Vector3 = Vector3(0,20,0):
+	set(value):
+		cameraPosition = value
+		$"camera".position = value
+		$"ui/SubViewportContainer/cursorViewport/cursorCamera".position = value
+
 var currentDragX:U.BOOL3 = U.BOOL3.UNKNOWN # current drag direction; used for the thing with the belt
 var dragStartPos:Vector2i
 
@@ -47,22 +54,22 @@ func _ready() -> void:
 	setCursor(Belt)
 
 func _process(delta:float) -> void:
-	if Input.is_key_pressed(KEY_A):$"camera".position.x -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
-	if Input.is_key_pressed(KEY_W):$"camera".position.z -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
-	if Input.is_key_pressed(KEY_S):$"camera".position.z += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
-	if Input.is_key_pressed(KEY_D):$"camera".position.x += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+	if Input.is_key_pressed(KEY_A):cameraPosition.x -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+	if Input.is_key_pressed(KEY_W):cameraPosition.z -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+	if Input.is_key_pressed(KEY_S):cameraPosition.z += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+	if Input.is_key_pressed(KEY_D):cameraPosition.x += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
 	
-	$"camera".position.y += (intendedCameraHeight - $"camera".position.y) * delta * 10
+	cameraPosition.y += (intendedCameraHeight - cameraPosition.y) * delta * 10
 	var aspectRatio = float(get_viewport().size.x) / get_viewport().size.y
-	effectiveScreenSize = Vector2($"camera".position.y * 1.534653976 * aspectRatio, $"camera".position.y * 1.534653976) # 2y tan 37.5
-	if abs(intendedCameraHeight / $"camera".position.y - 1) < 0.001 and abs(intendedCameraHeight / $"camera".position.y - 1) > 0.000001:
-		$"camera".position.y = intendedCameraHeight
+	effectiveScreenSize = Vector2(cameraPosition.y * 1.534653976 * aspectRatio, cameraPosition.y * 1.534653976) # 2y tan 37.5
+	if abs(intendedCameraHeight / cameraPosition.y - 1) < 0.001 and abs(intendedCameraHeight / cameraPosition.y - 1) > 0.000001:
+		cameraPosition.y = intendedCameraHeight
 		upperCameraHeight = intendedCameraHeight
 	
-	FLOOR_MATERIAL.set_shader_parameter("interpolation", clamp($"camera".position.y * 0.05 - 0.75, 0, 1))
+	FLOOR_MATERIAL.set_shader_parameter("interpolation", clamp(cameraPosition.y * 0.05 - 0.75, 0, 1))
 	
 	cursorPosition = screenspaceToWorldspace(get_viewport().get_mouse_position())
-	$"cursor".position = U.fxz(cursorPosition) + U.v3(0.5)
+	cursor.position = U.fxz(cursorPosition) + U.v3(0.5)
 	
 	if paused: cycle += delta
 	else: cycle += 4 * delta
@@ -78,7 +85,7 @@ func _input(event:InputEvent) -> void:
 	if paused: return
 	if event is InputEventMouseMotion:
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
-			$"camera".position -= U.fxz(event.relative) * intendedCameraHeight * 0.00237
+			cameraPosition -= U.fxz(event.relative) * intendedCameraHeight * 0.00237
 		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 			# placeDrag, deletedrag
 			cursorPosition = screenspaceToWorldspace(event.position)
@@ -90,8 +97,8 @@ func _input(event:InputEvent) -> void:
 				if U.isKnown(currentDragX):
 					cursorPosition.y = dragStartPos.y
 					previousCursorPosition.y = dragStartPos.y
-				if readFromCurrentDragX: currentDragX = U.BOOL3.TRUE
 				var dragSign = sign(cursorPosition.x - previousCursorPosition.x)
+				if readFromCurrentDragX and dragSign: currentDragX = U.BOOL3.TRUE
 				for i in abs(cursorPosition.x - previousCursorPosition.x) + 1:
 					cursorPosition = previousCursorPosition + Vector2i(i * dragSign, 0)
 					if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT): place()
@@ -100,8 +107,8 @@ func _input(event:InputEvent) -> void:
 				if U.isKnown(currentDragX):
 					cursorPosition.x = dragStartPos.x
 					previousCursorPosition.x = dragStartPos.x
-				if readFromCurrentDragX: currentDragX = U.BOOL3.FALSE
 				var dragSign = sign(cursorPosition.y - previousCursorPosition.y)
+				if readFromCurrentDragX and dragSign: currentDragX = U.BOOL3.FALSE
 				for i in abs(cursorPosition.y - previousCursorPosition.y) + 1:
 					cursorPosition = previousCursorPosition + Vector2i(0, i * dragSign)
 					if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT): place()
@@ -220,7 +227,7 @@ func pathComplete() -> void:
 	for pathcheck in paths: if !pathcheck.completed:return
 	pathsThisRound += 1
 	if pathsThisRound == pathsPerRound:
-		timeLeft += 30
+		timeLeft += 50
 		ui.updateRoundsCount()
 		paused = true
 		ui.showEndRoundScreen()
@@ -261,14 +268,14 @@ func setCursor(object:Variant=null) -> void:
 		if (object == UndergroundOutput) != (objectToPlace == UndergroundOutput): currentRotation = U.r180(currentRotation)
 		objectToPlace = object
 		match objectToPlace:
-			Belt: $"cursor".mesh = preload("res://meshes/beltStraight.tres")
-			UndergroundInput: $"cursor".mesh = preload("res://meshes/undergroundInput.tres")
-			UndergroundOutput: $"cursor".mesh = preload("res://meshes/undergroundOutput.tres")
-	$"cursor".visible = !paused
-	$"cursor".rotation.y = U.rotToRad(currentRotation)
+			Belt: cursor.mesh = preload("res://meshes/beltStraight.tres")
+			UndergroundInput: cursor.mesh = preload("res://meshes/undergroundInput.tres")
+			UndergroundOutput: cursor.mesh = preload("res://meshes/undergroundOutput.tres")
+	cursor.visible = !paused
+	cursor.rotation.y = U.rotToRad(currentRotation)
 
 func screenspaceToWorldspace(pos:Vector2) -> Vector2i:
-	return floor(U.xz($"camera".position) + (pos / Vector2(get_viewport().size) - U.v2(0.5)) * effectiveScreenSize)
+	return floor(U.xz(cameraPosition) + (pos / Vector2(get_viewport().size) - U.v2(0.5)) * effectiveScreenSize)
 
 class RunningTimer:
 	extends Timer

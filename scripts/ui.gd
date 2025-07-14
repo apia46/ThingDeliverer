@@ -1,6 +1,6 @@
 extends Control
 
-@onready var game = get_node("/root/game");
+@onready var game = get_node("/root/game")
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.is_pressed():

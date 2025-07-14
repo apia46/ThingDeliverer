@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://di6yfmmtdym8e"]
+[gd_scene load_steps=25 format=3 uid="uid://di6yfmmtdym8e"]
 
 [ext_resource type="Script" uid="uid://dr4q4w60f0ren" path="res://scripts/ui.gd" id="1_7dvkv"]
 [ext_resource type="Texture2D" uid="uid://uuygo8yxh7q6" path="res://resources/ui/ends.png" id="1_p7vwb"]
@@ -9,6 +9,22 @@
 [ext_resource type="Texture2D" uid="uid://dq6lwha8kj606" path="res://resources/ui/undergroundUnselected.png" id="8_cgfq5"]
 [ext_resource type="FontFile" uid="uid://mgbewlhf6ayn" path="res://resources/ui/SpaceMono-Bold.woff" id="8_ktti3"]
 [ext_resource type="PackedScene" uid="uid://dwcm4ycttlsw1" path="res://scenes/endRoundScreen.tscn" id="9_cgfq5"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cgfq5"]
+sky_top_color = Color(1, 1, 1, 1)
+sky_horizon_color = Color(1, 1, 1, 1)
+ground_bottom_color = Color(0.164706, 0.164706, 0.164706, 1)
+ground_horizon_color = Color(1, 1, 1, 1)
+ground_curve = 0.0168179
+use_debanding = false
+
+[sub_resource type="Sky" id="Sky_lbhrr"]
+sky_material = SubResource("ProceduralSkyMaterial_cgfq5")
+
+[sub_resource type="Environment" id="Environment_7dvkv"]
+background_mode = 2
+sky = SubResource("Sky_lbhrr")
+glow_enabled = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vdcm2"]
 bg_color = Color(0.180392, 0.156863, 0.247059, 1)
@@ -81,6 +97,32 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_7dvkv")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="cursorViewport" type="SubViewport" parent="SubViewportContainer"]
+own_world_3d = true
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="cursor" type="MeshInstance3D" parent="SubViewportContainer/cursorViewport"]
+transparency = 0.2
+skeleton = NodePath("../..")
+
+[node name="cursorCamera" type="Camera3D" parent="SubViewportContainer/cursorViewport"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewportContainer/cursorViewport"]
+environment = SubResource("Environment_7dvkv")
 
 [node name="endRoundScreen" parent="." instance=ExtResource("9_cgfq5")]
 unique_name_in_owner = true
