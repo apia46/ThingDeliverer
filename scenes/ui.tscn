@@ -115,7 +115,7 @@ size = Vector2i(1152, 648)
 render_target_update_mode = 4
 
 [node name="cursor" type="MeshInstance3D" parent="SubViewportContainer/cursorViewport"]
-transparency = 0.2
+transparency = 0.5
 skeleton = NodePath("../..")
 
 [node name="cursorCamera" type="Camera3D" parent="SubViewportContainer/cursorViewport"]

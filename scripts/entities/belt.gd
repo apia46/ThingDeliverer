@@ -60,7 +60,7 @@ func loadVisuals() -> void:
 	if pathNode.path and pathNode.path.completed:
 		#visualInstance.get_active_material(1).albedo_color = ACTIVATED_COLOR
 		#visualInstance.get_active_material(1).emission = ACTIVATED_COLOR
-		if !itemDisplay: itemDisplay = scene.items.addDisplay(Items.TYPES.BOX, position, rotation)
+		if !itemDisplay: itemDisplay = scene.items.addDisplay(pathNode.path.itemType, position, rotation)
 	else:
 		#visualInstance.get_active_material(1).albedo_color = DEACTIVATED_COLOR
 		#visualInstance.get_active_material(1).emission = DEACTIVATED_COLOR

@@ -2,7 +2,7 @@ extends Node3D
 class_name Game
 
 const FLOOR_MATERIAL:ShaderMaterial = preload("res://resources/floor.tres")
-const CAMERA_MOVE_SPEED:float = 5
+const CAMERA_MOVE_SPEED:float = 2
 
 @onready var scene = $"scene"
 @onready var ui = $"ui"
@@ -54,10 +54,20 @@ func _ready() -> void:
 	setCursor(Belt)
 
 func _process(delta:float) -> void:
-	if Input.is_key_pressed(KEY_A):cameraPosition.x -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
-	if Input.is_key_pressed(KEY_W):cameraPosition.z -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
-	if Input.is_key_pressed(KEY_S):cameraPosition.z += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
-	if Input.is_key_pressed(KEY_D):cameraPosition.x += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+	var previousCursorPosition:Vector2i = cursorPosition
+	cursorPosition = screenspaceToWorldspace(get_viewport().get_mouse_position())
+	if Input.is_key_pressed(KEY_A):
+		cameraPosition.x -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
+	if Input.is_key_pressed(KEY_W):
+		cameraPosition.z -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
+	if Input.is_key_pressed(KEY_S):
+		cameraPosition.z += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
+	if Input.is_key_pressed(KEY_D):
+		cameraPosition.x += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
 	
 	cameraPosition.y += (intendedCameraHeight - cameraPosition.y) * delta * 10
 	var aspectRatio = float(get_viewport().size.x) / get_viewport().size.y
@@ -67,19 +77,43 @@ func _process(delta:float) -> void:
 		upperCameraHeight = intendedCameraHeight
 	
 	FLOOR_MATERIAL.set_shader_parameter("interpolation", clamp(cameraPosition.y * 0.05 - 0.75, 0, 1))
-	
-	cursorPosition = screenspaceToWorldspace(get_viewport().get_mouse_position())
 	cursor.position = U.fxz(cursorPosition) + U.v3(0.5)
 	
 	if paused: cycle += delta
 	else: cycle += 4 * delta
-	if cycle >= 1:
-		cycle -= 1
+	if cycle >= Items.SPACES_PER_ITEM:
+		cycle -= Items.SPACES_PER_ITEM
 	scene.items.updateDisplays()
 	
 	if !paused:
 		timeLeft -= delta
 	ui.updateTimer()
+
+func heldClick(previousCursorPosition:Vector2i) -> void:
+	# placeDrag, deletedrag
+	
+	var readFromCurrentDragX = objectToPlace == Belt and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
+	
+	if (!(readFromCurrentDragX and U.isKnown(currentDragX)) and abs(cursorPosition.x-previousCursorPosition.x) > abs(cursorPosition.y-previousCursorPosition.y)) or ((readFromCurrentDragX and U.isKnown(currentDragX)) and U.isTrue(currentDragX)):
+		if U.isKnown(currentDragX):
+			cursorPosition.y = dragStartPos.y
+			previousCursorPosition.y = dragStartPos.y
+		var dragSign = sign(cursorPosition.x - previousCursorPosition.x)
+		if readFromCurrentDragX and dragSign: currentDragX = U.BOOL3.TRUE
+		for i in abs(cursorPosition.x - previousCursorPosition.x) + 1:
+			cursorPosition = previousCursorPosition + Vector2i(i * dragSign, 0)
+			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT): place()
+			else: delete()
+	else:
+		if U.isKnown(currentDragX):
+			cursorPosition.x = dragStartPos.x
+			previousCursorPosition.x = dragStartPos.x
+		var dragSign = sign(cursorPosition.y - previousCursorPosition.y)
+		if readFromCurrentDragX and dragSign: currentDragX = U.BOOL3.FALSE
+		for i in abs(cursorPosition.y - previousCursorPosition.y) + 1:
+			cursorPosition = previousCursorPosition + Vector2i(0, i * dragSign)
+			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT): place()
+			else: delete()
 
 func _input(event:InputEvent) -> void:
 	if paused: return
@@ -87,32 +121,8 @@ func _input(event:InputEvent) -> void:
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
 			cameraPosition -= U.fxz(event.relative) * intendedCameraHeight * 0.00237
 		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
-			# placeDrag, deletedrag
 			cursorPosition = screenspaceToWorldspace(event.position)
-			var previousCursorPosition:Vector2i = screenspaceToWorldspace(event.position - event.relative)
-			
-			var readFromCurrentDragX = objectToPlace == Belt and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
-			
-			if (!(readFromCurrentDragX and U.isKnown(currentDragX)) and abs(event.relative.x) > abs(event.relative.y)) or ((readFromCurrentDragX and U.isKnown(currentDragX)) and U.isTrue(currentDragX)):
-				if U.isKnown(currentDragX):
-					cursorPosition.y = dragStartPos.y
-					previousCursorPosition.y = dragStartPos.y
-				var dragSign = sign(cursorPosition.x - previousCursorPosition.x)
-				if readFromCurrentDragX and dragSign: currentDragX = U.BOOL3.TRUE
-				for i in abs(cursorPosition.x - previousCursorPosition.x) + 1:
-					cursorPosition = previousCursorPosition + Vector2i(i * dragSign, 0)
-					if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT): place()
-					else: delete()
-			else:
-				if U.isKnown(currentDragX):
-					cursorPosition.x = dragStartPos.x
-					previousCursorPosition.x = dragStartPos.x
-				var dragSign = sign(cursorPosition.y - previousCursorPosition.y)
-				if readFromCurrentDragX and dragSign: currentDragX = U.BOOL3.FALSE
-				for i in abs(cursorPosition.y - previousCursorPosition.y) + 1:
-					cursorPosition = previousCursorPosition + Vector2i(0, i * dragSign)
-					if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT): place()
-					else: delete()
+			heldClick(screenspaceToWorldspace(event.position - event.relative))
 	elif event is InputEventMouseButton:
 		if event.is_pressed():
 			match event.button_index:
@@ -200,7 +210,7 @@ func isABadLocation(pos:Vector2i, rot:U.ROTATIONS) -> bool:
 	return false
 
 func newInputOutputs() -> void:
-	var path = Path.new(len(paths), self)
+	var path = Path.new(len(paths), self, randi_range(0, 1))
 	paths.append(path)
 	
 	var inputPos:Vector2i = randomUnlockedTile()

@@ -3,13 +3,14 @@ class_name Items
 
 const ONE_OVER_LOG_TWO = 1 / log(2)
 const DISAPPEAR_TRANSFORM = Transform3D(Vector3(0,0,0),Vector3(0,0,0),Vector3(0,0,0),Vector3(0,0,0))
+const SPACES_PER_ITEM = 2 # doesnt actually work for a different number because it uses the parity dependant x+y instead of actually figuring it out from the path
 
-enum TYPES {BOX}
+enum TYPES {BOX, FRIDGE}
 @onready var game = get_node("/root/game")
-@onready var multiMeshInstances:Array[MultiMeshInstance3D] = [$"box"]
+@onready var multiMeshInstances:Array[MultiMeshInstance3D] = [$"box", $"fridge"]
 
-var displays:Array[Array] = [[]]
-var displayCounts = [32]
+var displays:Array[Array] = [[], []]
+var displayCounts = [32, 32]
 func updateDisplays():
 	var i:int = 0
 	for type:Array[Display] in displays:
@@ -18,7 +19,10 @@ func updateDisplays():
 			displayCounts[i] = displayCounts[i] << 1
 			multimesh.instance_count = displayCounts[i]
 		for display in type:
-			multimesh.set_instance_transform(display.index, Transform3D(Basis.IDENTITY, U.fxz(display.position) + U.fxz(U.rotatef(Vector2(0, -game.cycle), display.direction))))
+			if int(game.cycle) == U.iposmod(display.position.x + display.position.y, SPACES_PER_ITEM):
+				multimesh.set_instance_transform(display.index, Transform3D(Basis.IDENTITY, U.fxz(display.position) + U.fxz(U.rotatef(Vector2(0, -fposmod(game.cycle, 1)), display.direction))))
+			else:
+				multimesh.set_instance_transform(display.index, DISAPPEAR_TRANSFORM)
 		
 		i += 1
 
