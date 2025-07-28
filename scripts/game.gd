@@ -47,7 +47,7 @@ var cameraPosition:Vector3 = Vector3(0,20,0):
 var currentDragX:U.BOOL3 = U.BOOL3.UNKNOWN # current drag direction; used for the thing with the belt
 var dragStartPos:Vector2i
 
-var isDebug:bool = false
+var isDebug:bool = true
 
 func _ready() -> void:
 	for x in range(-2, 2): for y in range(-2, 2):

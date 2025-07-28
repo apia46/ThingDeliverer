@@ -45,8 +45,9 @@ func getNodeOutputFromRelative(node:PathNode, difference:Vector2i) -> PathNode:
 	var entity = scene.getEntity(node.position + U.rotate(difference, rotation))
 	return entity.asNodeInputFrom(node) if entity else null
 
-func findAndCheckPrevious() -> void: assert(false)
-func checkPrevious(_givenNode:PathNode) -> void: pass
+func previousWillBeDisconnected() -> void: assert(false)
+func previousWillBeDeleted() -> void: assert(false)
+func checkPrevious() -> void: pass
 func updateNext() -> void: pass
 func checkNext() -> void: pass # used sparingly
 

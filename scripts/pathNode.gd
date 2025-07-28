@@ -26,8 +26,11 @@ func joinAfter(node:PathNode) -> void:
 
 func disconnectFromPath(delete:=false) -> void:
 	if nextNode:
-		if delete: nextNode.previousNode = null
-		nextNode.entity.checkPrevious(null)
+		if delete:
+			nextNode.previousNode = null
+			nextNode.entity.previousWillBeDeleted()
+		else:
+			nextNode.entity.previousWillBeDisconnected()
 	if previousNode:
 		if delete: previousNode.nextNode = null
 		previousNode.entity.checkNext()

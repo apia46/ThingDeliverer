@@ -11,19 +11,21 @@ func loadVisuals() -> void:
 	elif itemDisplay: itemDisplay = scene.items.removeDisplay(itemDisplay)
 	super()
 
-func checkPrevious(inputNode:PathNode) -> void:
-	if !inputNode:
-		delete()
-		return
-	if inputNode.path:
+func previousWillBeDisconnected() -> void:
+	pathNode.disconnectFromPath()
+
+func checkPrevious() -> void:
+	if !pathNode.previousNode:
+		return delete()
+	if pathNode.previousNode.path:
 		if !pathNode.path:
-			pathNode.joinAfter(inputNode)
+			pathNode.joinAfter(pathNode.previousNode)
 	else: pathNode.disconnectFromPath()
-	print("out ", pathNode.path)
+	# print("out ", pathNode.path)
 
 func updateNext() -> void:
 	var node = getNodeOutputFromRelative(pathNode, Vector2i(0,1))
-	if node: node.entity.checkPrevious(pathNode)
+	if node: node.entity.checkPrevious()
 
 func asNodeOutputTo(node:PathNode) -> PathNode: return pathNode if node.position == position + U.rotate(Vector2i(0,1), rotation) else null
 

@@ -7,16 +7,30 @@ func loadVisuals() -> void:
 	else: visualInstance = preload("res://scenes/entityVisuals/output.tscn").instantiate()
 	super()
 
-func checkPrevious(givenNode:PathNode) -> void:
-	if givenNode:
-		pathNode.previousNode = givenNode
-		givenNode.nextNode = pathNode
-		if givenNode.path and pathNode.isDirectlyAfter(givenNode):
-			pathNode.joinAfter(givenNode)
+func previousWillBeDisconnected() -> void:
+	pathNode.path.uncomplete()
+
+func previousWillBeDeleted() -> void:
+	pathNode.path.uncomplete()
+	loadVisuals()
+
+func checkPrevious() -> void:
+	var previousNode
+	rotation = U.ROTATIONS.DOWN
+	for direction in [Vector2i(0,1), Vector2i(0,-1), Vector2i(1,0), Vector2i(-1,0)]:
+		previousNode = getNodeInputFromRelative(pathNode, direction)
+		if previousNode:
+			rotation = U.v2itorot(previousNode.position - position)
+			break
+
+	if previousNode:
+		pathNode.previousNode = previousNode
+		previousNode.nextNode = pathNode
+		if previousNode.path and pathNode.isDirectlyAfter(previousNode):
+			pathNode.joinAfter(previousNode)
 			pathNode.path.complete()
-			rotation = U.v2itorot(givenNode.position - position)
+			rotation = U.v2itorot(previousNode.position - position)
 			pointing = true
-			super(givenNode)
 			loadVisuals()
 	elif pointing:
 		pointing = false
@@ -27,6 +41,6 @@ func checkPrevious(givenNode:PathNode) -> void:
 		loadVisuals()
 
 func asNodeInputFrom(node:PathNode) -> PathNode:
-	print(pathNode.previousNode)
+	#print(pathNode.previousNode)
 	if !pathNode.previousNode: return pathNode
 	return pathNode if node.position != position + U.rotate(Vector2i(0,1), rotation) else null

@@ -18,30 +18,34 @@ var itemDisplay:Items.Display
 func ready() -> void:
 	pathNode = PathNode.new(self, position)
 	super()
-	findAndCheckPrevious()
+	checkPrevious()
 	updateNext()
 
-func findAndCheckPrevious() -> void:
-	var givenNode = getNodeInputFromRelative(pathNode, Vector2i(0,1))
+func previousWillBeDisconnected() -> void:
+	pathNode.disconnectFromPath()
+
+func previousWillBeDeleted() -> void:
 	previousDirection = U.ROTATIONS.DOWN
-	if !givenNode:
-		givenNode = getNodeInputFromRelative(pathNode, Vector2i(1,0))
-		previousDirection = U.ROTATIONS.RIGHT
-	if !givenNode:
-		givenNode = getNodeInputFromRelative(pathNode, Vector2i(-1,0))
-		previousDirection = U.ROTATIONS.LEFT
-	if !givenNode: previousDirection = U.ROTATIONS.DOWN
-	checkPrevious(givenNode)
+	pathNode.disconnectFromPath()
+	loadVisuals()
 
-func checkPrevious(givenNode:PathNode) -> void:
-	if givenNode:
-		previousDirection = U.v2itorot(U.rotate(givenNode.position - position, U.rNeg(rotation)))
+func checkPrevious() -> void:
+	var previousNode
+	previousDirection = U.ROTATIONS.DOWN
+	for direction in [Vector2i(0,1), Vector2i(1,0), Vector2i(-1,0)]:
+		previousNode = getNodeInputFromRelative(pathNode, direction)
+		if previousNode:
+			previousDirection = U.v2itorot(previousNode.position - position)
+			break
 
-		if givenNode.path:
-			if pathNode.path and pathNode.isBefore(givenNode): # path cuts itself off
+	if previousNode:
+		previousDirection = U.v2itorot(U.rotate(previousNode.position - position, U.rNeg(rotation)))
+
+		if previousNode.path:
+			if pathNode.path and pathNode.isBefore(previousNode): # path cuts itself off
 				pathNode.disconnectFromPath()
-			elif !pathNode.path or !pathNode.isDirectlyAfter(givenNode): # no updates needed if so
-				pathNode.joinAfter(givenNode)
+			elif !pathNode.path or !pathNode.isDirectlyAfter(previousNode): # no updates needed if so
+				pathNode.joinAfter(previousNode)
 		else: pathNode.disconnectFromPath()
 	else: pathNode.disconnectFromPath()
 	
@@ -49,7 +53,7 @@ func checkPrevious(givenNode:PathNode) -> void:
 
 func updateNext() -> void:
 	var node = getNodeOutputFromRelative(pathNode, Vector2i(0,-1))
-	if node: node.entity.checkPrevious(pathNode)
+	if node: node.entity.checkPrevious()
 
 # direction changes
 func loadVisuals() -> void:
