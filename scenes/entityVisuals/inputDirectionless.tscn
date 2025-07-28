@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bx3862jrseubv"]
+
+[ext_resource type="ArrayMesh" uid="uid://coakvt3cy4ge0" path="res://meshes/inputDirectionless.tres" id="1_wqg7f"]
+
+[node name="inputDirectionless" type="MeshInstance3D"]
+mesh = ExtResource("1_wqg7f")
+skeleton = NodePath("")

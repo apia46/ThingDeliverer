@@ -23,6 +23,8 @@ static func r90(rot:ROTATIONS) -> ROTATIONS: return (rot + 1) % 4 as ROTATIONS
 static func r180(rot:ROTATIONS) -> ROTATIONS: return (rot + 2) % 4 as ROTATIONS
 static func r270(rot:ROTATIONS) -> ROTATIONS: return (rot + 3) % 4 as ROTATIONS
 
+static func rNeg(rot:ROTATIONS) -> ROTATIONS: return (4 - rot if rot % 2 == 1 else rot) as ROTATIONS
+
 static func rotate(vector:Vector2i, rot:ROTATIONS) -> Vector2i:
 	match rot:
 		ROTATIONS.UP: return vector
@@ -36,6 +38,14 @@ static func rotatef(vector:Vector2, rot:ROTATIONS) -> Vector2:
 		ROTATIONS.RIGHT: return Vector2(-vector.y, vector.x)
 		ROTATIONS.DOWN: return Vector2(-vector.x, -vector.y)
 		_, ROTATIONS.LEFT: return Vector2(vector.y, -vector.x)
+
+static func v2itorot(vector:Vector2i) -> ROTATIONS:
+	if vector.y > 0: return ROTATIONS.DOWN
+	if vector.x > 0: return ROTATIONS.RIGHT
+	if vector.y < 0: return ROTATIONS.UP
+	if vector.x < 0: return ROTATIONS.LEFT
+	assert(false) # two things in the same place or something like that
+	return ROTATIONS.UP
 
 enum BOOL3 {UNKNOWN, FALSE, TRUE}
 

@@ -3,10 +3,6 @@ class_name UndergroundOutput
 
 var itemDisplay:Items.Display
 
-func ready() -> void:
-	super()
-	checkPrevious()
-
 func loadVisuals() -> void:
 	if visualInstance: visualInstance.queue_free()
 	visualInstance = preload("res://scenes/entityVisuals/undergroundOutput.tscn").instantiate()
@@ -15,19 +11,19 @@ func loadVisuals() -> void:
 	elif itemDisplay: itemDisplay = scene.items.removeDisplay(itemDisplay)
 	super()
 
-func checkPrevious() -> void:
-	if !pathNode.previousNode:
+func checkPrevious(inputNode:PathNode) -> void:
+	if !inputNode:
 		delete()
 		return
-	if pathNode.previousNode.path:
+	if inputNode.path:
 		if !pathNode.path:
-			pathNode.joinAfter(pathNode.previousNode)
+			pathNode.joinAfter(inputNode)
 	else: pathNode.disconnectFromPath()
 	print("out ", pathNode.path)
 
 func updateNext() -> void:
 	var node = getNodeOutputFromRelative(pathNode, Vector2i(0,1))
-	if node: node.entity.checkPrevious()
+	if node: node.entity.checkPrevious(pathNode)
 
 func asNodeOutputTo(node:PathNode) -> PathNode: return pathNode if node.position == position + U.rotate(Vector2i(0,1), rotation) else null
 

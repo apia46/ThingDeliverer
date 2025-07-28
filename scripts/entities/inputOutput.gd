@@ -2,6 +2,7 @@ extends Entity
 class_name InputOutput
 
 var pathNode:PathNode
+var pointing:bool = false
 
 func ready() -> void:
 	pathNode = PathNode.new(self, position)

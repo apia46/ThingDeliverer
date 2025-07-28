@@ -36,6 +36,8 @@ var pathsThisRound:int = 0
 var pathsPerRound:int = 5
 var paused:bool = false
 
+var itemTypesUnlocked:int = 1
+
 var cameraPosition:Vector3 = Vector3(0,20,0):
 	set(value):
 		cameraPosition = value
@@ -56,18 +58,19 @@ func _ready() -> void:
 func _process(delta:float) -> void:
 	var previousCursorPosition:Vector2i = cursorPosition
 	cursorPosition = screenspaceToWorldspace(get_viewport().get_mouse_position())
-	if Input.is_key_pressed(KEY_A):
-		cameraPosition.x -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
-	if Input.is_key_pressed(KEY_W):
-		cameraPosition.z -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
-	if Input.is_key_pressed(KEY_S):
-		cameraPosition.z += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
-	if Input.is_key_pressed(KEY_D):
-		cameraPosition.x += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
+	if !paused:
+		if Input.is_key_pressed(KEY_A):
+			cameraPosition.x -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
+		if Input.is_key_pressed(KEY_W):
+			cameraPosition.z -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
+		if Input.is_key_pressed(KEY_S):
+			cameraPosition.z += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
+		if Input.is_key_pressed(KEY_D):
+			cameraPosition.x += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
 	
 	cameraPosition.y += (intendedCameraHeight - cameraPosition.y) * delta * 10
 	var aspectRatio = float(get_viewport().size.x) / get_viewport().size.y
@@ -210,7 +213,7 @@ func isABadLocation(pos:Vector2i, rot:U.ROTATIONS) -> bool:
 	return false
 
 func newInputOutputs() -> void:
-	var path = Path.new(len(paths), self, randi_range(0, 1))
+	var path = Path.new(len(paths), self, randi_range(0, itemTypesUnlocked - 1))
 	paths.append(path)
 	
 	var inputPos:Vector2i = randomUnlockedTile()
@@ -254,7 +257,11 @@ func nextRound() -> void:
 	ui.hideEndRoundScreen()
 	for _i in 4: randomNewSpace()
 	newInputOutputs()
+	unlockItemType()
 	setCursor()
+
+func unlockItemType():
+	if itemTypesUnlocked < Items.ITEM_TYPES: itemTypesUnlocked += 1
 
 func randomNewSpace() -> void:
 	while true:

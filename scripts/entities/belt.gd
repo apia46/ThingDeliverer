@@ -18,25 +18,30 @@ var itemDisplay:Items.Display
 func ready() -> void:
 	pathNode = PathNode.new(self, position)
 	super()
-	checkPrevious()
+	findAndCheckPrevious()
+	updateNext()
 
-func checkPrevious() -> void:
-	var previousNode:PathNode = getNodeInputFromRelative(pathNode, Vector2i(0,1))
+func findAndCheckPrevious() -> void:
+	var givenNode = getNodeInputFromRelative(pathNode, Vector2i(0,1))
 	previousDirection = U.ROTATIONS.DOWN
-	if !previousNode:
-		previousNode = getNodeInputFromRelative(pathNode, Vector2i(1,0))
+	if !givenNode:
+		givenNode = getNodeInputFromRelative(pathNode, Vector2i(1,0))
 		previousDirection = U.ROTATIONS.RIGHT
-	if !previousNode:
-		previousNode = getNodeInputFromRelative(pathNode, Vector2i(-1,0))
+	if !givenNode:
+		givenNode = getNodeInputFromRelative(pathNode, Vector2i(-1,0))
 		previousDirection = U.ROTATIONS.LEFT
-	if !previousNode: previousDirection = U.ROTATIONS.DOWN
-	
-	if previousNode:
-		if previousNode.path:
-			if pathNode.path and pathNode.isBefore(previousNode): # path cuts itself off
+	if !givenNode: previousDirection = U.ROTATIONS.DOWN
+	checkPrevious(givenNode)
+
+func checkPrevious(givenNode:PathNode) -> void:
+	if givenNode:
+		previousDirection = U.v2itorot(U.rotate(givenNode.position - position, U.rNeg(rotation)))
+
+		if givenNode.path:
+			if pathNode.path and pathNode.isBefore(givenNode): # path cuts itself off
 				pathNode.disconnectFromPath()
-			elif !pathNode.path or !pathNode.isDirectlyAfter(previousNode): # no updates needed if so
-				pathNode.joinAfter(previousNode)
+			elif !pathNode.path or !pathNode.isDirectlyAfter(givenNode): # no updates needed if so
+				pathNode.joinAfter(givenNode)
 		else: pathNode.disconnectFromPath()
 	else: pathNode.disconnectFromPath()
 	
@@ -44,7 +49,7 @@ func checkPrevious() -> void:
 
 func updateNext() -> void:
 	var node = getNodeOutputFromRelative(pathNode, Vector2i(0,-1))
-	if node: node.entity.checkPrevious()
+	if node: node.entity.checkPrevious(pathNode)
 
 # direction changes
 func loadVisuals() -> void:

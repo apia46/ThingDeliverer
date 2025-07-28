@@ -17,7 +17,6 @@ func _init(_scene:Scene, _position:Vector2i, _rotation:U.ROTATIONS) -> void:
 func ready() -> void: loadVisuals()
 
 func delete() -> void:
-	updateNext()
 	unloadVisuals()
 
 func loadVisuals() -> void:
@@ -46,5 +45,9 @@ func getNodeOutputFromRelative(node:PathNode, difference:Vector2i) -> PathNode:
 	var entity = scene.getEntity(node.position + U.rotate(difference, rotation))
 	return entity.asNodeInputFrom(node) if entity else null
 
-func checkPrevious() -> void: pass
+func findAndCheckPrevious() -> void: assert(false)
+func checkPrevious(_givenNode:PathNode) -> void: pass
 func updateNext() -> void: pass
+func checkNext() -> void: pass # used sparingly
+
+func joinedBefore(_node:PathNode) -> void: pass

@@ -16,21 +16,24 @@ func _init(_entity:Entity, _position:Vector2i):
 
 func joinAfter(node:PathNode) -> void:
 	if isDirectlyAfter(node): return
+	if path: disconnectFromPath()
 	path = node.path
 	index = node.index + 1
 	previousNode = node
 	node.nextNode = self
 	entity.updateNext()
+	node.entity.joinedBefore(self)
 
 func disconnectFromPath(delete:=false) -> void:
-	if !path: return
-	if delete and previousNode: previousNode.nextNode = null
-	if path.completed: path.uncomplete()
-	path = null
-	entity.loadVisuals()
 	if nextNode:
 		if delete: nextNode.previousNode = null
-		nextNode.entity.checkPrevious()
+		nextNode.entity.checkPrevious(null)
+	if previousNode:
+		if delete: previousNode.nextNode = null
+		previousNode.entity.checkNext()
+	if path and path.completed: path.uncomplete()
+	path = null
+	entity.loadVisuals()
 
 func isDirectlyAfter(candidatePrevious:PathNode) -> bool:
 	return candidatePrevious and path and path == candidatePrevious.path and (index == candidatePrevious.index+1 or entity is Outputter)
