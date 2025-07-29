@@ -24,17 +24,18 @@ func joinAfter(node:PathNode) -> void:
 	entity.updateNext()
 	node.entity.joinedBefore(self)
 
-func disconnectFromPath(delete:=false) -> void:
-	if nextNode:
-		if delete:
-			nextNode.previousNode = null
-			nextNode.entity.previousWillBeDeleted()
-		else:
-			nextNode.entity.previousWillBeDisconnected()
-	if previousNode:
-		if delete: previousNode.nextNode = null
-		previousNode.entity.checkNext()
+func delete() -> void:
 	if path and path.completed: path.uncomplete()
+	if nextNode:
+		nextNode.previousNode = null
+		nextNode.entity.checkPrevious()
+	if previousNode:
+		previousNode.nextNode = null
+		previousNode.entity.checkNext()
+
+func disconnectFromPath() -> void:
+	if path and path.completed: path.uncomplete()
+	if nextNode: nextNode.entity.checkPrevious()
 	path = null
 	entity.loadVisuals()
 

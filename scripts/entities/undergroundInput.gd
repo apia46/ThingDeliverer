@@ -11,12 +11,6 @@ func loadVisuals() -> void:
 	visualInstance = preload("res://scenes/entityVisuals/undergroundInput.tscn").instantiate()
 	super()
 
-func previousWillBeDisconnected() -> void:
-	pathNode.disconnectFromPath()
-
-func previousWillBeDeleted() -> void:
-	pathNode.disconnectFromPath()
-
 func checkPrevious() -> void:
 	var previousNode = getNodeInputFromRelative(pathNode, Vector2i(0,1))
 	if previousNode:

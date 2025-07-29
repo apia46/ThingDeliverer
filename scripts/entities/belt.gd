@@ -21,14 +21,6 @@ func ready() -> void:
 	checkPrevious()
 	updateNext()
 
-func previousWillBeDisconnected() -> void:
-	pathNode.disconnectFromPath()
-
-func previousWillBeDeleted() -> void:
-	previousDirection = U.ROTATIONS.DOWN
-	pathNode.disconnectFromPath()
-	loadVisuals()
-
 func checkPrevious() -> void:
 	var previousNode
 	previousDirection = U.ROTATIONS.DOWN
@@ -83,7 +75,7 @@ func loadVisuals() -> void:
 	currentlyDisplayedPreviousDirection = previousDirection
 
 func delete() -> void:
-	pathNode.disconnectFromPath(true)
+	pathNode.delete()
 	if itemDisplay: scene.items.removeDisplay(itemDisplay)
 	super()
 

@@ -11,9 +11,6 @@ func loadVisuals() -> void:
 	elif itemDisplay: itemDisplay = scene.items.removeDisplay(itemDisplay)
 	super()
 
-func previousWillBeDisconnected() -> void:
-	pathNode.disconnectFromPath()
-
 func checkPrevious() -> void:
 	if !pathNode.previousNode:
 		return delete()

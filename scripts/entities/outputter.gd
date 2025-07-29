@@ -7,13 +7,6 @@ func loadVisuals() -> void:
 	else: visualInstance = preload("res://scenes/entityVisuals/output.tscn").instantiate()
 	super()
 
-func previousWillBeDisconnected() -> void:
-	pathNode.path.uncomplete()
-
-func previousWillBeDeleted() -> void:
-	pathNode.path.uncomplete()
-	loadVisuals()
-
 func checkPrevious() -> void:
 	var previousNode
 	rotation = U.ROTATIONS.DOWN
@@ -32,12 +25,15 @@ func checkPrevious() -> void:
 			rotation = U.v2itorot(previousNode.position - position)
 			pointing = true
 			loadVisuals()
-	elif pointing:
-		pointing = false
-		rotation = U.ROTATIONS.UP
-		if pathNode.previousNode:
-			pathNode.previousNode.nextNode = null
-			pathNode.previousNode = null
+		else: pathNode.path.uncomplete()
+	else:
+		pathNode.path.uncomplete()
+		if pointing:
+			pointing = false
+			rotation = U.ROTATIONS.UP
+			if pathNode.previousNode:
+				pathNode.previousNode.nextNode = null
+				pathNode.previousNode = null
 		loadVisuals()
 
 func asNodeInputFrom(node:PathNode) -> PathNode:
