@@ -58,17 +58,17 @@ func _ready() -> void:
 func _process(delta:float) -> void:
 	var previousCursorPosition:Vector2i = cursorPosition
 	cursorPosition = screenspaceToWorldspace(get_viewport().get_mouse_position())
-	if !paused:
-		if Input.is_key_pressed(KEY_LEFT):
+	if !paused and !Input.is_key_pressed(KEY_SHIFT):
+		if Input.is_key_pressed(KEY_A):
 			cameraPosition.x -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
 			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
-		if Input.is_key_pressed(KEY_UP):
+		if Input.is_key_pressed(KEY_W):
 			cameraPosition.z -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
 			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
-		if Input.is_key_pressed(KEY_DOWN):
+		if Input.is_key_pressed(KEY_S):
 			cameraPosition.z += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
 			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
-		if Input.is_key_pressed(KEY_RIGHT):
+		if Input.is_key_pressed(KEY_D):
 			cameraPosition.x += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
 			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
 	
@@ -143,10 +143,10 @@ func _input(event:InputEvent) -> void:
 			match event.keycode:
 				KEY_E: currentRotation = U.r90(currentRotation); restartDragFromHere()
 				KEY_Q: currentRotation = U.r270(currentRotation); restartDragFromHere()
-				KEY_W: currentRotation = U.ROTATIONS.UP; restartDragFromHere()
-				KEY_A: currentRotation = U.ROTATIONS.LEFT; restartDragFromHere()
-				KEY_S: currentRotation = U.ROTATIONS.DOWN; restartDragFromHere()
-				KEY_D: currentRotation = U.ROTATIONS.RIGHT; restartDragFromHere()
+				KEY_W: if Input.is_key_pressed(KEY_SHIFT): currentRotation = U.ROTATIONS.UP; restartDragFromHere()
+				KEY_A: if Input.is_key_pressed(KEY_SHIFT): currentRotation = U.ROTATIONS.LEFT; restartDragFromHere()
+				KEY_S: if Input.is_key_pressed(KEY_SHIFT): currentRotation = U.ROTATIONS.DOWN; restartDragFromHere()
+				KEY_D: if Input.is_key_pressed(KEY_SHIFT): currentRotation = U.ROTATIONS.RIGHT; restartDragFromHere()
 				KEY_F3: isDebug = !isDebug
 				KEY_SPACE:
 					if intendedCameraHeight > 50: intendedCameraHeight = 20
