@@ -59,16 +59,16 @@ func _process(delta:float) -> void:
 	var previousCursorPosition:Vector2i = cursorPosition
 	cursorPosition = screenspaceToWorldspace(get_viewport().get_mouse_position())
 	if !paused:
-		if Input.is_key_pressed(KEY_A):
+		if Input.is_key_pressed(KEY_LEFT):
 			cameraPosition.x -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
 			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
-		if Input.is_key_pressed(KEY_W):
+		if Input.is_key_pressed(KEY_UP):
 			cameraPosition.z -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
 			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
-		if Input.is_key_pressed(KEY_S):
+		if Input.is_key_pressed(KEY_DOWN):
 			cameraPosition.z += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
 			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
-		if Input.is_key_pressed(KEY_D):
+		if Input.is_key_pressed(KEY_RIGHT):
 			cameraPosition.x += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
 			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
 	
@@ -141,21 +141,21 @@ func _input(event:InputEvent) -> void:
 	elif event is InputEventKey:
 		if event.is_pressed():
 			match event.keycode:
-				KEY_E:
-					currentRotation = U.r90(currentRotation)
-					if U.isKnown(currentDragX):
-						dragStartPos = screenspaceToWorldspace(get_viewport().get_mouse_position())
-						currentDragX = U.bool3not(currentDragX)
-				KEY_Q:
-					currentRotation = U.r270(currentRotation)
-					if U.isKnown(currentDragX):
-						dragStartPos = screenspaceToWorldspace(get_viewport().get_mouse_position())
-						currentDragX = U.bool3not(currentDragX)
-				KEY_F: newInputOutputs()
+				KEY_E: currentRotation = U.r90(currentRotation); restartDragFromHere()
+				KEY_Q: currentRotation = U.r270(currentRotation); restartDragFromHere()
+				KEY_W: currentRotation = U.ROTATIONS.UP; restartDragFromHere()
+				KEY_A: currentRotation = U.ROTATIONS.LEFT; restartDragFromHere()
+				KEY_S: currentRotation = U.ROTATIONS.DOWN; restartDragFromHere()
+				KEY_D: currentRotation = U.ROTATIONS.RIGHT; restartDragFromHere()
 				KEY_F3: isDebug = !isDebug
-				KEY_SHIFT:
+				KEY_SPACE:
 					if intendedCameraHeight > 50: intendedCameraHeight = 20
 					else: intendedCameraHeight = 76.2939453125; upperCameraHeight = 76.2939453125
+
+func restartDragFromHere():
+	if U.isKnown(currentDragX):
+		dragStartPos = screenspaceToWorldspace(get_viewport().get_mouse_position())
+		currentDragX = U.bool3not(currentDragX)
 
 func place() -> Entity:
 	if paused: return
