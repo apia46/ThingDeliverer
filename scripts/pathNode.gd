@@ -26,8 +26,7 @@ func joinAfter(node:PathNode) -> void:
 
 func delete() -> void:
 	if path and path.completed: path.uncomplete()
-	if nextNode:
-		nextNode.previousNode = null
+	if nextNode: nextNode.previousNode = null # is this necessary?
 	entity.updateNext()
 	if previousNode:
 		previousNode.nextNode = null
@@ -37,6 +36,9 @@ func disconnectFromPath() -> void:
 	if !path: return
 	if path.completed: path.uncomplete()
 	path = null
+	if previousNode:
+		previousNode.nextNode = null
+		previousNode.entity.checkNext()
 	entity.updateNext()
 	entity.loadVisuals()
 
