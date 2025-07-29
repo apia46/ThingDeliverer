@@ -12,7 +12,7 @@ var entities:Dictionary[Vector2i, Entity]
 var spaces:Dictionary[Vector2i, Space]
 
 func getEntity(pos:Vector2i) -> Entity:
-	if game.isDebug: newDebugVisual(pos, Color(1, 0, 0.4))
+	# if game.isDebug: newDebugVisual(pos, Color(1, 0, 0.4))
 	var entity = entities.get(pos)
 	if entity: return entity
 	return null

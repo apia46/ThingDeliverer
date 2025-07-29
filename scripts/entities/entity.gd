@@ -14,7 +14,8 @@ func _init(_scene:Scene, _position:Vector2i, _rotation:U.ROTATIONS) -> void:
 	position = _position
 	rotation = _rotation
 
-func ready() -> void: loadVisuals()
+func ready() -> void:
+	loadVisuals()
 
 func delete() -> void:
 	unloadVisuals()
@@ -28,8 +29,8 @@ func loadVisuals() -> void:
 func unloadVisuals() -> void:
 	if visualInstance: visualInstance.queue_free()
 
-func getEntityRelative(difference:Vector2i, debug:=false) -> Entity:
-	if debug: scene.newDebugVisual(position + difference, Color(0, 0.4, 1))
+func getEntityRelative(difference:Vector2i, _debug:=false) -> Entity:
+	# if debug: scene.newDebugVisual(position + difference, Color(0, 0.4, 1))
 	return scene.getEntity(position + difference)
 
 static func updateEntityVisuals(entity:Entity) -> void: if entity: entity.loadVisuals()

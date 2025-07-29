@@ -13,8 +13,10 @@ func loadVisuals() -> void:
 	super()
 
 func updateNext() -> void:
-	var node = getNodeInputFromRelative(pathNode, Vector2i(0,-1))
-	if node: node.entity.checkPrevious(pathNode)
+	if pathNode.nextNode: pathNode.nextNode.entity.checkPrevious()
+	else:
+		var node = getNodeInputFromRelative(pathNode, Vector2i(0,-1))
+		if node: node.entity.checkPrevious()
 
 func asNodeOutputTo(node:PathNode) -> PathNode:
 	if !pathNode.nextNode: return pathNode

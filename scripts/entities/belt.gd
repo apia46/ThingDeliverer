@@ -22,6 +22,7 @@ func ready() -> void:
 	updateNext()
 
 func checkPrevious() -> void:
+	if game.isDebug: scene.newDebugVisual(position, Color(0, 1, 0.4))
 	var previousNode
 	previousDirection = U.ROTATIONS.DOWN
 	for direction in [Vector2i(0,1), Vector2i(1,0), Vector2i(-1,0)]:
@@ -44,8 +45,10 @@ func checkPrevious() -> void:
 	loadVisuals()
 
 func updateNext() -> void:
-	var node = getNodeOutputFromRelative(pathNode, Vector2i(0,-1))
-	if node: node.entity.checkPrevious()
+	if pathNode.nextNode: pathNode.nextNode.entity.checkPrevious()
+	else:
+		var node = getNodeOutputFromRelative(pathNode, Vector2i(0,-1))
+		if node: node.entity.checkPrevious()
 
 # direction changes
 func loadVisuals() -> void:

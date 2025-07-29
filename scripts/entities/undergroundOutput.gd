@@ -3,6 +3,10 @@ class_name UndergroundOutput
 
 var itemDisplay:Items.Display
 
+func ready() -> void:
+	super()
+	updateNext()
+
 func loadVisuals() -> void:
 	if visualInstance: visualInstance.queue_free()
 	visualInstance = preload("res://scenes/entityVisuals/undergroundOutput.tscn").instantiate()
@@ -21,8 +25,10 @@ func checkPrevious() -> void:
 	# print("out ", pathNode.path)
 
 func updateNext() -> void:
-	var node = getNodeOutputFromRelative(pathNode, Vector2i(0,1))
-	if node: node.entity.checkPrevious()
+	if pathNode.nextNode: pathNode.nextNode.entity.checkPrevious()
+	else:
+		var node = getNodeOutputFromRelative(pathNode, Vector2i(0,1))
+		if node: node.entity.checkPrevious()
 
 func asNodeOutputTo(node:PathNode) -> PathNode: return pathNode if node.position == position + U.rotate(Vector2i(0,1), rotation) else null
 

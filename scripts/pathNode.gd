@@ -28,15 +28,16 @@ func delete() -> void:
 	if path and path.completed: path.uncomplete()
 	if nextNode:
 		nextNode.previousNode = null
-		nextNode.entity.checkPrevious()
+	entity.updateNext()
 	if previousNode:
 		previousNode.nextNode = null
 		previousNode.entity.checkNext()
 
 func disconnectFromPath() -> void:
-	if path and path.completed: path.uncomplete()
-	if nextNode: nextNode.entity.checkPrevious()
+	if !path: return
+	if path.completed: path.uncomplete()
 	path = null
+	entity.updateNext()
 	entity.loadVisuals()
 
 func isDirectlyAfter(candidatePrevious:PathNode) -> bool:
