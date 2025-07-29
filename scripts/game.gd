@@ -80,6 +80,17 @@ func _process(delta:float) -> void:
 		upperCameraHeight = intendedCameraHeight
 	
 	FLOOR_MATERIAL.set_shader_parameter("interpolation", clamp(cameraPosition.y * 0.05 - 0.75, 0, 1))
+	
+	if objectToPlace == UndergroundOutput:
+		var inputPosition = undergroundInputStoredNode.position
+		if U.isVertical(currentRotation):
+			cursorPosition.x = previousCursorPosition.x
+			if currentRotation == U.ROTATIONS.DOWN: cursorPosition.y = clamp(cursorPosition.y, inputPosition.y - 5, inputPosition.y - 1)
+			else: cursorPosition.y = clamp(cursorPosition.y, inputPosition.y + 1, inputPosition.y + 5)
+		if U.isHorizontal(currentRotation):
+			cursorPosition.y = previousCursorPosition.y
+			if currentRotation == U.ROTATIONS.RIGHT: cursorPosition.x = clamp(cursorPosition.x, inputPosition.x - 5, inputPosition.x - 1)
+			else: cursorPosition.x = clamp(cursorPosition.x, inputPosition.x + 1, inputPosition.x + 5)
 	cursor.position = U.fxz(cursorPosition) + U.v3(0.5)
 	
 	if paused: cycle += delta
@@ -181,7 +192,6 @@ func place() -> Entity:
 func delete() -> Entity:
 	var entityPresent: Entity = scene.getEntity(cursorPosition)
 	if entityPresent is InputOutput: return null
-	if entityPresent is UndergroundInput: undergroundsAvailable += 1
 	return scene.deleteEntity(cursorPosition)
 
 func tryZoomIn() -> void:

@@ -25,6 +25,9 @@ static func r270(rot:ROTATIONS) -> ROTATIONS: return (rot + 3) % 4 as ROTATIONS
 
 static func rNeg(rot:ROTATIONS) -> ROTATIONS: return (4 - rot if rot % 2 == 1 else rot) as ROTATIONS
 
+static func isVertical(rot:ROTATIONS) -> bool: return rot % 2 == 0
+static func isHorizontal(rot:ROTATIONS) -> bool: return rot % 2 == 1
+
 static func rotate(vector:Vector2i, rot:ROTATIONS) -> Vector2i:
 	match rot:
 		ROTATIONS.UP: return vector

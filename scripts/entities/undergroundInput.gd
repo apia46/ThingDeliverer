@@ -28,3 +28,7 @@ func updateNext() -> void:
 
 func asNodeInputFrom(node:PathNode) -> PathNode:
 	return pathNode if node.position != position + U.rotate(Vector2i(0,-1), rotation) else null
+
+func delete() -> void:
+	super()
+	game.undergroundsAvailable += 1

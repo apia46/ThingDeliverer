@@ -35,5 +35,6 @@ func updateNext() -> void:
 func asNodeOutputTo(node:PathNode) -> PathNode: return pathNode if node.position == position + U.rotate(Vector2i(0,1), rotation) else null
 
 func delete() -> void:
+	if pathNode.previousNode: pathNode.previousNode.entity.delete()
 	if itemDisplay: scene.items.removeDisplay(itemDisplay)
 	super()
