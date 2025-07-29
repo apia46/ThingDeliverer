@@ -18,7 +18,7 @@ var timeLeft:float = 10
 
 var objectToPlace:Object = Belt
 var undergroundInputStoredNode:PathNode
-var undergroundsAvailable = 0:
+var undergroundsAvailable = 1:
 	set(value):
 		undergroundsAvailable = value
 		ui.updateUndergroundsCount()

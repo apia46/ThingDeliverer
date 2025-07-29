@@ -5,6 +5,7 @@ var itemDisplay:Items.Display
 
 func ready() -> void:
 	super()
+	checkPrevious()
 	updateNext()
 
 func loadVisuals() -> void:
@@ -16,6 +17,7 @@ func loadVisuals() -> void:
 	super()
 
 func checkPrevious() -> void:
+	if game.isDebug: scene.newDebugVisual(position, Color(0, 1, 0.4))
 	if !pathNode.previousNode:
 		return delete()
 	if pathNode.previousNode.path:

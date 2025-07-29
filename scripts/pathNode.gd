@@ -36,9 +36,7 @@ func disconnectFromPath() -> void:
 	if !path: return
 	if path.completed: path.uncomplete()
 	path = null
-	if previousNode:
-		previousNode.nextNode = null
-		previousNode.entity.checkNext()
+	if previousNode: previousNode.entity.checkNext()
 	entity.updateNext()
 	entity.loadVisuals()
 
