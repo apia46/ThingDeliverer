@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://brnf7jum0hf6n"]
 
-[ext_resource type="ArrayMesh" uid="uid://bdts1ikcrhvrj" path="res://meshes/output.tres" id="1_d3c8a"]
+[ext_resource type="ArrayMesh" uid="uid://bec4qk725hhwg" path="res://meshes/output.tres" id="1_d3c8a"]
 
 [node name="output" type="MeshInstance3D"]
 mesh = ExtResource("1_d3c8a")

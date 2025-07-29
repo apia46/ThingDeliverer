@@ -14,7 +14,7 @@ var effectiveScreenSize:Vector2 = Vector2(54.56548, 30.69308)
 var cursorPosition:Vector2i
 
 var cycle:float = 0
-var timeLeft:float = 60
+var timeLeft:float = 10
 
 var objectToPlace:Object = Belt
 var undergroundInputStoredNode:PathNode
@@ -88,7 +88,7 @@ func _process(delta:float) -> void:
 		cycle -= Items.SPACES_PER_ITEM
 	scene.items.updateDisplays()
 	
-	if !paused:
+	if !paused && rounds > 1:
 		timeLeft -= delta
 	ui.updateTimer()
 
@@ -250,6 +250,8 @@ func pathComplete() -> void:
 
 func nextRound() -> void:
 	rounds += 1
+	if rounds == 2:
+		get_tree().create_tween().tween_property($"ui/VBoxContainer", "position:y", 0, 1)
 	pathsThisRound = 0
 	ui.updateRoundsCount()
 	ui.updatePathsCount()
