@@ -1,23 +1,23 @@
-[gd_resource type="ArrayMesh" load_steps=5 format=4 uid="uid://cwidv7q6ebkhu"]
+[gd_scene load_steps=6 format=4 uid="uid://efkfxxrwyj35"]
 
-[ext_resource type="Texture2D" uid="uid://vm7owwf7e4dr" path="res://resources/beltTexture.png" id="1_wv3mo"]
+[ext_resource type="Texture2D" uid="uid://vm7owwf7e4dr" path="res://resources/beltTexture.png" id="1_1tjj4"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ejgit"]
 resource_name = "Material.001"
 cull_mode = 2
-albedo_texture = ExtResource("1_wv3mo")
+albedo_texture = ExtResource("1_1tjj4")
 roughness = 0.5
 texture_filter = 2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g7ofx"]
 resource_name = "Material.003"
 cull_mode = 2
+albedo_color = Color(0.180392, 0.156863, 0.247059, 1)
 roughness = 0.5
-emission_enabled = true
 emission = Color(1, 1, 1, 1)
 emission_energy_multiplier = 10.0
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_pt1qj"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_i7xf4"]
 _surfaces = [{
 "aabb": AABB(-0.53125, -0.5, -0.53125, 0.96875, 0.193598, 0.96875),
 "format": 34359742465,
@@ -41,7 +41,7 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 
-[resource]
+[sub_resource type="ArrayMesh" id="ArrayMesh_celun"]
 resource_name = "belt_Cube_003"
 _surfaces = [{
 "aabb": AABB(-0.53125, -0.5, -0.53125, 0.96875, 0.193598, 0.96875),
@@ -69,4 +69,14 @@ _surfaces = [{
 "vertex_data": PackedByteArray("V+4AAAAAVNX//wAA//8AAP//AAAAAFTVV+4AAFfuAAAAAAAAV+4AAAAAAAD+/1TVIywAACMs/797GgAAAAD/vyMsAAAAAP+/exoAAHsa/78AAAAAIyz/vwAAAAB7Gv+/VFVUVf9//z9UVVRV/3//P/9//z9UVVRV////f////3////9/////f////3////9/")
 }]
 blend_shape_mode = 0
-shadow_mesh = SubResource("ArrayMesh_pt1qj")
+shadow_mesh = SubResource("ArrayMesh_i7xf4")
+
+[node name="beltCW" type="MeshInstance3D"]
+mesh = SubResource("ArrayMesh_celun")
+skeleton = NodePath("")
+
+[node name="debugText" type="Label3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 1.19249e-08, 0, 1.19249e-08, 1, -1, 4.37114e-08, -5.21253e-16, 0, 0, 0)
+visible = false
+text = "2"
+font_size = 128

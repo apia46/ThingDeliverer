@@ -9,12 +9,11 @@ albedo_texture = ExtResource("1_gljq5")
 roughness = 0.5
 texture_filter = 2
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_123is"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gljq5"]
 resource_name = "Material.004"
 cull_mode = 2
-albedo_color = Color(0.906332, 0.906332, 0.906332, 1)
+albedo_color = Color(0.180392, 0.156863, 0.247059, 1)
 roughness = 0.5
-emission_enabled = true
 emission = Color(1, 1, 1, 1)
 emission_energy_multiplier = 10.0
 
@@ -62,7 +61,7 @@ _surfaces = [{
 "format": 34896613399,
 "index_count": 12,
 "index_data": PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUA"),
-"material": SubResource("StandardMaterial3D_123is"),
+"material": SubResource("StandardMaterial3D_gljq5"),
 "name": "Material.004",
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),

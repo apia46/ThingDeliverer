@@ -22,6 +22,7 @@ glow_enabled = true
 
 [node name="game" type="Node3D"]
 script = ExtResource("1_yqjtg")
+metadata/_edit_vertical_guides_ = [-51.0]
 
 [node name="ui" parent="." instance=ExtResource("3_lnu2h")]
 

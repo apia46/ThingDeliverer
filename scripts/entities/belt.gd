@@ -1,12 +1,12 @@
 extends Entity
 class_name Belt
 
-const BELT_STRAIGHT:PackedScene = preload("res://scenes/entityVisuals/beltStraight.tscn")
-const BELT_CCW:PackedScene = preload("res://scenes/entityVisuals/beltCCW.tscn")
-const BELT_CW:PackedScene = preload("res://scenes/entityVisuals/beltCW.tscn")
+const BELT_STRAIGHT:PackedScene = preload("res://scenes/entityVisuals/belt/Straight.tscn")
+const BELT_CCW:PackedScene = preload("res://scenes/entityVisuals/belt/CCW.tscn")
+const BELT_CW:PackedScene = preload("res://scenes/entityVisuals/belt/CW.tscn")
 
-const DEACTIVATED_COLOR = Color(0x0D063AFF)
-const ACTIVATED_COLOR = Color(0xFFD800FF)
+const CYAN:BaseMaterial3D = preload("res://scenes/entityVisuals/belt/Cyan.tres")
+const WHITE:BaseMaterial3D = preload("res://scenes/entityVisuals/belt/White.tres")
 
 var pathNode:PathNode
 
@@ -76,6 +76,11 @@ func loadVisuals() -> void:
 	
 	if changingInstance: super()
 	currentlyDisplayedPreviousDirection = previousDirection
+
+	if pathNode.path:
+		if pathNode.path.completed: visualInstance.set_surface_override_material(1, WHITE)
+		else: visualInstance.set_surface_override_material(1, CYAN)
+	else: visualInstance.set_surface_override_material(1, null)
 
 func delete() -> void:
 	pathNode.delete()
