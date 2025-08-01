@@ -71,8 +71,8 @@ func loadVisuals() -> void:
 		if itemDisplay: itemDisplay = scene.items.removeDisplay(itemDisplay)
 	
 	if game.isDebug:
-		visualInstance.get_node("debugText").visible = !!pathNode.path
-		if pathNode.path: visualInstance.get_node("debugText").text = str(pathNode.path) + "-" + str(pathNode.index)
+		visualInstance.get_node("debugText").visible = !!pathNode.partialPath
+		if pathNode.path: visualInstance.get_node("debugText").text = str(pathNode.partialPath)
 	
 	if changingInstance: super()
 	currentlyDisplayedPreviousDirection = previousDirection
