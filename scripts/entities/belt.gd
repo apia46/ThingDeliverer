@@ -54,13 +54,14 @@ func loadVisuals() -> void:
 			U.ROTATIONS.RIGHT: visualInstance = BELT_CW.instantiate()
 			_: visualInstance = BELT_STRAIGHT.instantiate()
 	
-	if pathNode.partialPath.isComplete(): if !itemDisplay: itemDisplay = scene.items.addDisplay(pathNode.partialPath.getItemType(), position, rotation)
-	else: if itemDisplay: itemDisplay = scene.items.removeDisplay(itemDisplay)
+	if pathNode.partialPath.isComplete():
+		if !itemDisplay: itemDisplay = scene.items.addDisplay(pathNode.partialPath.getItemType(), position, rotation)
+	elif itemDisplay: itemDisplay = scene.items.removeDisplay(itemDisplay)
 	
 	if game.isDebug:
 		visualInstance.get_node("debugText").visible = true
 		#visualInstance.get_node("debugText").text = str(pathNode.partialPath.id) + U.boolToText(pathNode == pathNode.partialPath.start) + U.boolToText(pathNode == pathNode.partialPath.end) + U.boolToText(pathNode.previousNode) + U.boolToText(pathNode.nextNode)
-		visualInstance.get_node("debugText").text = U.boolToText(pathNode.partialPath.isComplete())
+		visualInstance.get_node("debugText").text = U.boolToText(pathNode.partialPath.isComplete()) + U.boolToText(itemDisplay)
 	
 	if changingInstance: super()
 	currentlyDisplayedPreviousDirection = previousDirection

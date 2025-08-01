@@ -49,7 +49,7 @@ var cameraPosition:Vector3 = Vector3(0,20,0):
 var currentDragX:U.BOOL3 = U.BOOL3.UNKNOWN # current drag direction; used for the thing with the belt
 var dragStartPos:Vector2i
 
-var isDebug:bool = true
+var isDebug:bool = false
 
 func _ready() -> void:
 	for x in range(-2, 2): for y in range(-2, 2):
@@ -227,7 +227,8 @@ func isABadLocation(pos:Vector2i, rot:U.ROTATIONS) -> bool:
 
 func newInputOutputs() -> void:
 	var requestPair = InputOutput.RequestPair.new(randi_range(0, itemTypesUnlocked - 1) as Items.TYPES)
-	
+	requestPairs.append(requestPair)
+
 	var inputPos:Vector2i = randomUnlockedTile()
 	var inputRot:U.ROTATIONS = randi_range(0,3) as U.ROTATIONS
 	while isABadLocation(inputPos, inputRot):

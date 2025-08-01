@@ -17,10 +17,7 @@ func setHeight(timeLeft) -> void:
 class RequestPair:
 	var input:Inputter
 	var output:Outputter
-	var completed:bool = false:
-		set(value):
-			print(value)
-			completed = value
+	var completed:bool = false
 	var itemType:Items.TYPES
 
 	func _init(_itemType):
