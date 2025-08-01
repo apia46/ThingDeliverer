@@ -57,6 +57,7 @@ static func isFalse(bool3:BOOL3) -> bool: return bool3 == BOOL3.FALSE
 static func isKnown(bool3:BOOL3) -> bool: return bool3 != BOOL3.UNKNOWN
 static func bool3not(bool3:BOOL3) -> BOOL3: return toBool3(!isTrue(bool3))
 static func toBool3(condition:Variant) -> BOOL3: return BOOL3.TRUE if condition else BOOL3.FALSE
+static func bool3ToText(bool3:BOOL3): return ["?", "X", "✓"][bool3]
 
 static func v2iunwrap(vector:Vector2i, gridSize:int) -> int:
 	return vector.y * gridSize + vector.x
@@ -65,3 +66,5 @@ static func timeToText(time:float):
 	var minutes = int(time / 60)
 	var seconds = int(time - 60*minutes)
 	return str(minutes) + ":" + str(seconds).pad_zeros(2)
+
+static func boolToText(condition:Variant): return "✓" if condition else "X"

@@ -23,7 +23,7 @@ func ready() -> void:
 
 func checkPrevious() -> void:
 	if game.isDebug: scene.newDebugVisual(position, Color(0, 1, 0.4))
-	var previousNode
+	var previousNode:PathNode
 	previousDirection = U.ROTATIONS.DOWN
 	for direction in [Vector2i(0,1), Vector2i(1,0), Vector2i(-1,0)]:
 		previousNode = getNodeInputFromRelative(pathNode, direction)
@@ -33,14 +33,7 @@ func checkPrevious() -> void:
 
 	if previousNode:
 		previousDirection = U.v2itorot(U.rotate(previousNode.position - position, U.rNeg(rotation)))
-
-		if previousNode.path:
-			if pathNode.path and pathNode.isBefore(previousNode): # path cuts itself off
-				pathNode.disconnectFromPath()
-			elif !pathNode.path or !pathNode.isDirectlyAfter(previousNode): # no updates needed if so
-				pathNode.joinAfter(previousNode)
-		else: pathNode.disconnectFromPath()
-	else: pathNode.disconnectFromPath()
+		pathNode.partialJoinAfter(previousNode)
 	
 	loadVisuals()
 
@@ -53,6 +46,8 @@ func updateNext() -> void:
 # direction changes
 func loadVisuals() -> void:
 	#print(str(!visualInstance) + str(currentlyDisplayedPreviousDirection) + str(previousDirection))
+	assert(!deleted)
+
 	var changingInstance:bool = !visualInstance or currentlyDisplayedPreviousDirection != previousDirection
 	if changingInstance:
 		if visualInstance: visualInstance.queue_free()
@@ -71,8 +66,8 @@ func loadVisuals() -> void:
 		if itemDisplay: itemDisplay = scene.items.removeDisplay(itemDisplay)
 	
 	if game.isDebug:
-		visualInstance.get_node("debugText").visible = !!pathNode.partialPath
-		if pathNode.path: visualInstance.get_node("debugText").text = str(pathNode.partialPath)
+		visualInstance.get_node("debugText").visible = true
+		visualInstance.get_node("debugText").text = str(pathNode.partialPath.id) + U.boolToText(pathNode == pathNode.partialPath.start) + U.boolToText(pathNode == pathNode.partialPath.end) + U.boolToText(pathNode.nextNode)
 	
 	if changingInstance: super()
 	currentlyDisplayedPreviousDirection = previousDirection

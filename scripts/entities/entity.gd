@@ -4,6 +4,8 @@ class_name Entity
 var game:Game
 var scene:Scene
 
+var deleted:bool = false
+
 var visualInstance:MeshInstance3D
 var position:Vector2i # position in chunk
 var rotation:U.ROTATIONS
@@ -19,6 +21,7 @@ func ready() -> void:
 
 func delete() -> void:
 	unloadVisuals()
+	deleted = true
 
 func loadVisuals() -> void:
 	if visualInstance:
@@ -48,6 +51,6 @@ func getNodeOutputFromRelative(node:PathNode, difference:Vector2i) -> PathNode:
 
 func checkPrevious() -> void: pass
 func updateNext() -> void: pass
-func checkNext() -> void: pass # used sparingly
+func checkNext() -> void: loadVisuals() # use sparingly. set to load visuals for clarity of debug and also might be useful idk
 
 func joinedBefore(_node:PathNode) -> void: pass

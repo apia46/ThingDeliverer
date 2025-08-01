@@ -19,22 +19,18 @@ func checkPrevious() -> void:
 	if previousNode:
 		pathNode.previousNode = previousNode
 		previousNode.nextNode = pathNode
-		if previousNode.path and pathNode.isDirectlyAfter(previousNode):
-			pathNode.joinAfter(previousNode)
-			pathNode.path.complete()
+		pathNode.partialJoinAfter(previousNode)
+		if !pointing:
 			rotation = U.v2itorot(previousNode.position - position)
 			pointing = true
 			loadVisuals()
-		else: pathNode.path.uncomplete()
-	else:
-		pathNode.path.uncomplete()
-		if pointing:
+	elif pointing:
 			pointing = false
 			rotation = U.ROTATIONS.UP
 			if pathNode.previousNode:
 				pathNode.previousNode.nextNode = null
 				pathNode.previousNode = null
-		loadVisuals()
+			loadVisuals()
 
 func asNodeInputFrom(node:PathNode) -> PathNode:
 	#print(pathNode.previousNode)

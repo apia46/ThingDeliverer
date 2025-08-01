@@ -16,14 +16,21 @@ func _init(_entity:Entity, _position:Vector2i):
 	position = _position
 	partialPath = PartialPath.new(entity.game, self)
 
+func partialJoinAfter(node:PathNode) -> void:
+	if previousNode == node: return
+	if previousNode:
+		previousNode.nextNode = null
+		previousNode.entity.loadVisuals()
+	previousNode = node
+	node.nextNode = self
+	partialPath.joinAfter(node)
+
 func joinAfter(node:PathNode) -> void:
 	if isDirectlyAfter(node): return
 	if path: disconnectFromPath()
 	path = node.path
-	partialPath.joinAfter(node)
+	partialJoinAfter(node)
 	index = node.index + 1
-	previousNode = node
-	node.nextNode = self
 	entity.updateNext()
 	node.entity.joinedBefore(self)
 
@@ -33,7 +40,7 @@ func delete() -> void:
 	partialPath.splitAt(self)
 	entity.updateNext()
 	if previousNode:
-		previousNode.nextNode = null
+		previousNode.nextNode = null # cant before updatenext because of loop detection in partialpath. fucked up i know
 		previousNode.entity.checkNext()
 
 func disconnectFromPath() -> void:
