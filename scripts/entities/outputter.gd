@@ -17,8 +17,6 @@ func checkPrevious() -> void:
 			break
 
 	if previousNode:
-		pathNode.previousNode = previousNode
-		previousNode.nextNode = pathNode
 		pathNode.partialJoinAfter(previousNode)
 		if !pointing:
 			rotation = U.v2itorot(previousNode.position - position)

@@ -52,5 +52,3 @@ func getNodeOutputFromRelative(node:PathNode, difference:Vector2i) -> PathNode:
 func checkPrevious() -> void: pass
 func updateNext() -> void: pass
 func checkNext() -> void: loadVisuals() # use sparingly. set to load visuals for clarity of debug and also might be useful idk
-
-func joinedBefore(_node:PathNode) -> void: pass

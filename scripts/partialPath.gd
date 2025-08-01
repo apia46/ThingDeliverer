@@ -4,7 +4,6 @@ class_name PartialPath # called this because there used to be a Path that was Wo
 var game:Game
 
 var id:int
-var itemType:Items.TYPES
 var start:PathNode
 var end:PathNode
 
@@ -18,6 +17,13 @@ func _init(_game:Game, _start:PathNode) -> void:
 func update() -> void:
 	var head:PathNode = start
 	head.entity.loadVisuals()
+
+	if isComplete() and !start.entity.requestPair.completed:
+		start.entity.requestPair.completed = true
+		game.pathComplete()
+	if start.entity is Inputter and start.entity.requestPair.completed and !isComplete():
+		start.entity.requestPair.completed = false
+
 	while head.nextNode:
 		head = head.nextNode
 		head.entity.loadVisuals()
@@ -56,3 +62,23 @@ func joinAfter(pathNode:PathNode) -> void:
 		if head == pathNode.nextNode: break
 	toJoin.end = head
 	toJoin.update()
+
+func isComplete() -> bool: return start.entity is Inputter and end.entity is Outputter and start.entity.requestPair == end.entity.requestPair
+
+func isConnectedButWrong() -> bool: return start.entity is Inputter and end.entity is Outputter and start.entity.requestPair != end.entity.requestPair
+
+func getColorMaterial() -> BaseMaterial3D:
+	if !start or !end: return null # possible during deletion or whatever; shouldnt matter..?
+	if isConnectedButWrong(): return preload("res://scenes/entityVisuals/materials/Red.tres")
+	return [
+		null,
+		preload("res://scenes/entityVisuals/materials/Blue.tres"),
+		preload("res://scenes/entityVisuals/materials/Orange.tres"),
+		preload("res://scenes/entityVisuals/materials/White.tres"),
+	][int(start.entity is Inputter) + int(end.entity is Outputter) * 2]
+
+func getItemType() -> Items.TYPES:
+	if isConnectedButWrong(): return Items.TYPES.NULL
+	if start.entity is Inputter: return start.entity.requestPair.itemType
+	if end.entity is Outputter: return end.entity.requestPair.itemType
+	return Items.TYPES.NULL

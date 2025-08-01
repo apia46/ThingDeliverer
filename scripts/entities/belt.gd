@@ -5,8 +5,6 @@ const BELT_STRAIGHT:PackedScene = preload("res://scenes/entityVisuals/belt/Strai
 const BELT_CCW:PackedScene = preload("res://scenes/entityVisuals/belt/CCW.tscn")
 const BELT_CW:PackedScene = preload("res://scenes/entityVisuals/belt/CW.tscn")
 
-const CYAN:BaseMaterial3D = preload("res://scenes/entityVisuals/belt/Cyan.tres")
-const WHITE:BaseMaterial3D = preload("res://scenes/entityVisuals/belt/White.tres")
 
 var pathNode:PathNode
 
@@ -56,26 +54,19 @@ func loadVisuals() -> void:
 			U.ROTATIONS.RIGHT: visualInstance = BELT_CW.instantiate()
 			_: visualInstance = BELT_STRAIGHT.instantiate()
 	
-	if pathNode.path and pathNode.path.completed:
-		#visualInstance.get_active_material(1).albedo_color = ACTIVATED_COLOR
-		#visualInstance.get_active_material(1).emission = ACTIVATED_COLOR
-		if !itemDisplay: itemDisplay = scene.items.addDisplay(pathNode.path.itemType, position, rotation)
-	else:
-		#visualInstance.get_active_material(1).albedo_color = DEACTIVATED_COLOR
-		#visualInstance.get_active_material(1).emission = DEACTIVATED_COLOR
-		if itemDisplay: itemDisplay = scene.items.removeDisplay(itemDisplay)
+	if pathNode.partialPath.isComplete(): if !itemDisplay: itemDisplay = scene.items.addDisplay(pathNode.partialPath.getItemType(), position, rotation)
+	else: if itemDisplay: itemDisplay = scene.items.removeDisplay(itemDisplay)
 	
 	if game.isDebug:
 		visualInstance.get_node("debugText").visible = true
-		visualInstance.get_node("debugText").text = str(pathNode.partialPath.id) + U.boolToText(pathNode == pathNode.partialPath.start) + U.boolToText(pathNode == pathNode.partialPath.end) + U.boolToText(pathNode.nextNode)
+		#visualInstance.get_node("debugText").text = str(pathNode.partialPath.id) + U.boolToText(pathNode == pathNode.partialPath.start) + U.boolToText(pathNode == pathNode.partialPath.end) + U.boolToText(pathNode.previousNode) + U.boolToText(pathNode.nextNode)
+		visualInstance.get_node("debugText").text = U.boolToText(pathNode.partialPath.isComplete())
 	
 	if changingInstance: super()
 	currentlyDisplayedPreviousDirection = previousDirection
 
-	if pathNode.path:
-		if pathNode.path.completed: visualInstance.set_surface_override_material(1, WHITE)
-		else: visualInstance.set_surface_override_material(1, CYAN)
-	else: visualInstance.set_surface_override_material(1, null)
+	visualInstance.set_surface_override_material(1, pathNode.partialPath.getColorMaterial())
+
 
 func delete() -> void:
 	pathNode.delete()

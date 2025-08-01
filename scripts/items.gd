@@ -5,7 +5,7 @@ const ONE_OVER_LOG_TWO = 1 / log(2)
 const DISAPPEAR_TRANSFORM = Transform3D(Vector3(0,0,0),Vector3(0,0,0),Vector3(0,0,0),Vector3(0,0,0))
 const SPACES_PER_ITEM = 2 # doesnt actually work for a different number because it uses the parity dependant x+y instead of actually figuring it out from the path
 const ITEM_TYPES = 2
-enum TYPES {BOX, FRIDGE}
+enum TYPES {BOX, FRIDGE, NULL}
 @onready var game = get_node("/root/game")
 @onready var multiMeshInstances:Array[MultiMeshInstance3D] = [$"box", $"fridge"]
 

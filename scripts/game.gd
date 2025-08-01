@@ -30,7 +30,7 @@ var currentRotation:U.ROTATIONS = U.ROTATIONS.UP:
 
 var timers:Array[Timer] = []
 
-var paths:Array[Path] = []
+var requestPairs:Array[InputOutput.RequestPair] = []
 var rounds:int = 1
 var pathsThisRound:int = 0
 var pathsPerRound:int = 5
@@ -116,8 +116,8 @@ func heldClick(previousCursorPosition:Vector2i) -> void:
 			previousCursorPosition.y = dragStartPos.y
 		var dragSign = sign(cursorPosition.x - previousCursorPosition.x)
 		if readFromCurrentDragX and dragSign: currentDragX = U.BOOL3.TRUE
-		for i in abs(cursorPosition.x - previousCursorPosition.x) + 1:
-			cursorPosition = previousCursorPosition + Vector2i(i * dragSign, 0)
+		for i in abs(cursorPosition.x - previousCursorPosition.x):
+			cursorPosition = previousCursorPosition + Vector2i((i+1) * dragSign, 0)
 			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT): place()
 			else: delete()
 	else:
@@ -126,8 +126,8 @@ func heldClick(previousCursorPosition:Vector2i) -> void:
 			previousCursorPosition.x = dragStartPos.x
 		var dragSign = sign(cursorPosition.y - previousCursorPosition.y)
 		if readFromCurrentDragX and dragSign: currentDragX = U.BOOL3.FALSE
-		for i in abs(cursorPosition.y - previousCursorPosition.y) + 1:
-			cursorPosition = previousCursorPosition + Vector2i(0, i * dragSign)
+		for i in abs(cursorPosition.y - previousCursorPosition.y):
+			cursorPosition = previousCursorPosition + Vector2i(0, (i+1) * dragSign)
 			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT): place()
 			else: delete()
 
@@ -187,6 +187,7 @@ func place() -> Entity:
 		result.pathNode = PathNode.new(result, result.position)
 		result.pathNode.previousNode = undergroundInputStoredNode
 		undergroundInputStoredNode.nextNode = result.pathNode
+		result.pathNode.partialPath.joinAfter(undergroundInputStoredNode)
 		result.ready()
 		setCursor(Belt)
 	return result
@@ -225,8 +226,7 @@ func isABadLocation(pos:Vector2i, rot:U.ROTATIONS) -> bool:
 	return false
 
 func newInputOutputs() -> void:
-	var path = Path.new(len(paths), self, randi_range(0, itemTypesUnlocked - 1))
-	paths.append(path)
+	var requestPair = InputOutput.RequestPair.new(randi_range(0, itemTypesUnlocked - 1) as Items.TYPES)
 	
 	var inputPos:Vector2i = randomUnlockedTile()
 	var inputRot:U.ROTATIONS = randi_range(0,3) as U.ROTATIONS
@@ -235,10 +235,9 @@ func newInputOutputs() -> void:
 		inputRot = randi_range(0,3) as U.ROTATIONS
 	var input:Inputter = scene.placeEntity(Inputter, inputPos, inputRot)
 	input.pathNode = PathNode.new(input, inputPos)
-	input.pathNode.path = path
-	input.pathNode.index = 0
-	path.start = input.pathNode
-	
+	input.requestPair = requestPair
+	requestPair.input = input
+
 	var outputPos:Vector2i = randomUnlockedTile()
 	var outputRot:U.ROTATIONS = randi_range(0,3) as U.ROTATIONS
 	while outputPos.distance_squared_to(inputPos) < 36 or isABadLocation(outputPos, outputRot):
@@ -246,10 +245,11 @@ func newInputOutputs() -> void:
 		outputRot = randi_range(0,3) as U.ROTATIONS
 	var output:Outputter = scene.placeEntity(Outputter, outputPos, outputRot)
 	output.pathNode = PathNode.new(output, outputPos)
-	output.pathNode.path = path
+	output.requestPair = requestPair
+	requestPair.output = output
 
 func pathComplete() -> void:
-	for pathcheck in paths: if !pathcheck.completed:return
+	for requestPair in requestPairs: if !requestPair.completed: return
 	pathsThisRound += 1
 	if pathsThisRound == pathsPerRound:
 		timeLeft += 50
