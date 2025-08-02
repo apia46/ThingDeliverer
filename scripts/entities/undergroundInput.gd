@@ -1,10 +1,11 @@
 extends Underground
 class_name UndergroundInput
 
+static func getName() -> String: return "UnderpathInput"
+
 func ready() -> void:
 	pathNode = PathNode.new(self, position)
 	super()
-	checkPrevious()
 
 func loadVisuals() -> void:
 	if visualInstance: visualInstance.queue_free()

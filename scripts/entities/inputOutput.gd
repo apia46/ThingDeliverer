@@ -15,10 +15,12 @@ func setHeight(timeLeft) -> void:
 	visualInstance.position.y = max(0.5 - timeLeft*2.5, -1)
 
 class RequestPair:
+	var id:int
 	var input:Inputter
 	var output:Outputter
 	var completed:bool = false
 	var itemType:Items.TYPES
 
-	func _init(_itemType):
+	func _init(_id:int, _itemType:Items.TYPES):
+		id = _id
 		itemType = _itemType

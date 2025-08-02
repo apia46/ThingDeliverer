@@ -6,6 +6,7 @@ const DISAPPEAR_TRANSFORM = Transform3D(Vector3(0,0,0),Vector3(0,0,0),Vector3(0,
 const SPACES_PER_ITEM = 2 # doesnt actually work for a different number because it uses the parity dependant x+y instead of actually figuring it out from the path
 const ITEM_TYPES = 2
 enum TYPES {BOX, FRIDGE, NULL}
+const TYPES_NAMES:Array[String] = ["BOX", "FRIDGE", "NULL"]
 @onready var game = get_node("/root/game")
 @onready var multiMeshInstances:Array[MultiMeshInstance3D] = [$"box", $"fridge"]
 
@@ -34,7 +35,7 @@ func addDisplay(type:TYPES, pos:Vector2i, direction: U.ROTATIONS) -> Display:
 	return display
 
 func removeDisplay(display:Display) -> Display:
-	if display.index > displayCounts[display.type]: return null
+	if display.index >= displayCounts[display.type]: return null
 	multiMeshInstances[display.type].multimesh.set_instance_transform(len(displays[display.type]), DISAPPEAR_TRANSFORM)
 	displays[display.type].pop_at(display.index)
 	for i in range(display.index, len(displays[display.type])): displays[display.type][i].index -= 1

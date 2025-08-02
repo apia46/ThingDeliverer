@@ -1,6 +1,8 @@
 extends InputOutput
 class_name Inputter
 
+static func getName() -> String: return "Input"
+
 var itemDisplay:Items.Display
 
 func loadVisuals() -> void:
@@ -8,7 +10,7 @@ func loadVisuals() -> void:
 	if !pathNode.nextNode: visualInstance = preload("res://scenes/entityVisuals/inputDirectionless.tscn").instantiate()
 	else: visualInstance = preload("res://scenes/entityVisuals/input.tscn").instantiate();
 
-	if pathNode.partialPath.isComplete() and !itemDisplay: itemDisplay = scene.items.addDisplay(pathNode.partialPath.getItemType(), position, rotation)
+	if pathNode.partialPath.getState() == PartialPath.STATES.COMPLETE and !itemDisplay: itemDisplay = scene.items.addDisplay(pathNode.partialPath.getItemType(), position, rotation)
 	elif itemDisplay: itemDisplay = scene.items.removeDisplay(itemDisplay)
 	super()
 
@@ -30,3 +32,9 @@ func checkNext() -> void:
 	if !pathNode.nextNode and pointing:
 		pointing = false
 		loadVisuals()
+
+func hoverInfo(append:int=0) -> String:
+	return super(2) \
+	+ H.attribute("pair", H.specialName("{" + str(requestPair.id) + "}"), 2) \
+	+ (H.attribute("facing", U.ROTATION_NAMES[rotation], 2) if pointing else "") \
+	+ H.attribute("path", pathNode.partialPath.hoverInfo(), append, false)

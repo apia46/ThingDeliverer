@@ -16,6 +16,7 @@ static func v2(value:float) -> Vector2: return Vector2(value, value)
 static func v3(value:float) -> Vector3: return Vector3(value, value, value)
 
 enum ROTATIONS {UP, RIGHT, DOWN, LEFT}
+const ROTATION_NAMES:Array[String] = ["UP", "RIGHT", "DOWN", "LEFT"]
 const ROTATION_RADIANS:Array[float] = [4.71238898038, 3.14159265359, 1.57079632679, 0]
 
 static func rotToRad(rot:ROTATIONS) -> float: return ROTATION_RADIANS[rot]

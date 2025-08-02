@@ -1,13 +1,15 @@
 extends RefCounted
 class_name Entity
 
+static func getName() -> String: return "Entity"
+
 var game:Game
 var scene:Scene
 
 var deleted:bool = false
 
 var visualInstance:MeshInstance3D
-var position:Vector2i # position in chunk
+var position:Vector2i
 var rotation:U.ROTATIONS
 
 func _init(_scene:Scene, _position:Vector2i, _rotation:U.ROTATIONS) -> void:
@@ -52,3 +54,6 @@ func getNodeOutputFromRelative(node:PathNode, difference:Vector2i) -> PathNode:
 func checkPrevious() -> void: pass
 func updateNext() -> void: pass
 func checkNext() -> void: loadVisuals() # use sparingly. set to load visuals for clarity of debug and also might be useful idk
+
+func hoverInfo(append:int=0) -> String:
+	return H.debugAttribute(game.isDebug, "position", position, append)

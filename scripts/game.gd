@@ -4,9 +4,10 @@ class_name Game
 const FLOOR_MATERIAL:ShaderMaterial = preload("res://resources/floor.tres")
 const CAMERA_MOVE_SPEED:float = 2
 
-@onready var scene = $"scene"
+@onready var scene:Scene = $"scene"
 @onready var ui = $"ui"
 @onready var cursor = $"ui/SubViewportContainer/cursorViewport/cursor"
+@onready var hover:H = $"hover"
 
 var intendedCameraHeight:float = 20
 var upperCameraHeight: float = 20
@@ -50,6 +51,11 @@ var currentDragX:U.BOOL3 = U.BOOL3.UNKNOWN # current drag direction; used for th
 var dragStartPos:Vector2i
 
 var isDebug:bool = false
+
+const HOVER_INSPEED:float = 2
+const HOVER_OUTSPEED:float = 2
+var hoverPosition:Vector2i = Vector2i(0, 0)
+var hoverTime:float = 0
 
 func _ready() -> void:
 	for x in range(-2, 2): for y in range(-2, 2):
@@ -104,6 +110,24 @@ func _process(delta:float) -> void:
 	if !paused && rounds > 1:
 		timeLeft -= delta
 	ui.updateTimer()
+
+	var hovered:Entity = scene.getEntity(cursorPosition)
+	if hovered:
+		hoverPosition = cursorPosition
+		hover.setHover(hovered)
+		if cursorPosition == previousCursorPosition: hoverTime += delta * HOVER_INSPEED
+		else: hoverTime -= delta * HOVER_OUTSPEED
+	else: hoverTime -= delta * HOVER_OUTSPEED
+	hoverTime = clampf(hoverTime, 0, 1)
+	hover.modulate.a = (hoverTime - 0.6) * 3
+	cursor.transparency = (hoverTime - 0.6) * 3
+	hover.position = worldspaceToScreenspace(Vector2(hoverPosition) + Vector2(0.5, 0.8)) + Vector2(8, 8)
+	var bottomRightCorner:Vector2 = hover.position + hover.size - Vector2(get_viewport().size) + Vector2(32, 14) # add bottom right expand margins and some margins
+	if bottomRightCorner.y > 0: hover.position.y = worldspaceToScreenspace(Vector2(hoverPosition) + Vector2(0.5, 0.2)).y - hover.size.y - 8
+	if bottomRightCorner.x > 0:
+		for child in hover.get_children(): child.size_flags_horizontal = 8
+		hover.position.x -= hover.size.x + 16
+	else: for child in hover.get_children(): child.size_flags_horizontal = 0
 
 func heldClick(previousCursorPosition:Vector2i) -> void:
 	# placeDrag, deletedrag
@@ -166,12 +190,14 @@ func _input(event:InputEvent) -> void:
 					else: intendedCameraHeight = 76.2939453125; upperCameraHeight = 76.2939453125
 
 func restartDragFromHere():
+	hoverTime = 0
 	if U.isKnown(currentDragX):
 		dragStartPos = screenspaceToWorldspace(get_viewport().get_mouse_position())
 		currentDragX = U.bool3not(currentDragX)
 
 func place() -> Entity:
 	if paused: return
+	hoverTime = 0
 	var entityPresent: Entity = scene.getEntity(cursorPosition)
 	if entityPresent is InputOutput: return null
 	if !scene.getSpace(cursorPosition): return null
@@ -193,6 +219,8 @@ func place() -> Entity:
 	return result
 
 func delete() -> Entity:
+	if paused: return
+	hoverTime = 0
 	var entityPresent: Entity = scene.getEntity(cursorPosition)
 	if entityPresent is InputOutput: return null
 	return scene.deleteEntity(cursorPosition)
@@ -226,7 +254,7 @@ func isABadLocation(pos:Vector2i, rot:U.ROTATIONS) -> bool:
 	return false
 
 func newInputOutputs() -> void:
-	var requestPair = InputOutput.RequestPair.new(randi_range(0, itemTypesUnlocked - 1) as Items.TYPES)
+	var requestPair = InputOutput.RequestPair.new(len(requestPairs), randi_range(0, itemTypesUnlocked - 1) as Items.TYPES)
 	requestPairs.append(requestPair)
 
 	var inputPos:Vector2i = randomUnlockedTile()
@@ -308,6 +336,9 @@ func setCursor(object:Variant=null) -> void:
 
 func screenspaceToWorldspace(pos:Vector2) -> Vector2i:
 	return floor(U.xz(cameraPosition) + (pos / Vector2(get_viewport().size) - U.v2(0.5)) * effectiveScreenSize)
+
+func worldspaceToScreenspace(pos:Vector2) -> Vector2:
+	return ((Vector2(pos) - U.xz(cameraPosition)) / effectiveScreenSize + U.v2(0.5)) * Vector2(get_viewport().size)
 
 class RunningTimer:
 	extends Timer

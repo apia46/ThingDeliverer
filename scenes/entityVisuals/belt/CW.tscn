@@ -74,9 +74,3 @@ shadow_mesh = SubResource("ArrayMesh_i7xf4")
 [node name="beltCW" type="MeshInstance3D"]
 mesh = SubResource("ArrayMesh_celun")
 skeleton = NodePath("")
-
-[node name="debugText" type="Label3D" parent="."]
-transform = Transform3D(-4.37114e-08, -1, 1.19249e-08, 0, 1.19249e-08, 1, -1, 4.37114e-08, -5.21253e-16, 0, 0, 0)
-visible = false
-text = "2"
-font_size = 128

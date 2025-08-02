@@ -1,18 +1,19 @@
 extends Underground
 class_name UndergroundOutput
 
+static func getName() -> String: return "UnderpathOutput"
+
 var itemDisplay:Items.Display
 
 func ready() -> void:
 	super()
-	checkPrevious()
 	updateNext()
 
 func loadVisuals() -> void:
 	if visualInstance: visualInstance.queue_free()
 	visualInstance = preload("res://scenes/entityVisuals/undergroundOutput.tscn").instantiate()
 	
-	if pathNode.partialPath.isComplete() and !itemDisplay: itemDisplay = scene.items.addDisplay(pathNode.partialPath.getItemType(), position, U.r180(rotation))
+	if pathNode.partialPath.getState() == PartialPath.STATES.COMPLETE and !itemDisplay: itemDisplay = scene.items.addDisplay(pathNode.partialPath.getItemType(), position, U.r180(rotation))
 	elif itemDisplay: itemDisplay = scene.items.removeDisplay(itemDisplay)
 	super()
 

@@ -1,0 +1,59 @@
+[gd_scene load_steps=5 format=3 uid="uid://n41t2vjmsuh"]
+
+[ext_resource type="Script" uid="uid://bjvva6ih1sl12" path="res://scripts/hover.gd" id="1_kvef0"]
+[ext_resource type="FontFile" uid="uid://b872nh8bkgph8" path="res://resources/Inconsolata-SemiBold.ttf" id="1_sd74f"]
+[ext_resource type="PackedScene" uid="uid://dmq327ujv68ov" path="res://scenes/hoverError.tscn" id="3_vfl0y"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kvef0"]
+bg_color = Color(0.180392, 0.156863, 0.247059, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.666667, 0.67451, 0.768627, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+expand_margin_left = 8.0
+expand_margin_top = 6.0
+expand_margin_right = 8.0
+expand_margin_bottom = 6.0
+
+[node name="hover" type="VBoxContainer"]
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 169.0
+offset_bottom = 113.0
+theme_override_constants/separation = 16
+script = ExtResource("1_kvef0")
+
+[node name="main" type="PanelContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_kvef0")
+
+[node name="margins" type="MarginContainer" parent="main"]
+layout_mode = 2
+theme_override_constants/margin_right = 16
+
+[node name="text" type="RichTextLabel" parent="main/margins"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.831373, 0.831373, 0.831373, 1)
+theme_override_fonts/normal_font = ExtResource("1_sd74f")
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "[color=#569CD6]var[/color] [color=#9CDCFE]hovered[/color]:[color=#4EC9B0]Belt[/color] = [color=#FFD700]{[/color]
+	[color=#9CDCFE]facing[/color]: [color=#4FC1FF]RIGHT[/color],
+	[color=#9CDCFE]path[/color]: [color=#FFD700]{[/color]
+		[color=#9CDCFE]itemType[/color]: [color=#4FC1FF]BOX[/color],
+		[color=#9CDCFE]state[/color]: [color=#4FC1FF]HAS_INPUT[/color]
+	[color=#FFD700]}[/color]
+[color=#FFD700]}[/color]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="hoverError" parent="." instance=ExtResource("3_vfl0y")]
+layout_mode = 2
+size_flags_horizontal = 0

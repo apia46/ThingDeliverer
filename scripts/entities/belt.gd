@@ -1,10 +1,11 @@
 extends Entity
 class_name Belt
 
+static func getName() -> String: return "Belt"
+
 const BELT_STRAIGHT:PackedScene = preload("res://scenes/entityVisuals/belt/Straight.tscn")
 const BELT_CCW:PackedScene = preload("res://scenes/entityVisuals/belt/CCW.tscn")
 const BELT_CW:PackedScene = preload("res://scenes/entityVisuals/belt/CW.tscn")
-
 
 var pathNode:PathNode
 
@@ -54,15 +55,10 @@ func loadVisuals() -> void:
 			U.ROTATIONS.RIGHT: visualInstance = BELT_CW.instantiate()
 			_: visualInstance = BELT_STRAIGHT.instantiate()
 	
-	if pathNode.partialPath.isComplete():
+	if pathNode.partialPath.getState() == PartialPath.STATES.COMPLETE:
 		if !itemDisplay: itemDisplay = scene.items.addDisplay(pathNode.partialPath.getItemType(), position, rotation)
 	elif itemDisplay: itemDisplay = scene.items.removeDisplay(itemDisplay)
-	
-	if game.isDebug:
-		visualInstance.get_node("debugText").visible = true
-		#visualInstance.get_node("debugText").text = str(pathNode.partialPath.id) + U.boolToText(pathNode == pathNode.partialPath.start) + U.boolToText(pathNode == pathNode.partialPath.end) + U.boolToText(pathNode.previousNode) + U.boolToText(pathNode.nextNode)
-		visualInstance.get_node("debugText").text = U.boolToText(pathNode.partialPath.isComplete()) + U.boolToText(itemDisplay)
-	
+
 	if changingInstance: super()
 	currentlyDisplayedPreviousDirection = previousDirection
 
@@ -76,3 +72,12 @@ func delete() -> void:
 
 func asNodeOutputTo(node:PathNode) -> PathNode: return pathNode if node.position == position + U.rotate(Vector2i(0,-1), rotation) else null
 func asNodeInputFrom(node:PathNode) -> PathNode: return pathNode if node.position != position + U.rotate(Vector2i(0,-1), rotation) else null
+
+func hoverInfo(append:int=0) -> String:
+	if rotation == U.ROTATIONS.RIGHT:
+		game.hover.errors.append(H.errorMessage("this is a right facing belt and thats a problem"))
+	return super(2) \
+	+ H.debugAttribute(game.isDebug, "hasPrevious", !!pathNode.previousNode, 2) \
+	+ H.debugAttribute(game.isDebug, "hasNext", !!pathNode.nextNode, 2) \
+	+ H.attribute("facing", U.ROTATION_NAMES[rotation], 2) \
+	+ H.attribute("path", pathNode.partialPath.hoverInfo(), append, false)

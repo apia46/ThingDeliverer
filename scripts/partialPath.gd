@@ -7,6 +7,16 @@ var id:int
 var start:PathNode
 var end:PathNode
 
+enum STATES {INCOMPLETE, HAS_INPUT, HAS_OUTPUT, COMPLETE, ERROR}
+const STATES_NAMES:Array[String] = ["INCOMPLETE", "HAS_INPUT", "HAS_OUTPUT", "COMPLETE", "ERROR"]
+const STATES_COLORS:Array[BaseMaterial3D] = [
+	null,
+	preload("res://scenes/entityVisuals/materials/Blue.tres"),
+	preload("res://scenes/entityVisuals/materials/Orange.tres"),
+	preload("res://scenes/entityVisuals/materials/White.tres"),
+	preload("res://scenes/entityVisuals/materials/Red.tres")
+]
+
 func _init(_game:Game, _start:PathNode) -> void:
 	game = _game
 	id = game.partialPathIdIncr
@@ -18,10 +28,10 @@ func update() -> void:
 	var head:PathNode = start
 	head.entity.loadVisuals()
 
-	if isComplete() and !start.entity.requestPair.completed:
+	if getState() == STATES.COMPLETE and !start.entity.requestPair.completed:
 		start.entity.requestPair.completed = true
 		game.pathComplete()
-	if start.entity is Inputter and start.entity.requestPair.completed and !isComplete():
+	if start.entity is Inputter and start.entity.requestPair.completed and getState() != STATES.COMPLETE:
 		start.entity.requestPair.completed = false
 
 	while head.nextNode:
@@ -63,22 +73,30 @@ func joinAfter(pathNode:PathNode) -> void:
 	toJoin.end = head
 	toJoin.update()
 
-func isComplete() -> bool: return start.entity is Inputter and end.entity is Outputter and start.entity.requestPair == end.entity.requestPair
+func getColorMaterial() -> BaseMaterial3D: return STATES_COLORS[getState()]
 
-func isConnectedButWrong() -> bool: return start.entity is Inputter and end.entity is Outputter and start.entity.requestPair != end.entity.requestPair
+func mispairedError() -> Array[int]:
+	if start.entity is Inputter and end.entity is Outputter and start.entity.requestPair != end.entity.requestPair:
+		return [start.entity.requestPair.id, end.entity.requestPair.id]
+	else: return []
 
-func getColorMaterial() -> BaseMaterial3D:
-	if !start or !end: return null # possible during deletion or whatever; shouldnt matter..?
-	if isConnectedButWrong(): return preload("res://scenes/entityVisuals/materials/Red.tres")
-	return [
-		null,
-		preload("res://scenes/entityVisuals/materials/Blue.tres"),
-		preload("res://scenes/entityVisuals/materials/Orange.tres"),
-		preload("res://scenes/entityVisuals/materials/White.tres"),
-	][int(start.entity is Inputter) + int(end.entity is Outputter) * 2]
+func getState() -> STATES:
+	if !start or !end: return STATES.INCOMPLETE # possible during deletion or whatever; shouldnt matter..?
+	if mispairedError(): return STATES.ERROR
+	return int(start.entity is Inputter) + int(end.entity is Outputter) * 2 as STATES
 
 func getItemType() -> Items.TYPES:
-	if isConnectedButWrong(): return Items.TYPES.NULL
+	if mispairedError(): return Items.TYPES.NULL
 	if start.entity is Inputter: return start.entity.requestPair.itemType
 	if end.entity is Outputter: return end.entity.requestPair.itemType
 	return Items.TYPES.NULL
+
+func hoverInfo() -> String:
+	var mispair = mispairedError()
+	if mispair:
+		game.hover.errors.append(H.errorMessage("tried to connect " + H.specialName("Input{%s}" % mispair[0]) + " to " + H.specialName("Output{%s}" % mispair[1])))
+	return H.LBRACE + "\n" \
+	+ H.debugAttribute(game.isDebug, "id", id, 2, true, H.TAB) \
+	+ H.TAB + H.attribute("itemType", Items.TYPES_NAMES[getItemType()], 2) \
+	+ H.TAB + H.attribute("state", STATES_NAMES[getState()]) \
+	+ H.TAB + H.RBRACE
