@@ -19,7 +19,7 @@ var timeLeft:float = 10
 
 var objectToPlace:Object = Belt
 var undergroundInputStoredNode:PathNode
-var undergroundsAvailable = 1:
+var undergroundsAvailable = 0:
 	set(value):
 		undergroundsAvailable = value
 		ui.updateUndergroundsCount()
@@ -202,10 +202,9 @@ func place() -> Entity:
 	if entityPresent is InputOutput: return null
 	if !scene.getSpace(cursorPosition): return null
 	if objectToPlace == UndergroundOutput and entityPresent is UndergroundInput: return null
-	if objectToPlace == Belt and entityPresent is UndergroundOutput: return null
+	if objectToPlace == UndergroundInput and undergroundsAvailable == 0 and !isDebug: return null
 	var result = scene.placeEntity(objectToPlace, cursorPosition, currentRotation, objectToPlace != UndergroundOutput)
 	if result is UndergroundInput:
-		if undergroundsAvailable == 0 and !isDebug: return
 		undergroundsAvailable -= 1
 		undergroundInputStoredNode = result.pathNode
 		setCursor(UndergroundOutput)
