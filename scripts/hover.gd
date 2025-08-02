@@ -22,6 +22,7 @@ func setHover(entity:Entity):
 		for i in diff: add_child(preload("res://scenes/hoverError.tscn").instantiate())
 	for i in len(errors):
 		get_child(i+1).get_node("text").text = errors[i]
+	size = Vector2(0, 0)
 
 const LBRACE:String = "[color=#FFD700]{[/color]"
 const RBRACE:String = "[color=#FFD700]}[/color]"

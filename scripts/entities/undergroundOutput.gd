@@ -19,8 +19,6 @@ func loadVisuals() -> void:
 
 func checkPrevious() -> void:
 	if game.isDebug: scene.newDebugVisual(position, Color(0, 1, 0.4))
-	if !pathNode.previousNode:
-		return delete()
 	# print("out ", pathNode.path)
 
 func updateNext() -> void:
@@ -32,6 +30,13 @@ func updateNext() -> void:
 func asNodeOutputTo(node:PathNode) -> PathNode: return pathNode if node.position == position + U.rotate(Vector2i(0,1), rotation) else null
 
 func delete() -> void:
-	if pathNode.previousNode: pathNode.previousNode.entity.delete()
-	if itemDisplay: scene.items.removeDisplay(itemDisplay)
 	super()
+	if pathNode.previousNode: scene.deleteEntity(pathNode.previousNode.position)
+	if itemDisplay: scene.items.removeDisplay(itemDisplay)
+
+func hoverInfo(append:int=0) -> String:
+	return super(2) \
+	+ H.debugAttribute(game.isDebug, "hasPrevious", !!pathNode.previousNode, 2) \
+	+ H.debugAttribute(game.isDebug, "hasNext", !!pathNode.nextNode, 2) \
+	+ H.attribute("facing", U.ROTATION_NAMES[U.rNeg(rotation)], 2) \
+	+ H.attribute("path", pathNode.partialPath.hoverInfo(), append, false)

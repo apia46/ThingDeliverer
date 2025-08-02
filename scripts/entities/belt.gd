@@ -74,8 +74,6 @@ func asNodeOutputTo(node:PathNode) -> PathNode: return pathNode if node.position
 func asNodeInputFrom(node:PathNode) -> PathNode: return pathNode if node.position != position + U.rotate(Vector2i(0,-1), rotation) else null
 
 func hoverInfo(append:int=0) -> String:
-	if rotation == U.ROTATIONS.RIGHT:
-		game.hover.errors.append(H.errorMessage("this is a right facing belt and thats a problem"))
 	return super(2) \
 	+ H.debugAttribute(game.isDebug, "hasPrevious", !!pathNode.previousNode, 2) \
 	+ H.debugAttribute(game.isDebug, "hasNext", !!pathNode.nextNode, 2) \

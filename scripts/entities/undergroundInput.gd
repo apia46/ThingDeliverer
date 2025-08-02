@@ -25,4 +25,12 @@ func asNodeInputFrom(node:PathNode) -> PathNode:
 
 func delete() -> void:
 	super()
+	if pathNode.nextNode: scene.deleteEntity(pathNode.nextNode.position)
 	game.undergroundsAvailable += 1
+
+func hoverInfo(append:int=0) -> String:
+	return super(2) \
+	+ H.debugAttribute(game.isDebug, "hasPrevious", !!pathNode.previousNode, 2) \
+	+ H.debugAttribute(game.isDebug, "hasNext", !!pathNode.nextNode, 2) \
+	+ H.attribute("facing", U.ROTATION_NAMES[rotation], 2) \
+	+ H.attribute("path", pathNode.partialPath.hoverInfo(), append, false)

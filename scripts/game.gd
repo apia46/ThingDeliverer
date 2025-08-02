@@ -112,7 +112,7 @@ func _process(delta:float) -> void:
 	ui.updateTimer()
 
 	var hovered:Entity = scene.getEntity(cursorPosition)
-	if hovered:
+	if hovered and !paused:
 		hoverPosition = cursorPosition
 		hover.setHover(hovered)
 		if cursorPosition == previousCursorPosition: hoverTime += delta * HOVER_INSPEED
@@ -205,7 +205,7 @@ func place() -> Entity:
 	if objectToPlace == Belt and entityPresent is UndergroundOutput: return null
 	var result = scene.placeEntity(objectToPlace, cursorPosition, currentRotation, objectToPlace != UndergroundOutput)
 	if result is UndergroundInput:
-		if undergroundsAvailable == 0: return
+		if undergroundsAvailable == 0 and !isDebug: return
 		undergroundsAvailable -= 1
 		undergroundInputStoredNode = result.pathNode
 		setCursor(UndergroundOutput)

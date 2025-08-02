@@ -14,6 +14,10 @@ func setHeight(timeLeft) -> void:
 	if !visualInstance: return
 	visualInstance.position.y = max(0.5 - timeLeft*2.5, -1)
 
+func loadVisuals() -> void:
+	super()
+	visualInstance.set_surface_override_material(1, pathNode.partialPath.getColorMaterial())
+
 class RequestPair:
 	var id:int
 	var input:Inputter
