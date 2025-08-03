@@ -7,6 +7,8 @@ var id:int
 var start:PathNode
 var end:PathNode
 
+var typeError:String = ""
+
 enum STATES {INCOMPLETE, HAS_INPUT, HAS_OUTPUT, COMPLETE, ERROR}
 const STATES_NAMES:Array[String] = ["INCOMPLETE", "HAS_INPUT", "HAS_OUTPUT", "COMPLETE", "ERROR"]
 const STATES_COLORS:Array[BaseMaterial3D] = [
@@ -25,20 +27,22 @@ func _init(_game:Game, _start:PathNode) -> void:
 	end = start
 
 func update() -> void:
-	var head:PathNode = start
-	head.entity.loadVisuals()
-
 	if getState() == STATES.COMPLETE and !start.entity.requestPair.completed:
 		start.entity.requestPair.completed = true
 		game.pathComplete()
 	if start.entity is Inputter and start.entity.requestPair.completed and getState() != STATES.COMPLETE:
 		start.entity.requestPair.completed = false
 
+	typeError = ""
+	if fridgeError(): typeError = H.specialName("TypeError") + ": item of type " + H.enumName("FRIDGE") + " cannot enter " + H.typeName("Underpaths")
+
+	var head:PathNode = start
+	head.entity.loadVisuals()
 	while head.nextNode:
 		head = head.nextNode
 		head.entity.loadVisuals()
-		if head == end: return # in case of loops
-
+		if head == end: break # in case of loops
+	
 func splitAt(pathNode:PathNode) -> void:
 	var head:PathNode = pathNode
 	if start.previousNode || pathNode.nextNode == start:
@@ -55,7 +59,8 @@ func splitAt(pathNode:PathNode) -> void:
 		forwards.end = end
 		forwards.update()
 	end = pathNode.previousNode
-	pathNode.partialPath.update()
+	if end: end.nextNode = null # hghghghhhh
+	update()
 
 func joinAfter(pathNode:PathNode) -> void:
 	var toJoin = pathNode.partialPath
@@ -83,9 +88,11 @@ func mispairedError() -> Array[int]:
 func getState() -> STATES:
 	if !start or !end: return STATES.INCOMPLETE # possible during deletion or whatever; shouldnt matter..?
 	if mispairedError(): return STATES.ERROR
+	if typeError: return STATES.ERROR
 	return int(start.entity is Inputter) + int(end.entity is Outputter) * 2 as STATES
 
 func getItemType() -> Items.TYPES:
+	if !start or !end: return Items.TYPES.NULL
 	if mispairedError(): return Items.TYPES.NULL
 	if start.entity is Inputter: return start.entity.requestPair.itemType
 	if end.entity is Outputter: return end.entity.requestPair.itemType
@@ -94,9 +101,22 @@ func getItemType() -> Items.TYPES:
 func hoverInfo() -> String:
 	var mispair = mispairedError()
 	if mispair:
-		game.hover.errors.append(H.errorMessage("tried to connect " + H.specialName("Input{%s}" % mispair[0]) + " to " + H.specialName("Output{%s}" % mispair[1])))
+		game.hover.errors.append(H.errorMessage(H.specialName("PointerError") + ": cannot connect " + H.specialName("Input{%s}" % mispair[0]) + " to " + H.specialName("Output{%s}" % mispair[1])))
+	if typeError:
+		game.hover.errors.append(H.errorMessage(typeError))
 	return H.LBRACE + "\n" \
 	+ H.debugAttribute(game.isDebug, "id", id, 2, true, H.TAB) \
 	+ H.TAB + H.attribute("itemType", Items.TYPES_NAMES[getItemType()], 2) \
 	+ H.TAB + H.attribute("state", STATES_NAMES[getState()]) \
 	+ H.TAB + H.RBRACE
+
+
+# type checks
+func fridgeError() -> bool:
+	if getItemType() != Items.TYPES.FRIDGE: return false
+	var head = start
+	while true:
+		if head.entity is UndergroundInput: return true
+		if head.nextNode: head = head.nextNode
+		else: break
+	return false

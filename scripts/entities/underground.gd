@@ -10,3 +10,8 @@ func ready() -> void:
 func delete() -> void:
 	pathNode.delete()
 	super()
+
+func loadVisuals() -> void:
+	super()
+	visualInstance.set_surface_override_material(1, pathNode.partialPath.getColorMaterial())
+

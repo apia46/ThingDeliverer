@@ -42,7 +42,7 @@ var trulyPaused:bool = false # stop anims fully
 
 var partialPathIdIncr:int = 0
 
-var itemTypesUnlocked:int = 1
+var itemTypesUnlocked:int = 2
 
 var cameraPosition:Vector3 = Vector3(0,20,0):
 	set(value):
