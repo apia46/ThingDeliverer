@@ -7,7 +7,7 @@ const SPACES_PER_ITEM = 2 # doesnt actually work for a different number because 
 const ITEM_TYPES = 2
 enum TYPES {BOX, FRIDGE, NULL}
 const TYPES_NAMES:Array[String] = ["BOX", "FRIDGE", "NULL"]
-@onready var game = get_node("/root/game")
+@onready var game:Game = get_node("../..")
 @onready var multiMeshInstances:Array[MultiMeshInstance3D] = [$"box", $"fridge"]
 
 var displays:Array[Array] = [[], []]

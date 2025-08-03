@@ -4,7 +4,7 @@ class_name Scene
 const DEBUG_VISUAL = preload("res://scenes/debugVisual.tscn");
 const SPACE_SIZE:int = 8
 
-@onready var game:Game = $"/root/game"
+@onready var game:Game = $".."
 @onready var items:Items = $"items"
 @onready var spaceVisuals:SpaceVisuals = $"spaceVisuals"
 

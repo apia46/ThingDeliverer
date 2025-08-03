@@ -1,0 +1,234 @@
+[gd_scene load_steps=13 format=3 uid="uid://bson8b2xh0e3u"]
+
+[ext_resource type="Script" uid="uid://g34ijtt88ye" path="res://scripts/menu.gd" id="1_con2f"]
+[ext_resource type="Texture2D" uid="uid://cfek1u0gilq6a" path="res://resources/ui/horizontalLine.png" id="2_mhnvy"]
+[ext_resource type="PackedScene" uid="uid://dddwu1sve42so" path="res://scenes/game.tscn" id="2_vjb58"]
+[ext_resource type="Texture2D" uid="uid://wo8usoy06231" path="res://resources/ui/File.svg" id="3_4ytvr"]
+[ext_resource type="Texture2D" uid="uid://bjiimycbv3owg" path="res://resources/ui/Play.svg" id="3_13sgg"]
+[ext_resource type="FontFile" uid="uid://b872nh8bkgph8" path="res://resources/ui/Inconsolata-SemiBold.ttf" id="3_con2f"]
+[ext_resource type="Texture2D" uid="uid://cxdfyhrqmbr61" path="res://resources/ui/GodotMonochrome.svg" id="3_v86rl"]
+[ext_resource type="Texture2D" uid="uid://1oidl1y68xjk" path="res://resources/ui/TextFile.svg" id="5_13sgg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vjb58"]
+bg_color = Color(0.180392, 0.156863, 0.247059, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.666667, 0.67451, 0.768627, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+expand_margin_left = 8.0
+expand_margin_top = 6.0
+expand_margin_bottom = 6.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_g3eks"]
+font_size = 12
+font_color = Color(0.847059, 0.847059, 0.847059, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_13sgg"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_con2f"]
+bg_color = Color(0.180392, 0.156863, 0.247059, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.666667, 0.67451, 0.768627, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+expand_margin_left = 8.0
+expand_margin_right = 8.0
+expand_margin_bottom = 6.0
+
+[node name="menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_con2f")
+
+[node name="hbox" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="hbox"]
+z_index = 1
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vjb58")
+
+[node name="MarginContainer" type="MarginContainer" parent="hbox/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="hbox/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="hbox/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "File System"
+
+[node name="horizLine" type="TextureRect" parent="hbox/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_mhnvy")
+
+[node name="MarginContainer" type="MarginContainer" parent="hbox/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="hbox/PanelContainer/MarginContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="file4" type="HBoxContainer" parent="hbox/PanelContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="icon" type="TextureRect" parent="hbox/PanelContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/file4"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("3_13sgg")
+
+[node name="filename" type="Label" parent="hbox/PanelContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/file4"]
+layout_mode = 2
+text = "run.tmp"
+label_settings = SubResource("LabelSettings_g3eks")
+
+[node name="file" type="HBoxContainer" parent="hbox/PanelContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="icon" type="TextureRect" parent="hbox/PanelContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/file"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("3_v86rl")
+
+[node name="filename" type="Label" parent="hbox/PanelContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/file"]
+layout_mode = 2
+text = "game.gd"
+label_settings = SubResource("LabelSettings_g3eks")
+
+[node name="file2" type="HBoxContainer" parent="hbox/PanelContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="icon" type="TextureRect" parent="hbox/PanelContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/file2"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("3_4ytvr")
+
+[node name="filename" type="Label" parent="hbox/PanelContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/file2"]
+layout_mode = 2
+text = "config.ini"
+label_settings = SubResource("LabelSettings_g3eks")
+
+[node name="file3" type="HBoxContainer" parent="hbox/PanelContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="icon" type="TextureRect" parent="hbox/PanelContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/file3"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("5_13sgg")
+
+[node name="filename" type="Label" parent="hbox/PanelContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/file3"]
+layout_mode = 2
+text = "README.md"
+label_settings = SubResource("LabelSettings_g3eks")
+
+[node name="vbox" type="VBoxContainer" parent="hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+alignment = 2
+
+[node name="margin" type="MarginContainer" parent="hbox/vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="viewportcont" type="SubViewportContainer" parent="hbox/vbox/margin"]
+layout_mode = 2
+size_flags_vertical = 3
+stretch = true
+
+[node name="subviewportcont" type="SubViewport" parent="hbox/vbox/margin/viewportcont"]
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="game" parent="hbox/vbox/margin/viewportcont/subviewportcont" instance=ExtResource("2_vjb58")]
+unique_name_in_owner = true
+
+[node name="overlay" type="Panel" parent="hbox/vbox/margin"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_13sgg")
+
+[node name="PanelContainer" type="PanelContainer" parent="hbox/vbox"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_con2f")
+
+[node name="MarginContainer" type="MarginContainer" parent="hbox/vbox/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="hbox/vbox/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="hbox/vbox/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Debug Output"
+
+[node name="horizLine" type="TextureRect" parent="hbox/vbox/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_mhnvy")
+
+[node name="PanelContainer" type="PanelContainer" parent="hbox/vbox/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="hbox/vbox/PanelContainer/MarginContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="console" type="RichTextLabel" parent="hbox/vbox/PanelContainer/MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/default_color = Color(0.627451, 0.627451, 0.627451, 1)
+theme_override_fonts/normal_font = ExtResource("3_con2f")
+bbcode_enabled = true
+text = "Game Started"
+scroll_following = true
+shortcut_keys_enabled = false
+vertical_alignment = 2

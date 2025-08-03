@@ -4,6 +4,7 @@ class_name Game
 const FLOOR_MATERIAL:ShaderMaterial = preload("res://resources/floor.tres")
 const CAMERA_MOVE_SPEED:float = 2
 
+@onready var menu:Menu = $"/root/menu"
 @onready var scene:Scene = $"scene"
 @onready var ui = $"ui"
 @onready var cursor = $"ui/SubViewportContainer/cursorViewport/cursor"
@@ -16,6 +17,7 @@ var cursorPosition:Vector2i
 
 var cycle:float = 0
 var timeLeft:float = 10
+var timeSinceStart:float = 0
 
 var objectToPlace:Object = Belt
 var undergroundInputStoredNode:PathNode
@@ -33,9 +35,10 @@ var timers:Array[Timer] = []
 
 var requestPairs:Array[InputOutput.RequestPair] = []
 var rounds:int = 1
-var pathsThisRound:int = 0
+var pathsThisRound:int = 4
 var pathsPerRound:int = 5
 var paused:bool = false
+var trulyPaused:bool = false # stop anims fully
 
 var partialPathIdIncr:int = 0
 
@@ -101,15 +104,18 @@ func _process(delta:float) -> void:
 			else: cursorPosition.x = clamp(cursorPosition.x, inputPosition.x + 1, inputPosition.x + 5)
 	cursor.position = U.fxz(cursorPosition) + U.v3(0.5)
 	
-	if paused: cycle += delta
-	else: cycle += 4 * delta
+	if !paused: cycle += 4 * delta
+	elif !trulyPaused: cycle += delta
 	if cycle >= Items.SPACES_PER_ITEM:
 		cycle -= Items.SPACES_PER_ITEM
 	scene.items.updateDisplays()
 	
 	if !paused && rounds > 1:
 		timeLeft -= delta
+		if timeLeft < 0: lose()
 	ui.updateTimer()
+
+	timeSinceStart += delta
 
 	var hovered:Entity = scene.getEntity(cursorPosition)
 	if hovered and !paused:
@@ -156,6 +162,7 @@ func heldClick(previousCursorPosition:Vector2i) -> void:
 			else: delete()
 
 func _input(event:InputEvent) -> void:
+	if event is InputEventKey and event.is_pressed() and event.keycode == KEY_ESCAPE and !trulyPaused: menu.togglePause()
 	if paused: return
 	if event is InputEventMouseMotion:
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
@@ -185,6 +192,7 @@ func _input(event:InputEvent) -> void:
 				KEY_S: if Input.is_key_pressed(KEY_SHIFT): currentRotation = U.ROTATIONS.DOWN; restartDragFromHere()
 				KEY_D: if Input.is_key_pressed(KEY_SHIFT): currentRotation = U.ROTATIONS.RIGHT; restartDragFromHere()
 				KEY_F3: isDebug = !isDebug
+				KEY_K: lose()
 				KEY_SPACE:
 					if intendedCameraHeight > 50: intendedCameraHeight = 20
 					else: intendedCameraHeight = 76.2939453125; upperCameraHeight = 76.2939453125
@@ -279,9 +287,10 @@ func newInputOutputs() -> void:
 func pathComplete() -> void:
 	for requestPair in requestPairs: if !requestPair.completed: return
 	pathsThisRound += 1
+	menu.consolePrint("Path {%s} complete" % len(requestPairs))
 	if pathsThisRound == pathsPerRound:
-		timeLeft += 50
-		ui.updateRoundsCount()
+		timeLeft += 0
+		menu.consolePrint("Round %s complete" % rounds)
 		paused = true
 		ui.showEndRoundScreen()
 		setCursor()
@@ -338,6 +347,21 @@ func screenspaceToWorldspace(pos:Vector2) -> Vector2i:
 
 func worldspaceToScreenspace(pos:Vector2) -> Vector2:
 	return ((Vector2(pos) - U.xz(cameraPosition)) / effectiveScreenSize + U.v2(0.5)) * Vector2(get_viewport().size)
+
+func lose() -> void:
+	trulyPaused = true
+	paused = true
+	setCursor()
+	var tween = create_tween()
+	tween.tween_interval(1)
+	tween.tween_property(menu.overlay, "modulate:a", 0.5, 0.5)
+	tween.tween_callback(func(): 
+		menu.overlay.mouse_default_cursor_shape = Input.CURSOR_WAIT
+		menu.overlay.mouse_filter = Control.MouseFilter.MOUSE_FILTER_STOP
+	)
+	tween.tween_interval(1)
+	tween.tween_callback(menu.togglePause)
+	menu.consoleError("FATAL: Timeout error")
 
 class RunningTimer:
 	extends Timer

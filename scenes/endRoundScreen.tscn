@@ -53,118 +53,131 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_vj7qv")
 script = ExtResource("1_klblk")
 
-[node name="menu" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(500, 0)
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 100
+
+[node name="menu" type="PanelContainer" parent="MarginContainer"]
+custom_minimum_size = Vector2(500, 400)
+layout_mode = 2
+size_flags_vertical = 4
 theme_override_styles/panel = ExtResource("6_itomd")
 
-[node name="margin" type="MarginContainer" parent="menu"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/menu"]
 layout_mode = 2
+
+[node name="margin" type="MarginContainer" parent="MarginContainer/menu/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="vcont" type="VBoxContainer" parent="menu/margin"]
+[node name="vcont" type="VBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin"]
 layout_mode = 2
 
-[node name="title" type="HBoxContainer" parent="menu/margin/vcont"]
+[node name="title" type="HBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="version" type="Label" parent="menu/margin/vcont/title"]
+[node name="version" type="Label" parent="MarginContainer/menu/ScrollContainer/margin/vcont/title"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Build 1"
 label_settings = SubResource("LabelSettings_6ubk6")
 
-[node name="vcont" type="VBoxContainer" parent="menu/margin/vcont/title"]
+[node name="vcont" type="VBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/title"]
 layout_mode = 2
 alignment = 1
 
-[node name="margin" type="MarginContainer" parent="menu/margin/vcont/title/vcont"]
+[node name="margin" type="MarginContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/title/vcont"]
 layout_mode = 2
 theme_override_constants/margin_top = 4
 
-[node name="latest" type="PanelContainer" parent="menu/margin/vcont/title/vcont/margin"]
+[node name="latest" type="PanelContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/title/vcont/margin"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_6ubk6")
 
-[node name="Label" type="Label" parent="menu/margin/vcont/title/vcont/margin/latest"]
+[node name="Label" type="Label" parent="MarginContainer/menu/ScrollContainer/margin/vcont/title/vcont/margin/latest"]
 layout_mode = 2
 text = "Latest"
 label_settings = SubResource("LabelSettings_8nmw0")
 
-[node name="heading" type="MarginContainer" parent="menu/margin/vcont"]
+[node name="heading" type="MarginContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont"]
 layout_mode = 2
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="vbox" type="VBoxContainer" parent="menu/margin/vcont/heading"]
+[node name="vbox" type="VBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/heading"]
 layout_mode = 2
 
-[node name="subtitle" type="Label" parent="menu/margin/vcont/heading/vbox"]
+[node name="subtitle" type="Label" parent="MarginContainer/menu/ScrollContainer/margin/vcont/heading/vbox"]
 layout_mode = 2
 text = "What's Changed"
 label_settings = SubResource("LabelSettings_3khar")
 
-[node name="horizLine" type="TextureRect" parent="menu/margin/vcont/heading/vbox"]
+[node name="horizLine" type="TextureRect" parent="MarginContainer/menu/ScrollContainer/margin/vcont/heading/vbox"]
 layout_mode = 2
 texture = ExtResource("8_6ubk6")
 
-[node name="body" type="MarginContainer" parent="menu/margin/vcont"]
+[node name="body" type="MarginContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont"]
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_right = 50
 
-[node name="Label3" type="Label" parent="menu/margin/vcont/body"]
+[node name="Label3" type="Label" parent="MarginContainer/menu/ScrollContainer/margin/vcont/body"]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 text = " • There is now a timer. You must fulfill all requests of the next round within one minute
  • Fridge item may now appear, which is incompatible with underpaths
- • Added four extra chunks of map space"
+ • Added four extra chunks of map space
+ • Added nothing
+ • Added nothing
+ • Added nothing
+ • Added nothing
+ • Added nothing
+ • Added nothing"
 label_settings = SubResource("LabelSettings_pspes")
 autowrap_mode = 2
 
-[node name="heading2" type="MarginContainer" parent="menu/margin/vcont"]
+[node name="heading2" type="MarginContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont"]
 layout_mode = 2
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="vbox" type="VBoxContainer" parent="menu/margin/vcont/heading2"]
+[node name="vbox" type="VBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/heading2"]
 layout_mode = 2
 
-[node name="subtitle" type="Label" parent="menu/margin/vcont/heading2/vbox"]
+[node name="subtitle" type="Label" parent="MarginContainer/menu/ScrollContainer/margin/vcont/heading2/vbox"]
 layout_mode = 2
 text = "Options"
 label_settings = SubResource("LabelSettings_3khar")
 
-[node name="options" type="PanelContainer" parent="menu/margin/vcont"]
+[node name="options" type="PanelContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont"]
 layout_mode = 2
 theme_override_styles/panel = ExtResource("6_itomd")
 
-[node name="vcont" type="VBoxContainer" parent="menu/margin/vcont/options"]
+[node name="vcont" type="VBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options"]
 layout_mode = 2
 
-[node name="option" type="HBoxContainer" parent="menu/margin/vcont/options/vcont"]
+[node name="option" type="HBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="menu/margin/vcont/options/vcont/option"]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont/option"]
 layout_mode = 2
 texture = ExtResource("10_3khar")
 
-[node name="label" type="RichTextLabel" parent="menu/margin/vcont/options/vcont/option"]
+[node name="label" type="RichTextLabel" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont/option"]
 layout_mode = 2
 theme_override_colors/default_color = Color(0.309804, 0.756863, 1, 1)
 theme_override_fonts/normal_font = ExtResource("9_3khar")
@@ -175,18 +188,18 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 0
 
-[node name="horizLine" type="TextureRect" parent="menu/margin/vcont/options/vcont"]
+[node name="horizLine" type="TextureRect" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont"]
 layout_mode = 2
 texture = ExtResource("8_6ubk6")
 
-[node name="option2" type="HBoxContainer" parent="menu/margin/vcont/options/vcont"]
+[node name="option2" type="HBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="menu/margin/vcont/options/vcont/option2"]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont/option2"]
 layout_mode = 2
 texture = ExtResource("11_pspes")
 
-[node name="label" type="RichTextLabel" parent="menu/margin/vcont/options/vcont/option2"]
+[node name="label" type="RichTextLabel" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont/option2"]
 layout_mode = 2
 theme_override_colors/default_color = Color(0.309804, 0.756863, 1, 1)
 theme_override_fonts/normal_font = ExtResource("9_3khar")
@@ -197,18 +210,18 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 0
 
-[node name="horizLine2" type="TextureRect" parent="menu/margin/vcont/options/vcont"]
+[node name="horizLine2" type="TextureRect" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont"]
 layout_mode = 2
 texture = ExtResource("8_6ubk6")
 
-[node name="option3" type="HBoxContainer" parent="menu/margin/vcont/options/vcont"]
+[node name="option3" type="HBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="menu/margin/vcont/options/vcont/option3"]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont/option3"]
 layout_mode = 2
 texture = ExtResource("4_k1xcv")
 
-[node name="label" type="RichTextLabel" parent="menu/margin/vcont/options/vcont/option3"]
+[node name="label" type="RichTextLabel" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont/option3"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/default_color = Color(0.309804, 0.756863, 1, 1)
@@ -219,6 +232,6 @@ text = "[url][b]Third Option[/b][/url]"
 scroll_active = false
 autowrap_mode = 0
 
-[connection signal="meta_clicked" from="menu/margin/vcont/options/vcont/option/label" to="." method="_optionChosen" binds= [0]]
-[connection signal="meta_clicked" from="menu/margin/vcont/options/vcont/option2/label" to="." method="_optionChosen" binds= [1]]
-[connection signal="meta_clicked" from="menu/margin/vcont/options/vcont/option3/label" to="." method="_optionChosen" binds= [2]]
+[connection signal="meta_clicked" from="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont/option/label" to="." method="_optionChosen" binds= [0]]
+[connection signal="meta_clicked" from="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont/option2/label" to="." method="_optionChosen" binds= [1]]
+[connection signal="meta_clicked" from="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont/option3/label" to="." method="_optionChosen" binds= [2]]

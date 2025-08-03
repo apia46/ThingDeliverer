@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="ThingDeliverer"
-run/main_scene="uid://dddwu1sve42so"
+run/main_scene="uid://bson8b2xh0e3u"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 

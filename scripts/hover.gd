@@ -39,4 +39,4 @@ static func attribute(attrName:String, value:Variant, append:int=0, color:bool=t
 
 static func debugAttribute(isDebug:bool, attrName:String, value:Variant, append:int=0, color:bool=true, prepend:String="") -> String: return TAB + prepend + specialName("@debug", 1) + varName(attrName) + ": " + (enumName(str(value), append) if color else noneName(str(value), append)) + "\n" if isDebug else ""
 
-static func errorMessage(string:String) -> String: return "[color=#FF0066]ERROR[/color]: " + string
+static func errorMessage(string:String) -> String: return "[color=#f96790]ERROR[/color]: " + string

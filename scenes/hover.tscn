@@ -10,6 +10,7 @@ offset_left = 1.0
 offset_top = 1.0
 offset_right = 169.0
 offset_bottom = 113.0
+mouse_filter = 2
 theme_override_constants/separation = 16
 script = ExtResource("1_kvef0")
 

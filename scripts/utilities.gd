@@ -63,9 +63,9 @@ static func bool3ToText(bool3:BOOL3): return ["?", "X", "✓"][bool3]
 static func v2iunwrap(vector:Vector2i, gridSize:int) -> int:
 	return vector.y * gridSize + vector.x
 
-static func timeToText(time:float):
+static func timeToText(time:float, decimals:bool=false):
 	var minutes = int(time / 60)
-	var seconds = int(time - 60*minutes)
-	return str(minutes) + ":" + str(seconds).pad_zeros(2)
+	@warning_ignore("incompatible_ternary") var seconds = float(time - 60*minutes) if decimals else int(time - 60*minutes)
+	return str(minutes).pad_zeros(2) + ":" + str(seconds).pad_zeros(2).left(6)
 
 static func boolToText(condition:Variant): return "✓" if condition else "X"
