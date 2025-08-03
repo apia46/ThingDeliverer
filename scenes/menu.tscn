@@ -266,6 +266,7 @@ unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 mouse_filter = 2
+mouse_default_cursor_shape = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_13sgg")
 
 [node name="mainMenu" parent="hbox/rightSide/openFile" instance=ExtResource("9_70i5f")]

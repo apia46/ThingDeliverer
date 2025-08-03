@@ -35,7 +35,7 @@ var timers:Array[Timer] = []
 
 var requestPairs:Array[InputOutput.RequestPair] = []
 var rounds:int = 1
-var pathsThisRound:int = 4
+var pathsThisRound:int = 0
 var pathsPerRound:int = 5
 var paused:bool = false
 var trulyPaused:bool = false # stop anims fully
@@ -355,10 +355,7 @@ func lose() -> void:
 	setCursor()
 	var tween = create_tween()
 	tween.tween_interval(1)
-	tween.tween_callback(func(): 
-		menu.overlay.mouse_default_cursor_shape = Control.CURSOR_WAIT
-		menu.overlay.mouse_filter = Control.MouseFilter.MOUSE_FILTER_STOP
-	)
+	tween.tween_callback(func(): menu.overlay.mouse_filter = Control.MouseFilter.MOUSE_FILTER_STOP)
 	tween.tween_property(menu.overlay, "modulate:a", 0.5, 0.5)
 	tween.tween_interval(1)
 	if !menu.paused: tween.tween_callback(menu.togglePause)

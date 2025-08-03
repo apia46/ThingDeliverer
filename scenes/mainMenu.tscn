@@ -1,29 +1,36 @@
-[gd_scene load_steps=3 format=3 uid="uid://nx5gf4q6wtto"]
+[gd_scene load_steps=4 format=3 uid="uid://nx5gf4q6wtto"]
 
 [ext_resource type="Script" uid="uid://bx65ej8gfoiid" path="res://scripts/mainMenu.gd" id="1_3d1i7"]
 [ext_resource type="FontFile" uid="uid://b872nh8bkgph8" path="res://resources/ui/Inconsolata-SemiBold.ttf" id="1_5mbse"]
 
-[node name="mainMenu" type="MarginContainer"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3d1i7"]
+bg_color = Color(0.164706, 0.164706, 0.164706, 1)
+
+[node name="mainMenu" type="PanelContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_3d1i7")
 script = ExtResource("1_3d1i7")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer"]
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("1_5mbse")
-text = "var game = ThingDeliverer.new()"
+text = "placeholder main menu"
 
-[node name="Button" type="Button" parent="."]
+[node name="Button" type="Button" parent="MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 text = "play game"
 
-[connection signal="pressed" from="Button" to="." method="_startGame"]
+[connection signal="pressed" from="MarginContainer/Button" to="." method="_startGame"]

@@ -50,6 +50,8 @@ func confirmEndRun() -> void:
 	%gameFile.visible = false
 	%consoleCont.visible = false
 	gaming = false
+	overlay.modulate.a = 0
+	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	game.queue_free()
 
 func startGame() -> void:

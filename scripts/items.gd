@@ -32,10 +32,13 @@ func addDisplay(type:TYPES, pos:Vector2i, direction: U.ROTATIONS) -> Display:
 	var display:Display = Display.new(type, pos, direction, len(displays[type]))
 	displays[type].append(display)
 	assert(!!display)
+	if len(displays[type]) >= displayCounts[type]:
+		displayCounts[type] = displayCounts[type] << 1
+		multiMeshInstances[type].multimesh.instance_count = displayCounts[type]
 	return display
 
 func removeDisplay(display:Display) -> Display:
-	if display.index >= displayCounts[display.type]: return null
+	assert(display.index < displayCounts[display.type])
 	multiMeshInstances[display.type].multimesh.set_instance_transform(len(displays[display.type]), DISAPPEAR_TRANSFORM)
 	displays[display.type].pop_at(display.index)
 	for i in range(display.index, len(displays[display.type])): displays[display.type][i].index -= 1
