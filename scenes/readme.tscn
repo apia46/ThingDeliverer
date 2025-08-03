@@ -95,6 +95,7 @@ text = " • [LMB] to place entities
  • [Q] and [E] or [Shift] + [WASD] to rotate cursor
 
 Alternatively, if you do not have a scroll wheel:
+
  • [SPACE] to toggle between two preset camera zoom levels
  • [WASD] to move the camera"
 label_settings = SubResource("LabelSettings_llexs")
