@@ -1,38 +1,48 @@
-[gd_scene load_steps=14 format=3 uid="uid://dwcm4ycttlsw1"]
+[gd_scene load_steps=15 format=3 uid="uid://dwcm4ycttlsw1"]
 
-[ext_resource type="FontFile" uid="uid://mgbewlhf6ayn" path="res://resources/ui/SpaceMono-Bold.woff" id="1_agm60"]
 [ext_resource type="Script" uid="uid://cpjc0gipy7vj5" path="res://scripts/endRoundScreen.gd" id="1_klblk"]
-[ext_resource type="Texture2D" uid="uid://75jslkjx6ebq" path="res://resources/ui/undergroundSelected.png" id="2_qal0e"]
-[ext_resource type="FontFile" uid="uid://cbeu4lg1vkpgk" path="res://resources/ui/SpaceMono-Regular.woff" id="3_jeis1"]
 [ext_resource type="Texture2D" uid="uid://byvhjuk24w60g" path="res://resources/ui/entityButton.png" id="4_k1xcv"]
+[ext_resource type="StyleBox" uid="uid://dy0jw7vyrp3pc" path="res://resources/ui/stylebox.tres" id="6_itomd"]
+[ext_resource type="FontFile" uid="uid://xinijcy13jse" path="res://resources/ui/NotoSans-Bold.ttf" id="7_nlhyi"]
+[ext_resource type="Texture2D" uid="uid://cfek1u0gilq6a" path="res://resources/ui/horizontalLine.png" id="8_6ubk6"]
+[ext_resource type="FontFile" uid="uid://u5t8a6v4my7y" path="res://resources/ui/NotoSans-Regular.ttf" id="9_3khar"]
+[ext_resource type="Texture2D" uid="uid://dq6lwha8kj606" path="res://resources/ui/undergroundUnselected.png" id="10_3khar"]
+[ext_resource type="Texture2D" uid="uid://dbx607kpgbhhy" path="res://resources/ui/beltUnselected.png" id="11_pspes"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vj7qv"]
 bg_color = Color(0, 0, 0, 0.501961)
 
-[sub_resource type="LabelSettings" id="LabelSettings_hl1qf"]
-font = ExtResource("1_agm60")
-font_size = 48
+[sub_resource type="LabelSettings" id="LabelSettings_6ubk6"]
+font = ExtResource("7_nlhyi")
+font_size = 36
 
-[sub_resource type="LabelSettings" id="LabelSettings_elc13"]
-font = ExtResource("1_agm60")
-font_size = 24
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vb2fb"]
-bg_color = Color(0.180392, 0.156863, 0.247059, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6ubk6"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 1, 0.4, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
+expand_margin_left = 4.0
+expand_margin_top = 2.0
+expand_margin_right = 4.0
+expand_margin_bottom = 2.0
 
-[sub_resource type="LabelSettings" id="LabelSettings_14ou0"]
-font = ExtResource("3_jeis1")
+[sub_resource type="LabelSettings" id="LabelSettings_8nmw0"]
+font = ExtResource("9_3khar")
+font_size = 10
+font_color = Color(0, 1, 0.4, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_3khar"]
+font = ExtResource("7_nlhyi")
 font_size = 24
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_klblk"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_20d63"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_itomd"]
+[sub_resource type="LabelSettings" id="LabelSettings_pspes"]
+font = ExtResource("9_3khar")
 
 [node name="endRoundScreen" type="Panel"]
 anchors_preset = 15
@@ -43,7 +53,8 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_vj7qv")
 script = ExtResource("1_klblk")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="menu" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(500, 0)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -56,118 +67,158 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = ExtResource("6_itomd")
 
-[node name="Label" type="Label" parent="VBoxContainer"]
+[node name="margin" type="MarginContainer" parent="menu"]
 layout_mode = 2
-text = "End of Round"
-label_settings = SubResource("LabelSettings_hl1qf")
-horizontal_alignment = 1
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 
-[node name="Label2" type="Label" parent="VBoxContainer"]
+[node name="vcont" type="VBoxContainer" parent="menu/margin"]
 layout_mode = 2
-text = "Pick your whatever
-"
-label_settings = SubResource("LabelSettings_elc13")
-horizontal_alignment = 1
 
-[node name="options" type="VBoxContainer" parent="VBoxContainer"]
+[node name="title" type="HBoxContainer" parent="menu/margin/vcont"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="option" type="PanelContainer" parent="VBoxContainer/options"]
-custom_minimum_size = Vector2(400, 80)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_vb2fb")
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/options/option"]
-layout_mode = 2
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 4
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/options/option/MarginContainer"]
-layout_mode = 2
-
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/options/option/MarginContainer/HBoxContainer"]
-layout_mode = 2
-texture = ExtResource("2_qal0e")
-expand_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/options/option/MarginContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "5x underground(s)"
-label_settings = SubResource("LabelSettings_14ou0")
-horizontal_alignment = 1
-
-[node name="Button" type="Button" parent="VBoxContainer/options/option"]
-layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxEmpty_klblk")
-
-[node name="option2" type="PanelContainer" parent="VBoxContainer/options"]
+[node name="version" type="Label" parent="menu/margin/vcont/title"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(400, 80)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_vb2fb")
+text = "Build 1"
+label_settings = SubResource("LabelSettings_6ubk6")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/options/option2"]
+[node name="vcont" type="VBoxContainer" parent="menu/margin/vcont/title"]
 layout_mode = 2
-theme_override_constants/margin_left = 4
+alignment = 1
+
+[node name="margin" type="MarginContainer" parent="menu/margin/vcont/title/vcont"]
+layout_mode = 2
 theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/options/option2/MarginContainer"]
+[node name="latest" type="PanelContainer" parent="menu/margin/vcont/title/vcont/margin"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6ubk6")
+
+[node name="Label" type="Label" parent="menu/margin/vcont/title/vcont/margin/latest"]
+layout_mode = 2
+text = "Latest"
+label_settings = SubResource("LabelSettings_8nmw0")
+
+[node name="heading" type="MarginContainer" parent="menu/margin/vcont"]
+layout_mode = 2
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="vbox" type="VBoxContainer" parent="menu/margin/vcont/heading"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/options/option2/MarginContainer/HBoxContainer"]
+[node name="subtitle" type="Label" parent="menu/margin/vcont/heading/vbox"]
+layout_mode = 2
+text = "What's Changed"
+label_settings = SubResource("LabelSettings_3khar")
+
+[node name="horizLine" type="TextureRect" parent="menu/margin/vcont/heading/vbox"]
+layout_mode = 2
+texture = ExtResource("8_6ubk6")
+
+[node name="body" type="MarginContainer" parent="menu/margin/vcont"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 50
+
+[node name="Label3" type="Label" parent="menu/margin/vcont/body"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+text = " • There is now a timer. You must fulfill all requests of the next round within one minute
+ • Fridge item may now appear, which is incompatible with underpaths
+ • Added four extra chunks of map space"
+label_settings = SubResource("LabelSettings_pspes")
+autowrap_mode = 2
+
+[node name="heading2" type="MarginContainer" parent="menu/margin/vcont"]
+layout_mode = 2
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="vbox" type="VBoxContainer" parent="menu/margin/vcont/heading2"]
+layout_mode = 2
+
+[node name="subtitle" type="Label" parent="menu/margin/vcont/heading2/vbox"]
+layout_mode = 2
+text = "Options"
+label_settings = SubResource("LabelSettings_3khar")
+
+[node name="options" type="PanelContainer" parent="menu/margin/vcont"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("6_itomd")
+
+[node name="vcont" type="VBoxContainer" parent="menu/margin/vcont/options"]
+layout_mode = 2
+
+[node name="option" type="HBoxContainer" parent="menu/margin/vcont/options/vcont"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="menu/margin/vcont/options/vcont/option"]
+layout_mode = 2
+texture = ExtResource("10_3khar")
+
+[node name="label" type="RichTextLabel" parent="menu/margin/vcont/options/vcont/option"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.309804, 0.756863, 1, 1)
+theme_override_fonts/normal_font = ExtResource("9_3khar")
+theme_override_fonts/bold_font = ExtResource("7_nlhyi")
+bbcode_enabled = true
+text = "[url]5x [b]Underpaths[/b][/url]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="horizLine" type="TextureRect" parent="menu/margin/vcont/options/vcont"]
+layout_mode = 2
+texture = ExtResource("8_6ubk6")
+
+[node name="option2" type="HBoxContainer" parent="menu/margin/vcont/options/vcont"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="menu/margin/vcont/options/vcont/option2"]
+layout_mode = 2
+texture = ExtResource("11_pspes")
+
+[node name="label" type="RichTextLabel" parent="menu/margin/vcont/options/vcont/option2"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.309804, 0.756863, 1, 1)
+theme_override_fonts/normal_font = ExtResource("9_3khar")
+theme_override_fonts/bold_font = ExtResource("7_nlhyi")
+bbcode_enabled = true
+text = "[url][b]Other Option[/b][/url]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="horizLine2" type="TextureRect" parent="menu/margin/vcont/options/vcont"]
+layout_mode = 2
+texture = ExtResource("8_6ubk6")
+
+[node name="option3" type="HBoxContainer" parent="menu/margin/vcont/options/vcont"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="menu/margin/vcont/options/vcont/option3"]
 layout_mode = 2
 texture = ExtResource("4_k1xcv")
-expand_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/options/option2/MarginContainer/HBoxContainer"]
+[node name="label" type="RichTextLabel" parent="menu/margin/vcont/options/vcont/option3"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "other option"
-label_settings = SubResource("LabelSettings_14ou0")
-horizontal_alignment = 1
+theme_override_colors/default_color = Color(0.309804, 0.756863, 1, 1)
+theme_override_fonts/normal_font = ExtResource("9_3khar")
+theme_override_fonts/bold_font = ExtResource("7_nlhyi")
+bbcode_enabled = true
+text = "[url][b]Third Option[/b][/url]"
+scroll_active = false
+autowrap_mode = 0
 
-[node name="Button2" type="Button" parent="VBoxContainer/options/option2"]
-layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxEmpty_20d63")
-
-[node name="option3" type="PanelContainer" parent="VBoxContainer/options"]
-custom_minimum_size = Vector2(400, 80)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_vb2fb")
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/options/option3"]
-layout_mode = 2
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 4
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/options/option3/MarginContainer"]
-layout_mode = 2
-
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/options/option3/MarginContainer/HBoxContainer"]
-layout_mode = 2
-texture = ExtResource("4_k1xcv")
-expand_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/options/option3/MarginContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "third opption"
-label_settings = SubResource("LabelSettings_14ou0")
-horizontal_alignment = 1
-
-[node name="Button3" type="Button" parent="VBoxContainer/options/option3"]
-layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxEmpty_itomd")
-
-[connection signal="pressed" from="VBoxContainer/options/option/Button" to="." method="optionChosen" binds= [0]]
-[connection signal="pressed" from="VBoxContainer/options/option2/Button2" to="." method="optionChosen" binds= [1]]
-[connection signal="pressed" from="VBoxContainer/options/option3/Button3" to="." method="optionChosen" binds= [2]]
+[connection signal="meta_clicked" from="menu/margin/vcont/options/vcont/option/label" to="." method="_optionChosen" binds= [0]]
+[connection signal="meta_clicked" from="menu/margin/vcont/options/vcont/option2/label" to="." method="_optionChosen" binds= [1]]
+[connection signal="meta_clicked" from="menu/margin/vcont/options/vcont/option3/label" to="." method="_optionChosen" binds= [2]]

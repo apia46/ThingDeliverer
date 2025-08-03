@@ -24,5 +24,7 @@ func updateRoundsCount() -> void: %roundsCount.text = "Round " + str(game.rounds
 
 func updatePathsCount() -> void: %pathsCount.text = str(game.pathsThisRound) + "/" + str(game.pathsPerRound)
 
-func showEndRoundScreen() -> void: %endRoundScreen.visible = true
+func showEndRoundScreen() -> void:
+	%endRoundScreen.loadNext()
+	%endRoundScreen.visible = true
 func hideEndRoundScreen() -> void: %endRoundScreen.visible = false

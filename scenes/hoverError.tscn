@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dmq327ujv68ov"]
 
-[ext_resource type="FontFile" uid="uid://b872nh8bkgph8" path="res://resources/Inconsolata-SemiBold.ttf" id="1_f67si"]
+[ext_resource type="FontFile" uid="uid://b872nh8bkgph8" path="res://resources/ui/Inconsolata-SemiBold.ttf" id="1_f67si"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wk2q6"]
 bg_color = Color(0.180392, 0.156863, 0.247059, 1)
