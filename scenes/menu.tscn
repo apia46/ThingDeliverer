@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bson8b2xh0e3u"]
+[gd_scene load_steps=21 format=3 uid="uid://bson8b2xh0e3u"]
 
 [ext_resource type="Script" uid="uid://g34ijtt88ye" path="res://scripts/menu.gd" id="1_con2f"]
 [ext_resource type="Texture2D" uid="uid://cfek1u0gilq6a" path="res://resources/ui/horizontalLine.png" id="2_mhnvy"]
@@ -57,6 +57,13 @@ corner_radius_bottom_left = 4
 expand_margin_left = 8.0
 expand_margin_right = 8.0
 expand_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ufwb2"]
+bg_color = Color(0.129412, 0.109804, 0.180392, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="menu" type="Control"]
 layout_mode = 3
@@ -309,12 +316,13 @@ texture = ExtResource("2_mhnvy")
 [node name="PanelContainer" type="PanelContainer" parent="hbox/rightSide/consoleCont/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_ufwb2")
 
 [node name="MarginContainer" type="MarginContainer" parent="hbox/rightSide/consoleCont/MarginContainer/VBoxContainer/PanelContainer"]
 layout_mode = 2
-theme_override_constants/margin_left = 4
+theme_override_constants/margin_left = 6
 theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 4
+theme_override_constants/margin_right = 6
 theme_override_constants/margin_bottom = 4
 
 [node name="console" type="RichTextLabel" parent="hbox/rightSide/consoleCont/MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]

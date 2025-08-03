@@ -1,15 +1,26 @@
-[gd_scene format=3 uid="uid://bfc6y23eofsdn"]
+[gd_scene load_steps=3 format=3 uid="uid://bfc6y23eofsdn"]
 
-[node name="config" type="Control"]
-layout_mode = 3
+[ext_resource type="FontFile" uid="uid://b872nh8bkgph8" path="res://resources/ui/Inconsolata-SemiBold.ttf" id="1_duhc1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t8hcq"]
+bg_color = Color(0.129412, 0.109804, 0.180392, 1)
+
+[node name="config" type="PanelContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_t8hcq")
 
-[node name="Label" type="Label" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "this is the config menu"
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer"]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("1_duhc1")
+text = "placeholder config menu"
