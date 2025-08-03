@@ -68,7 +68,6 @@ theme_override_constants/margin_bottom = 100
 [node name="menu" type="PanelContainer" parent="MarginContainer"]
 custom_minimum_size = Vector2(500, 400)
 layout_mode = 2
-size_flags_vertical = 4
 theme_override_styles/panel = ExtResource("6_itomd")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/menu"]
@@ -133,7 +132,7 @@ texture = ExtResource("8_6ubk6")
 [node name="body" type="MarginContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont"]
 layout_mode = 2
 theme_override_constants/margin_left = 16
-theme_override_constants/margin_right = 50
+theme_override_constants/margin_right = 16
 
 [node name="Label3" type="Label" parent="MarginContainer/menu/ScrollContainer/margin/vcont/body"]
 custom_minimum_size = Vector2(400, 0)
@@ -141,12 +140,8 @@ layout_mode = 2
 text = " • There is now a timer. You must fulfill all requests of the next round within one minute
  • Fridge item may now appear, which is incompatible with underpaths
  • Added four extra chunks of map space
- • Added nothing
- • Added nothing
- • Added nothing
- • Added nothing
- • Added nothing
- • Added nothing"
+
+Due to these changes, there is a choice of versions for this build."
 label_settings = SubResource("LabelSettings_pspes")
 autowrap_mode = 2
 

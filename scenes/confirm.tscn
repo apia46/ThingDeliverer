@@ -1,0 +1,108 @@
+[gd_scene load_steps=7 format=3 uid="uid://d1rd1plk2jyar"]
+
+[ext_resource type="StyleBox" uid="uid://dy0jw7vyrp3pc" path="res://resources/ui/stylebox.tres" id="1_td2ac"]
+[ext_resource type="Script" uid="uid://b0qkv23evu8lo" path="res://scripts/confirm.gd" id="2_68dlr"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_td2ac"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cdn4g"]
+bg_color = Color(0.095375, 0.079963, 0.239114, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.666667, 0.67451, 0.768627, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+expand_margin_left = 4.0
+expand_margin_right = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_td2ac"]
+bg_color = Color(0.180392, 0.156863, 0.403922, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.666667, 0.67451, 0.768627, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+expand_margin_left = 4.0
+expand_margin_right = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_68dlr"]
+bg_color = Color(0.180392, 0.156863, 0.247059, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.666667, 0.67451, 0.768627, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+expand_margin_left = 4.0
+expand_margin_right = 4.0
+
+[node name="confirm" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_68dlr")
+
+[node name="panel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -157.0
+offset_top = -40.0
+offset_right = 157.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = ExtResource("1_td2ac")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="panel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="panel/VBoxContainer"]
+layout_mode = 2
+text = "Are you sure you want to close run.tmp?
+Changes will not be saved."
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 25
+alignment = 1
+
+[node name="yes" type="Button" parent="panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_td2ac")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_cdn4g")
+theme_override_styles/hover = SubResource("StyleBoxFlat_td2ac")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_cdn4g")
+theme_override_styles/normal = SubResource("StyleBoxFlat_68dlr")
+text = "Yes"
+
+[node name="no" type="Button" parent="panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_td2ac")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_cdn4g")
+theme_override_styles/hover = SubResource("StyleBoxFlat_td2ac")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_cdn4g")
+theme_override_styles/normal = SubResource("StyleBoxFlat_68dlr")
+text = "No
+"
+
+[connection signal="pressed" from="panel/VBoxContainer/HBoxContainer/yes" to="." method="_yes"]
+[connection signal="pressed" from="panel/VBoxContainer/HBoxContainer/no" to="." method="_no"]

@@ -65,6 +65,7 @@ func _ready() -> void:
 		scene.newSpace(Vector2i(x*Scene.SPACE_SIZE,y*Scene.SPACE_SIZE))
 	newInputOutputs()
 	setCursor(Belt)
+	menu.consoleSet("Game Started")
 
 func _process(delta:float) -> void:
 	var previousCursorPosition:Vector2i = cursorPosition
@@ -354,14 +355,17 @@ func lose() -> void:
 	setCursor()
 	var tween = create_tween()
 	tween.tween_interval(1)
-	tween.tween_property(menu.overlay, "modulate:a", 0.5, 0.5)
 	tween.tween_callback(func(): 
-		menu.overlay.mouse_default_cursor_shape = Input.CURSOR_WAIT
+		menu.overlay.mouse_default_cursor_shape = Control.CURSOR_WAIT
 		menu.overlay.mouse_filter = Control.MouseFilter.MOUSE_FILTER_STOP
 	)
+	tween.tween_property(menu.overlay, "modulate:a", 0.5, 0.5)
 	tween.tween_interval(1)
-	tween.tween_callback(menu.togglePause)
-	menu.consoleError("FATAL: Timeout error")
+	if !menu.paused: tween.tween_callback(menu.togglePause)
+	menu.consoleError("""FATAL: Timeout error
+				at %s rounds
+				at %s connections
+				at game.gd""" % [rounds, len(requestPairs)-1])
 
 class RunningTimer:
 	extends Timer
