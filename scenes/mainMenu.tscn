@@ -4,7 +4,7 @@
 [ext_resource type="FontFile" uid="uid://b872nh8bkgph8" path="res://resources/ui/Inconsolata-SemiBold.ttf" id="1_5mbse"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3d1i7"]
-bg_color = Color(0.164706, 0.164706, 0.164706, 1)
+bg_color = Color(0.129412, 0.109804, 0.180392, 1)
 
 [node name="mainMenu" type="PanelContainer"]
 anchors_preset = 15

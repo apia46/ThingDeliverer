@@ -1,15 +1,125 @@
-[gd_scene format=3 uid="uid://d2k40fw8r7462"]
+[gd_scene load_steps=8 format=3 uid="uid://d2k40fw8r7462"]
 
-[node name="readme" type="Control"]
-layout_mode = 3
+[ext_resource type="FontFile" uid="uid://xinijcy13jse" path="res://resources/ui/NotoSans-Bold.ttf" id="1_42t5d"]
+[ext_resource type="Texture2D" uid="uid://cfek1u0gilq6a" path="res://resources/ui/horizontalLine.png" id="2_xqf51"]
+[ext_resource type="FontFile" uid="uid://u5t8a6v4my7y" path="res://resources/ui/NotoSans-Regular.ttf" id="3_2wst4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xqf51"]
+bg_color = Color(0.128888, 0.110366, 0.181265, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_2wst4"]
+font = ExtResource("1_42t5d")
+font_size = 36
+
+[sub_resource type="LabelSettings" id="LabelSettings_llexs"]
+font = ExtResource("3_2wst4")
+
+[sub_resource type="LabelSettings" id="LabelSettings_t3jrt"]
+font = ExtResource("1_42t5d")
+font_size = 24
+
+[node name="readme" type="PanelContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_xqf51")
 
-[node name="Label" type="Label" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "this is the readme"
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="margin" type="MarginContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="vbox" type="VBoxContainer" parent="ScrollContainer/margin"]
+layout_mode = 2
+
+[node name="title" type="MarginContainer" parent="ScrollContainer/margin/vbox"]
+layout_mode = 2
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 16
+
+[node name="vbox" type="VBoxContainer" parent="ScrollContainer/margin/vbox/title"]
+layout_mode = 2
+
+[node name="title" type="Label" parent="ScrollContainer/margin/vbox/title/vbox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "ThingDeliverer"
+label_settings = SubResource("LabelSettings_2wst4")
+
+[node name="horizLine" type="TextureRect" parent="ScrollContainer/margin/vbox/title/vbox"]
+layout_mode = 2
+texture = ExtResource("2_xqf51")
+
+[node name="para" type="Label" parent="ScrollContainer/margin/vbox"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+text = "A game about delivering things."
+label_settings = SubResource("LabelSettings_llexs")
+autowrap_mode = 2
+
+[node name="heading2" type="MarginContainer" parent="ScrollContainer/margin/vbox"]
+layout_mode = 2
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="vbox" type="VBoxContainer" parent="ScrollContainer/margin/vbox/heading2"]
+layout_mode = 2
+
+[node name="subtitle" type="Label" parent="ScrollContainer/margin/vbox/heading2/vbox"]
+layout_mode = 2
+text = "Controls"
+label_settings = SubResource("LabelSettings_t3jrt")
+
+[node name="horizLine" type="TextureRect" parent="ScrollContainer/margin/vbox/heading2/vbox"]
+layout_mode = 2
+texture = ExtResource("2_xqf51")
+
+[node name="para2" type="Label" parent="ScrollContainer/margin/vbox"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+text = " • [LMB] to place entities
+ • [RMB] to delete entities
+ • [123] to choose entity to place
+ • [MMB] drag to move the camera
+ • [MMB] scroll to zoom the camera in/out
+ • [Q] and [E] or [Shift] + [WASD] to rotate cursor
+
+Alternatively, if you do not have a scroll wheel:
+ • [SPACE] to toggle between two preset camera zoom levels
+ • [WASD] to move the camera"
+label_settings = SubResource("LabelSettings_llexs")
+autowrap_mode = 2
+
+[node name="heading3" type="MarginContainer" parent="ScrollContainer/margin/vbox"]
+layout_mode = 2
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="vbox" type="VBoxContainer" parent="ScrollContainer/margin/vbox/heading3"]
+layout_mode = 2
+
+[node name="subtitle" type="Label" parent="ScrollContainer/margin/vbox/heading3/vbox"]
+layout_mode = 2
+text = "FAQ"
+label_settings = SubResource("LabelSettings_t3jrt")
+
+[node name="horizLine" type="TextureRect" parent="ScrollContainer/margin/vbox/heading3/vbox"]
+layout_mode = 2
+texture = ExtResource("2_xqf51")
+
+[node name="para3" type="Label" parent="ScrollContainer/margin/vbox"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+text = "Q: Is this a factory game?"
+label_settings = SubResource("LabelSettings_llexs")
+autowrap_mode = 2

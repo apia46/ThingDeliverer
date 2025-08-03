@@ -6,7 +6,7 @@ var game:Game
 @onready var mainMenuButton:Button = %mainMenuButton
 
 var paused:bool = true
-var currentFile:int = 1
+var currentFile:int = 3
 var gaming:bool = false
 
 func togglePause(withoutConsole:bool=false) -> void:

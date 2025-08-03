@@ -156,7 +156,6 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_g3eks")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_i6lef")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_13sgg")
 toggle_mode = true
-button_pressed = true
 button_group = ExtResource("3_g3eks")
 
 [node name="hbox" type="HBoxContainer" parent="hbox/leftSide/MarginContainer/VBoxContainer/MarginContainer/files/file2"]
@@ -215,6 +214,7 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_g3eks")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_i6lef")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_13sgg")
 toggle_mode = true
+button_pressed = true
 button_group = ExtResource("3_g3eks")
 
 [node name="hbox" type="HBoxContainer" parent="hbox/leftSide/MarginContainer/VBoxContainer/MarginContainer/files/file4"]
@@ -270,6 +270,7 @@ mouse_default_cursor_shape = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_13sgg")
 
 [node name="mainMenu" parent="hbox/rightSide/openFile" instance=ExtResource("9_70i5f")]
+visible = false
 layout_mode = 2
 
 [node name="config" parent="hbox/rightSide/openFile" instance=ExtResource("9_mj5lg")]
@@ -277,7 +278,6 @@ visible = false
 layout_mode = 2
 
 [node name="readme" parent="hbox/rightSide/openFile" instance=ExtResource("10_ufwb2")]
-visible = false
 layout_mode = 2
 
 [node name="consoleCont" type="PanelContainer" parent="hbox/rightSide"]
