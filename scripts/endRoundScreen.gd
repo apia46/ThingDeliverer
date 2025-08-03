@@ -6,11 +6,11 @@ extends Panel
 var options = [undergrounds, null, null]
 
 func loadNext() -> void:
-	%version.text = "Build " + str(game.rounds)
+	%version.text = "Build " + str(game.rounds+1)
 
 func _optionChosen(_meta, which:int) -> void: # i think theres a way to remove the first param but i cant bother to figure it out
 	options[which].call()
-	menu.consolePrint("Option %s chosen, next round is %s" % [which+1, game.rounds+1])
+	menu.consolePrint("Option %s chosen, next round starting" % [which+1])
 	game.nextRound()
 
 func undergrounds() -> void:

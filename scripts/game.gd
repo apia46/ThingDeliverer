@@ -363,6 +363,7 @@ func lose() -> void:
 				at %s rounds
 				at %s connections
 				at game.gd""" % [rounds, len(requestPairs)-1])
+	menu.consolePrint("Select game.gd to try again")
 
 class RunningTimer:
 	extends Timer
