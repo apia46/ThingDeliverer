@@ -24,7 +24,7 @@ func checkPrevious() -> void:
 	if game.isDebug: scene.newDebugVisual(position, Color(0, 1, 0.4))
 	var previousNode:PathNode
 	previousDirection = U.ROTATIONS.DOWN
-	for direction in [Vector2i(0,1), Vector2i(1,0), Vector2i(-1,0)]:
+	for direction in U.V2I_DIRECTIONS_NO_UP:
 		previousNode = getNodeInputFromRelative(pathNode, direction)
 		if previousNode:
 			previousDirection = U.v2itorot(previousNode.position - position)
@@ -79,10 +79,12 @@ func hoverInfo(append:int=0) -> String:
 	+ H.attribute("facing", U.ROTATION_NAMES[rotation], 2) \
 	+ H.attribute("path", pathNode.partialPath.hoverInfo(), append, false)
 
-func sides(_pathNode:PathNode) -> Array[Entity]:
-	var toReturn:Array[Entity] = []
-	for direction in [Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0)]:
-		if U.v2itorot(direction) != previousDirection:
-			toReturn.append(getEntityRelative(direction))
-	if !pathNode.nextNode: toReturn.append(getEntityRelative(Vector2i(0, -1)))
+func getSidesOf(_pathNode:PathNode) -> Array[PathNode]:
+	var toReturn:Array[PathNode] = []
+	for direction in U.V2I_DIRECTIONS_NO_UP:
+		if !pathNode.previousNode or U.v2itorot(direction) != previousDirection:
+			toReturn.append(getPathNodeRelative(direction))
+	if !pathNode.nextNode: toReturn.append(getPathNodeRelative(Vector2i(0, -1)))
 	return toReturn
+
+func asPathNodeAt(_position:Vector2i) -> PathNode: return pathNode

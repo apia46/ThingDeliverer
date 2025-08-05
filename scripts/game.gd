@@ -292,7 +292,7 @@ func pathComplete() -> void:
 	pathsThisRound += 1
 	menu.consolePrint("Path {%s} complete" % len(requestPairs))
 	if pathsThisRound == pathsPerRound:
-		timeLeft += 0
+		timeLeft += 50
 		menu.consolePrint("Round %s complete" % rounds)
 		paused = true
 		ui.showEndRoundScreen()
@@ -320,7 +320,7 @@ func unlockItemType():
 func randomNewSpace() -> void:
 	while true:
 		var space:Space = scene.spaces[scene.spaces.keys()[randi_range(0, len(scene.spaces) - 1)]]
-		var randomPosition = space.position + [Vector2i(-Scene.SPACE_SIZE,0),Vector2i(Scene.SPACE_SIZE,0),Vector2i(0,-Scene.SPACE_SIZE),Vector2i(0,Scene.SPACE_SIZE)][randi_range(0,3)]
+		var randomPosition = space.position + U.V2I_DIRECTIONS[randi_range(0,3)] * Scene.SPACE_SIZE
 		if scene.newSpace(randomPosition): return
 
 func addRunningTimer(time:float, running:Callable):

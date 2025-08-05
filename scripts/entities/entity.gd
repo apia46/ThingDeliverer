@@ -34,14 +34,20 @@ func loadVisuals() -> void:
 func unloadVisuals() -> void:
 	if visualInstance: visualInstance.queue_free()
 
-func getEntityRelative(difference:Vector2i, _debug:=false) -> Entity:
-	# if debug: scene.newDebugVisual(position + difference, Color(0, 0.4, 1))
-	return scene.getEntity(position + difference)
+func getEntityRelative(difference:Vector2i, debug:=false) -> Entity:
+	if debug: scene.newDebugVisual(position + U.rotate(difference, rotation), Color(0, 0.4, 1))
+	return scene.getEntity(position + U.rotate(difference, rotation))
+
+func getPathNodeRelative(difference:Vector2i) -> PathNode:
+	var entity:Entity = scene.getEntity(position + U.rotate(difference, rotation))
+	if entity: return entity.asPathNodeAt(position + U.rotate(difference, rotation))
+	else: return null
 
 static func updateEntityVisuals(entity:Entity) -> void: if entity: entity.loadVisuals()
 
 func asNodeOutputTo(_node:PathNode) -> PathNode: return null
 func asNodeInputFrom(_node:PathNode) -> PathNode: return null
+func asPathNodeAt(_position:Vector2i) -> PathNode: return null
 
 func getNodeInputFromRelative(node:PathNode, difference:Vector2i) -> PathNode:
 	var entity = scene.getEntity(node.position + U.rotate(difference, rotation))
@@ -51,13 +57,13 @@ func getNodeOutputFromRelative(node:PathNode, difference:Vector2i) -> PathNode:
 	var entity = scene.getEntity(node.position + U.rotate(difference, rotation))
 	return entity.asNodeInputFrom(node) if entity else null
 
-func checkPrevious() -> void: pass
-func updateNext() -> void: pass
+func checkPrevious() -> void: return
+func updateNext() -> void: return
 func checkNext() -> void: loadVisuals() # use sparingly. set to load visuals for clarity of debug and also might be useful idk
 
 func hoverInfo(append:int=0) -> String:
 	return H.debugAttribute(game.isDebug, "position", position, append)
 
-func sides(_pathNode:PathNode) -> Array[Entity]:
+func getSidesOf(_pathNode:PathNode) -> Array[PathNode]:
 	assert(false)
 	return []

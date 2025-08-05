@@ -34,3 +34,10 @@ func hoverInfo(append:int=0) -> String:
 	+ H.debugAttribute(game.isDebug, "hasNext", !!pathNode.nextNode, 2) \
 	+ H.attribute("facing", U.ROTATION_NAMES[rotation], 2) \
 	+ H.attribute("path", pathNode.partialPath.hoverInfo(), append, false)
+
+func getSidesOf(_pathNode:PathNode) -> Array[PathNode]:
+	var toReturn:Array[PathNode] = []
+	for direction in U.V2I_DIRECTIONS:
+		if U.v2itorot(direction) != rotation:
+			toReturn.append(getPathNodeRelative(direction))
+	return toReturn

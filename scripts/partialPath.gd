@@ -33,17 +33,31 @@ func update() -> void:
 	if start.entity is Inputter and start.entity.requestPair.completed and getState() != STATES.COMPLETE:
 		start.entity.requestPair.completed = false
 
+	var head:PathNode = start
+	var adjacentPaths:Array[PartialPath] = []
+	while true:
+		for side in head.entity.getSidesOf(head):
+			if side and side.partialPath not in adjacentPaths: adjacentPaths.append(side.partialPath)
+		if head.nextNode && head != end: head = head.nextNode
+		else: break		# in case of loops
+
 	typeError = ""
 	if fridgeError(): typeError = H.specialName("TypeError") + ": item of type " + H.enumName("FRIDGE") + " cannot enter " + H.typeName("Underpaths")
+	if magnetError(adjacentPaths): typeError = H.specialName("TypeError") + ": item of type " + H.enumName("MAGNET") + " cannot be adjacent to " + H.typeName("Metallic") + " items"
 
-	var head:PathNode = start
-	head.entity.loadVisuals()
-	while head.nextNode:
-		head = head.nextNode
+	head = start
+	while true:
 		head.entity.loadVisuals()
-		if head == end: break # in case of loops
+		if head.nextNode && head != end: head = head.nextNode
+		else: break		# in case of loops
+	
+	if getItemType() != Items.TYPES.MAGNET:
+		for path in adjacentPaths:
+			if path.getItemType() == Items.TYPES.MAGNET: path.update()
 	
 func splitAt(pathNode:PathNode) -> void:
+	for side in pathNode.entity.getSidesOf(pathNode):
+		if side and side.partialPath.getItemType() == Items.TYPES.MAGNET: side.partialPath.update()
 	var head:PathNode = pathNode
 	if start.previousNode || pathNode.nextNode == start:
 		# there is a loop
@@ -114,9 +128,15 @@ func hoverInfo() -> String:
 # type checks
 func fridgeError() -> bool:
 	if getItemType() != Items.TYPES.FRIDGE: return false
-	var head = start
+	var head:PathNode = start
 	while true:
 		if head.entity is UndergroundInput: return true
 		if head.nextNode: head = head.nextNode
 		else: break
+	return false
+
+func magnetError(adjacentPaths:Array[PartialPath]) -> bool:
+	if getItemType() != Items.TYPES.MAGNET: return false
+	for path in adjacentPaths:
+		if Items.isMetallic(path.getItemType()): return true
 	return false

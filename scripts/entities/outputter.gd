@@ -12,7 +12,7 @@ func loadVisuals() -> void:
 func checkPrevious() -> void:
 	var previousNode
 	rotation = U.ROTATIONS.DOWN
-	for direction in [Vector2i(0,1), Vector2i(0,-1), Vector2i(1,0), Vector2i(-1,0)]:
+	for direction in U.V2I_DIRECTIONS:
 		previousNode = getNodeInputFromRelative(pathNode, direction)
 		if previousNode:
 			rotation = U.v2itorot(previousNode.position - position)

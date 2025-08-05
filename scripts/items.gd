@@ -45,6 +45,9 @@ func removeDisplay(display:Display) -> Display:
 	for i in range(display.index, len(displays[display.type])): displays[display.type][i].index -= 1
 	return null
 
+static func isMetallic(item:TYPES):
+	return item == TYPES.FRIDGE
+
 class Display:
 	extends RefCounted
 	var type:TYPES
@@ -57,4 +60,3 @@ class Display:
 		position = _position
 		direction = _direction
 		index = _index
-	

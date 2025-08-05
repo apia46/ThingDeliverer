@@ -29,8 +29,10 @@ class RequestPair:
 		id = _id
 		itemType = _itemType
 
-func sides(_pathNode:PathNode) -> Array[Entity]:
-	var toReturn:Array[Entity] = []
-	if !pointing: toReturn.append(getEntityRelative(Vector2i(0, 1)))
-	for direction in [Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0)]: toReturn.append(getEntityRelative(direction))
+func getSidesOf(_pathNode:PathNode) -> Array[PathNode]:
+	var toReturn:Array[PathNode] = []
+	if !pointing: toReturn.append(getPathNodeRelative(Vector2i(0, 1)))
+	for direction in U.V2I_DIRECTIONS_NO_UP: toReturn.append(getPathNodeRelative(direction))
 	return toReturn
+
+func asPathNodeAt(_position:Vector2i) -> PathNode: return pathNode

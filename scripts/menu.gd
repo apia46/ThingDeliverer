@@ -26,7 +26,8 @@ func entreat() -> void:
 	tween.tween_property(self, "size", Vector2(get_viewport().size), 0.2)
 
 func consoleSet(string:String) -> void:
-	%console.text = string
+	%console.clear()
+	%console.append_text(string)
 
 func consolePrint(string:String) -> void:
 	%console.append_text("\n[" + U.timeToText(game.timeSinceStart, true) + "] " + string)
