@@ -42,7 +42,7 @@ var trulyPaused:bool = false # stop anims fully
 
 var partialPathIdIncr:int = 0
 
-var itemTypesUnlocked:int = 3
+var itemTypesUnlocked:Array[Items.TYPES] = [Items.TYPES.BOX]
 
 var cameraPosition:Vector3 = Vector3(0,20,0):
 	set(value):
@@ -264,7 +264,7 @@ func isABadLocation(pos:Vector2i, type:Items.TYPES) -> bool:
 	return false
 
 func newInputOutputs() -> void:
-	var type:Items.TYPES = randi_range(0, itemTypesUnlocked - 1) as Items.TYPES
+	var type:Items.TYPES = itemTypesUnlocked[randi_range(0, len(itemTypesUnlocked) - 1)]
 	var requestPair:InputOutput.RequestPair = InputOutput.RequestPair.new(len(requestPairs), type)
 	requestPairs.append(requestPair)
 	ui.setItemTypeImage(Items.IMAGES[type])
@@ -293,6 +293,7 @@ func pathComplete() -> void:
 		timeLeft += 50
 		menu.consolePrint("Round %s complete" % rounds)
 		paused = true
+		unlockItemType()
 		ui.showEndRoundScreen()
 		setCursor()
 	else: newInputOutputs()
@@ -309,11 +310,11 @@ func nextRound() -> void:
 	ui.hideEndRoundScreen()
 	for _i in 4: randomNewSpace()
 	newInputOutputs()
-	unlockItemType()
 	setCursor()
 
 func unlockItemType():
-	if itemTypesUnlocked < Items.ITEM_TYPES: itemTypesUnlocked += 1
+	if rounds == 1: itemTypesUnlocked.append(Items.TYPES.FRIDGE)
+	elif rounds == 2: itemTypesUnlocked.append(Items.TYPES.MAGNET)
 
 func randomNewSpace() -> void:
 	while true:
