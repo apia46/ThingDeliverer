@@ -27,12 +27,6 @@ func _init(_game:Game, _start:PathNode) -> void:
 	end = start
 
 func update() -> void:
-	if getState() == STATES.COMPLETE and !start.entity.requestPair.completed:
-		start.entity.requestPair.completed = true
-		game.pathComplete()
-	if start.entity is Inputter and start.entity.requestPair.completed and getState() != STATES.COMPLETE:
-		start.entity.requestPair.completed = false
-
 	var head:PathNode = start
 	var adjacentPaths:Array[PartialPath] = []
 	while true:
@@ -54,6 +48,12 @@ func update() -> void:
 	if getItemType() != Items.TYPES.MAGNET:
 		for path in adjacentPaths:
 			if path.getItemType() == Items.TYPES.MAGNET: path.update()
+	
+	if getState() == STATES.COMPLETE and !start.entity.requestPair.completed:
+		start.entity.requestPair.completed = true
+		game.pathComplete()
+	if start.entity is Inputter and start.entity.requestPair.completed and getState() != STATES.COMPLETE:
+		start.entity.requestPair.completed = false
 	
 func splitAt(pathNode:PathNode) -> void:
 	for side in pathNode.entity.getSidesOf(pathNode):

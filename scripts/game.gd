@@ -245,20 +245,22 @@ func tryZoomOut() -> void:
 func randomUnlockedTile() -> Vector2i:
 	return scene.spaces[scene.spaces.keys()[randi_range(0, len(scene.spaces) - 1)]].position + Vector2i(randi_range(0, Scene.SPACE_SIZE - 1), randi_range(0, Scene.SPACE_SIZE - 1))
 
-func isABadLocation(pos:Vector2i, rot:U.ROTATIONS) -> bool:
+func isABadLocation(pos:Vector2i, type:Items.TYPES) -> bool:
 	# should have space
 	if scene.getEntity(pos): return true
-	# should be possible
-	if !scene.getSpace(pos + U.rotate(Vector2i(0,-1), rot)): return true
-	if scene.getEntity(pos + U.rotate(Vector2i(0,-1), rot)): return true
 	# be out in the open
-	if scene.getEntity(pos + U.rotate(Vector2i(1,0), rot)) and randf() > 0.6: return true
-	if scene.getEntity(pos + U.rotate(Vector2i(-1,0), rot)) and randf() > 0.6: return true
+	var nearCount:int = 0
+	for direction in U.V2I_DIRECTIONS:
+		var entity:Entity = scene.getEntity(pos + direction)
+		if entity:
+			var theirType:Items.TYPES = entity.asPathNodeAt(pos + direction).partialPath.getItemType()
+			if Items.isMetallic(type) and theirType == Items.TYPES.MAGNET: return true
+			if type == Items.TYPES.MAGNET and Items.isMetallic(theirType): return true
+			nearCount += 1
+	if randi_range(0, 3) < nearCount: return true
 	# not too close to edge
-	if !scene.getSpace(pos + Vector2i(-3, 0)) and randf() > 0.4: return true
-	if !scene.getSpace(pos + Vector2i(3, 0)) and randf() > 0.4: return true
-	if !scene.getSpace(pos + Vector2i(0, 3)) and randf() > 0.4: return true
-	if !scene.getSpace(pos + Vector2i(0, -3)) and randf() > 0.4: return true
+	for direction in U.V2I_DIRECTIONS:
+		if !scene.getSpace(pos + direction*3) and randf() > 0.4: return true
 	return false
 
 func newInputOutputs() -> void:
@@ -268,21 +270,17 @@ func newInputOutputs() -> void:
 	ui.setItemTypeImage(Items.IMAGES[type])
 
 	var inputPos:Vector2i = randomUnlockedTile()
-	var inputRot:U.ROTATIONS = randi_range(0,3) as U.ROTATIONS
-	while isABadLocation(inputPos, inputRot):
+	while isABadLocation(inputPos, type):
 		inputPos = randomUnlockedTile()
-		inputRot = randi_range(0,3) as U.ROTATIONS
-	var input:Inputter = scene.placeEntity(Inputter, inputPos, inputRot)
+	var input:Inputter = scene.placeEntity(Inputter, inputPos, U.ROTATIONS.UP)
 	input.pathNode = PathNode.new(input, inputPos)
 	input.requestPair = requestPair
 	requestPair.input = input
 
 	var outputPos:Vector2i = randomUnlockedTile()
-	var outputRot:U.ROTATIONS = randi_range(0,3) as U.ROTATIONS
-	while outputPos.distance_squared_to(inputPos) < 36 or isABadLocation(outputPos, outputRot):
+	while outputPos.distance_squared_to(inputPos) < 36 or isABadLocation(outputPos, type):
 		outputPos = randomUnlockedTile()
-		outputRot = randi_range(0,3) as U.ROTATIONS
-	var output:Outputter = scene.placeEntity(Outputter, outputPos, outputRot)
+	var output:Outputter = scene.placeEntity(Outputter, outputPos, U.ROTATIONS.UP)
 	output.pathNode = PathNode.new(output, outputPos)
 	output.requestPair = requestPair
 	requestPair.output = output
