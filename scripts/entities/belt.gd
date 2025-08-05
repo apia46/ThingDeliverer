@@ -64,7 +64,6 @@ func loadVisuals() -> void:
 
 	visualInstance.set_surface_override_material(1, pathNode.partialPath.getColorMaterial())
 
-
 func delete() -> void:
 	pathNode.delete()
 	if itemDisplay: scene.items.removeDisplay(itemDisplay)
@@ -79,3 +78,11 @@ func hoverInfo(append:int=0) -> String:
 	+ H.debugAttribute(game.isDebug, "hasNext", !!pathNode.nextNode, 2) \
 	+ H.attribute("facing", U.ROTATION_NAMES[rotation], 2) \
 	+ H.attribute("path", pathNode.partialPath.hoverInfo(), append, false)
+
+func sides(_pathNode:PathNode) -> Array[Entity]:
+	var toReturn:Array[Entity] = []
+	for direction in [Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0)]:
+		if U.v2itorot(direction) != previousDirection:
+			toReturn.append(getEntityRelative(direction))
+	if !pathNode.nextNode: toReturn.append(getEntityRelative(Vector2i(0, -1)))
+	return toReturn

@@ -57,3 +57,7 @@ func checkNext() -> void: loadVisuals() # use sparingly. set to load visuals for
 
 func hoverInfo(append:int=0) -> String:
 	return H.debugAttribute(game.isDebug, "position", position, append)
+
+func sides(_pathNode:PathNode) -> Array[Entity]:
+	assert(false)
+	return []

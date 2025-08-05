@@ -42,7 +42,7 @@ var trulyPaused:bool = false # stop anims fully
 
 var partialPathIdIncr:int = 0
 
-var itemTypesUnlocked:int = 2
+var itemTypesUnlocked:int = 3
 
 var cameraPosition:Vector3 = Vector3(0,20,0):
 	set(value):
@@ -262,8 +262,10 @@ func isABadLocation(pos:Vector2i, rot:U.ROTATIONS) -> bool:
 	return false
 
 func newInputOutputs() -> void:
-	var requestPair = InputOutput.RequestPair.new(len(requestPairs), randi_range(0, itemTypesUnlocked - 1) as Items.TYPES)
+	var type:Items.TYPES = randi_range(0, itemTypesUnlocked - 1) as Items.TYPES
+	var requestPair:InputOutput.RequestPair = InputOutput.RequestPair.new(len(requestPairs), type)
 	requestPairs.append(requestPair)
+	ui.setItemTypeImage(Items.IMAGES[type])
 
 	var inputPos:Vector2i = randomUnlockedTile()
 	var inputRot:U.ROTATIONS = randi_range(0,3) as U.ROTATIONS

@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://di6yfmmtdym8e"]
+[gd_scene load_steps=26 format=3 uid="uid://di6yfmmtdym8e"]
 
 [ext_resource type="Script" uid="uid://dr4q4w60f0ren" path="res://scripts/ui.gd" id="1_7dvkv"]
 [ext_resource type="Texture2D" uid="uid://uuygo8yxh7q6" path="res://resources/ui/ends.png" id="1_p7vwb"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://dq6lwha8kj606" path="res://resources/ui/undergroundUnselected.png" id="8_cgfq5"]
 [ext_resource type="FontFile" uid="uid://mgbewlhf6ayn" path="res://resources/ui/SpaceMono-Bold.woff" id="8_ktti3"]
 [ext_resource type="PackedScene" uid="uid://dwcm4ycttlsw1" path="res://scenes/endRoundScreen.tscn" id="9_cgfq5"]
+[ext_resource type="Texture2D" uid="uid://iagavfhfb3sj" path="res://resources/ui/itemTypes/box.png" id="10_7dvkv"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cgfq5"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -256,25 +257,41 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_qsv74")
 
-[node name="roundsInner" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/roundsPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer/roundsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_right = 2
+
+[node name="roundsInner" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/roundsPanel/MarginContainer"]
 layout_mode = 2
 
-[node name="roundsCount" type="Label" parent="VBoxContainer/HBoxContainer/roundsPanel/roundsInner"]
+[node name="roundsCount" type="Label" parent="VBoxContainer/HBoxContainer/roundsPanel/MarginContainer/roundsInner"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Round 1"
 label_settings = SubResource("LabelSettings_ktti3")
 
-[node name="seperator" type="TextureRect" parent="VBoxContainer/HBoxContainer/roundsPanel/roundsInner"]
+[node name="seperator" type="TextureRect" parent="VBoxContainer/HBoxContainer/roundsPanel/MarginContainer/roundsInner"]
 custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
 texture = ExtResource("3_cgfq5")
 
-[node name="pathsCount" type="Label" parent="VBoxContainer/HBoxContainer/roundsPanel/roundsInner"]
+[node name="pathsCount" type="Label" parent="VBoxContainer/HBoxContainer/roundsPanel/MarginContainer/roundsInner"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0/5"
 label_settings = SubResource("LabelSettings_ktti3")
+
+[node name="seperator2" type="TextureRect" parent="VBoxContainer/HBoxContainer/roundsPanel/MarginContainer/roundsInner"]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+texture = ExtResource("3_cgfq5")
+
+[node name="itemType" type="TextureRect" parent="VBoxContainer/HBoxContainer/roundsPanel/MarginContainer/roundsInner"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("10_7dvkv")
 
 [node name="rightEnd" type="TextureRect" parent="VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(16, 0)

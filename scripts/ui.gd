@@ -28,3 +28,6 @@ func showEndRoundScreen() -> void:
 	%endRoundScreen.loadNext()
 	%endRoundScreen.visible = true
 func hideEndRoundScreen() -> void: %endRoundScreen.visible = false
+
+func setItemTypeImage(image:CompressedTexture2D) -> void:
+	%itemType.texture = image

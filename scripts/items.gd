@@ -4,14 +4,15 @@ class_name Items
 const ONE_OVER_LOG_TWO = 1 / log(2)
 const DISAPPEAR_TRANSFORM = Transform3D(Vector3(0,0,0),Vector3(0,0,0),Vector3(0,0,0),Vector3(0,0,0))
 const SPACES_PER_ITEM = 2 # doesnt actually work for a different number because it uses the parity dependant x+y instead of actually figuring it out from the path
-const ITEM_TYPES = 2
-enum TYPES {BOX, FRIDGE, NULL}
-const TYPES_NAMES:Array[String] = ["BOX", "FRIDGE", "NULL"]
 @onready var game:Game = get_node("../..")
-@onready var multiMeshInstances:Array[MultiMeshInstance3D] = [$"box", $"fridge"]
+const ITEM_TYPES = 3
+enum TYPES {BOX, FRIDGE, MAGNET, NULL}
+const TYPES_NAMES:Array[String] = ["BOX", "FRIDGE", "MAGNET", "NULL"]
+@onready var multiMeshInstances:Array[MultiMeshInstance3D] = [$"box", $"fridge", $"magnet"]
+const IMAGES:Array[CompressedTexture2D] = [preload("res://resources/ui/itemTypes/box.png"), preload("res://resources/ui/itemTypes/fridge.png"), preload("res://resources/ui/itemTypes/magnet.png")]
 
-var displays:Array[Array] = [[], []]
-var displayCounts = [32, 32]
+var displays:Array[Array] = [[], [], []]
+var displayCounts = [32, 32, 32]
 
 func updateDisplays():
 	var i:int = 0

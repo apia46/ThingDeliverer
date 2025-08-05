@@ -28,3 +28,9 @@ class RequestPair:
 	func _init(_id:int, _itemType:Items.TYPES):
 		id = _id
 		itemType = _itemType
+
+func sides(_pathNode:PathNode) -> Array[Entity]:
+	var toReturn:Array[Entity] = []
+	if !pointing: toReturn.append(getEntityRelative(Vector2i(0, 1)))
+	for direction in [Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0)]: toReturn.append(getEntityRelative(direction))
+	return toReturn
