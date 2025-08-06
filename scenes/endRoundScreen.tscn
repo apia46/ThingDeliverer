@@ -1,13 +1,13 @@
-[gd_scene load_steps=15 format=3 uid="uid://dwcm4ycttlsw1"]
+[gd_scene load_steps=17 format=3 uid="uid://dwcm4ycttlsw1"]
 
 [ext_resource type="Script" uid="uid://cpjc0gipy7vj5" path="res://scripts/endRoundScreen.gd" id="1_klblk"]
-[ext_resource type="Texture2D" uid="uid://byvhjuk24w60g" path="res://resources/ui/entityButton.png" id="4_k1xcv"]
 [ext_resource type="StyleBox" uid="uid://dy0jw7vyrp3pc" path="res://resources/ui/stylebox.tres" id="6_itomd"]
+[ext_resource type="Texture2D" uid="uid://bsh7twtwe0shu" path="res://resources/ui/hourglass.png" id="7_6ubk6"]
 [ext_resource type="FontFile" uid="uid://xinijcy13jse" path="res://resources/ui/NotoSans-Bold.ttf" id="7_nlhyi"]
 [ext_resource type="Texture2D" uid="uid://cfek1u0gilq6a" path="res://resources/ui/horizontalLine.png" id="8_6ubk6"]
+[ext_resource type="Texture2D" uid="uid://c8p50pstmxuep" path="res://resources/ui/cube.png" id="8_nlhyi"]
 [ext_resource type="FontFile" uid="uid://u5t8a6v4my7y" path="res://resources/ui/NotoSans-Regular.ttf" id="9_3khar"]
 [ext_resource type="Texture2D" uid="uid://dq6lwha8kj606" path="res://resources/ui/undergroundUnselected.png" id="10_3khar"]
-[ext_resource type="Texture2D" uid="uid://dbx607kpgbhhy" path="res://resources/ui/beltUnselected.png" id="11_pspes"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vj7qv"]
 bg_color = Color(0, 0, 0, 0.501961)
@@ -44,6 +44,21 @@ font_size = 24
 [sub_resource type="LabelSettings" id="LabelSettings_pspes"]
 font = ExtResource("9_3khar")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nlhyi"]
+bg_color = Color(0.30131, 0.354708, 0.398402, 0.733333)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 4.0
+expand_margin_top = 2.0
+expand_margin_right = 4.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_a50cc"]
+font = ExtResource("9_3khar")
+font_size = 10
+
 [node name="endRoundScreen" type="Panel"]
 anchors_preset = 15
 anchor_right = 1.0
@@ -76,7 +91,6 @@ layout_mode = 2
 [node name="margin" type="MarginContainer" parent="MarginContainer/menu/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
@@ -154,26 +168,48 @@ theme_override_constants/margin_bottom = 8
 [node name="vbox" type="VBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/heading2"]
 layout_mode = 2
 
-[node name="subtitle" type="Label" parent="MarginContainer/menu/ScrollContainer/margin/vcont/heading2/vbox"]
+[node name="horizLine" type="TextureRect" parent="MarginContainer/menu/ScrollContainer/margin/vcont/heading2/vbox"]
 layout_mode = 2
-text = "Options"
+texture = ExtResource("8_6ubk6")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/heading2/vbox"]
+layout_mode = 2
+theme_override_constants/separation = 13
+
+[node name="subtitle" type="Label" parent="MarginContainer/menu/ScrollContainer/margin/vcont/heading2/vbox/HBoxContainer"]
+layout_mode = 2
+text = "Assets"
 label_settings = SubResource("LabelSettings_3khar")
+
+[node name="vcont" type="VBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/heading2/vbox/HBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="3" type="PanelContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/heading2/vbox/HBoxContainer/vcont"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_nlhyi")
+
+[node name="Label" type="Label" parent="MarginContainer/menu/ScrollContainer/margin/vcont/heading2/vbox/HBoxContainer/vcont/3"]
+layout_mode = 2
+text = "3"
+label_settings = SubResource("LabelSettings_a50cc")
 
 [node name="options" type="PanelContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont"]
 layout_mode = 2
 theme_override_styles/panel = ExtResource("6_itomd")
 
-[node name="vcont" type="VBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options"]
+[node name="options" type="VBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="option" type="HBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont"]
+[node name="option" type="HBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/options"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont/option"]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/options/option"]
 layout_mode = 2
 texture = ExtResource("10_3khar")
 
-[node name="label" type="RichTextLabel" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont/option"]
+[node name="label" type="RichTextLabel" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/options/option"]
 layout_mode = 2
 theme_override_colors/default_color = Color(0.309804, 0.756863, 1, 1)
 theme_override_fonts/normal_font = ExtResource("9_3khar")
@@ -184,18 +220,18 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 0
 
-[node name="horizLine" type="TextureRect" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont"]
+[node name="horizLine" type="TextureRect" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/options"]
 layout_mode = 2
 texture = ExtResource("8_6ubk6")
 
-[node name="option2" type="HBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont"]
+[node name="option2" type="HBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/options"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont/option2"]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/options/option2"]
 layout_mode = 2
-texture = ExtResource("11_pspes")
+texture = ExtResource("7_6ubk6")
 
-[node name="label" type="RichTextLabel" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont/option2"]
+[node name="label" type="RichTextLabel" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/options/option2"]
 layout_mode = 2
 theme_override_colors/default_color = Color(0.309804, 0.756863, 1, 1)
 theme_override_fonts/normal_font = ExtResource("9_3khar")
@@ -206,18 +242,18 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 0
 
-[node name="horizLine2" type="TextureRect" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont"]
+[node name="horizLine2" type="TextureRect" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/options"]
 layout_mode = 2
 texture = ExtResource("8_6ubk6")
 
-[node name="option3" type="HBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont"]
+[node name="option3" type="HBoxContainer" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/options"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont/option3"]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/options/option3"]
 layout_mode = 2
-texture = ExtResource("4_k1xcv")
+texture = ExtResource("8_nlhyi")
 
-[node name="label" type="RichTextLabel" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont/option3"]
+[node name="label" type="RichTextLabel" parent="MarginContainer/menu/ScrollContainer/margin/vcont/options/options/option3"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/default_color = Color(0.309804, 0.756863, 1, 1)
@@ -228,6 +264,6 @@ text = "[url][b]Third Option[/b][/url]"
 scroll_active = false
 autowrap_mode = 0
 
-[connection signal="meta_clicked" from="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont/option/label" to="." method="_optionChosen" binds= [0]]
-[connection signal="meta_clicked" from="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont/option2/label" to="." method="_optionChosen" binds= [1]]
-[connection signal="meta_clicked" from="MarginContainer/menu/ScrollContainer/margin/vcont/options/vcont/option3/label" to="." method="_optionChosen" binds= [2]]
+[connection signal="meta_clicked" from="MarginContainer/menu/ScrollContainer/margin/vcont/options/options/option/label" to="." method="_optionChosen" binds= [0]]
+[connection signal="meta_clicked" from="MarginContainer/menu/ScrollContainer/margin/vcont/options/options/option2/label" to="." method="_optionChosen" binds= [1]]
+[connection signal="meta_clicked" from="MarginContainer/menu/ScrollContainer/margin/vcont/options/options/option3/label" to="." method="_optionChosen" binds= [2]]

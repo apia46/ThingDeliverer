@@ -72,3 +72,6 @@ static func timeToText(time:float, decimals:bool=false):
 	return str(minutes).pad_zeros(2) + ":" + str(seconds).pad_zeros(2).left(6)
 
 static func boolToText(condition:Variant): return "✓" if condition else "X"
+
+static func topHeavyRandI(values:int) -> int:
+	return int((1 - randf() * randf())*values)

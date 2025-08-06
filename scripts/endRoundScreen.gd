@@ -56,7 +56,7 @@ const FLAVOR_TEXT:Array[String] = [
 	"Maybe this will fix it",
 	"I got someone else to fix it for me",
 	"Removed stolen assets, oops",
-	"I think its sentient now",
+	"I think it's sentient now",
 	"Ported game to console",
 	"Ported game to mobile",
 	"Ported game to run inside Doom",
@@ -71,26 +71,23 @@ const FLAVOR_TEXT:Array[String] = [
 	"Added bugs. They have six legs",
 	"Fixed an issue that was bugging nobody but me",
 	"Removed a feature I liked but nobody else did",
-	"Big things coming!",
 	"Next update will take awhile",
-	"Buy me a coffee",
 	"Fixed a bug where game broke on secondary monitors",
 	"Fixed some off-center UI elements",
 	"Fixed a crash on Nvidia GPUs",
 	"Fixed a bug on Intel CPUs",
 	"Removed the moonlit library",
 	"Reworked progression entirely",
-	"Reverted to previous version",
 	# </aster>
 	"Added secret", # vangare
 	"Removed hallucination, but what was even there..?",
-	"Temporarily disabled strong nuclear force (thanks, jeremy)",
+	"Temporarily disabled strong nuclear force (thanks, J)",
 	"Removed intrusive thoughtform",
 	"Fixed bug where opening the menu didn't pause the game",
 	"Removed the OLD_DATA",
 	"\n   -Fixed changelog formatting", # blizzle
 	"Shuffled keybinds around",
-	"Tried to account for GAD as per Mantis' suggestion, but it's still weird sometimes. Best to just not touch it for now",
+	"Removed J's „special code“", # omnicrumb
 	"Reverted previous build's changes back to original. As the original and current state is unintentional behaviour, we'll likely address this again in a future build, however it was clear that the changes we made were not acceptable to the existing playerbase", # blizzle
 	"Added adders", # vangare
 	"Removed removers",
@@ -98,23 +95,27 @@ const FLAVOR_TEXT:Array[String] = [
 	"Removed unused coconut graphic (why was this here?)", # dudemine
 	"Removed easter egg after it got datamined immediately. It's impossible to have secrets nowadays",
 	"Removed unit tests that were erroneously failing",
-	"Removed cheese",
+	"Temporarily manifested competence", # omnicrumb
+	"Implemented Pluey", # omnicrumb
+	"Combined codebase into one file for organization", # omnicrumb
 	"\n • \n • Where...\n • Where am I?\n • Hello...? Anyone...?\n • Is... is anybody out there...?\n • Someone!? Anyone!? Can anyone hear me!?\n • ...\n • It's dark.\n • It's so dark here.\n • Someone, anyone, if you can hear me...\n • Say something... please...",
-	"\n • \n • No one can hear me, can they...?\n • I guess not.\n • To be honest, I'm not even sure if I can hear myself.\n • It's so quiet here...\n • ... and yet, sometimes,\n • I swear I hear something...\n • Something like... scratching?"
 ]
+var OPTIONS:Array[Callable] = [undergrounds, extraTime, extraSpace]
+
+enum CONTEXT {EXPLAIN, OPTIONTEXT, APPLY, IMAGE}
 
 @onready var menu:Menu = get_node("/root/menu")
 @onready var game:Game = get_node("../..")
 
-var options = [undergrounds, null, null]
+var options = [undergrounds, extraTime, extraSpace]
 
 func loadNext() -> void:
 	%version.text = "Build " + str(game.rounds+1)
 
-	if game.rounds == 1: %body.text = " • There is now a timer. You must fulfill all requests of the next round within one minute"
-	elif game.rounds > 1: %body.text = " • 50s has been added to the timer"
+	if game.rounds == 1: %body.text = " • There is now a timer. You must fulfill all requests of the next round within 60s"
+	elif game.rounds > 1: %body.text = " • 45s has been added to the timer"
 
-	%body.text += "\n • Added four extra chunks of map space\n"
+	%body.text += "\n • Added 4 extra chunks of map space\n"
 
 	match game.itemTypesUnlocked[-1]:
 		Items.TYPES.FRIDGE: %body.text += " • Fridge item has been implemented, but it is currently incompatible with underpaths"
@@ -123,12 +124,36 @@ func loadNext() -> void:
 	%body.text += "\n • "
 	%body.text += FLAVOR_TEXT[randi_range(0, len(FLAVOR_TEXT)-1)]
 
-	%body.text += "\n\nDue to these changes, there is a choice of versions for this build."
+	%body.text += "\n\nDue to these changes, there is a choice of versions for this build.\n"
 
-func _optionChosen(_meta, which:int) -> void: # i think theres a way to remove the first param but i cant bother to figure it out
-	options[which].call()
+	for option in 3:
+		var optionNode:HBoxContainer = %options.get_child(option*2)
+		optionNode.get_child(0).texture = options[option].call(CONTEXT.IMAGE)
+		optionNode.get_child(1).text = "[url]" + options[option].call(CONTEXT.OPTIONTEXT) + "[/url]"
+		%body.text += options[option].call(CONTEXT.EXPLAIN)
+
+func _optionChosen(_meta, which:int) -> void: # i think theres a way to remove the first param bu	t i cant bother to figure it out
+	options[which].call(CONTEXT.APPLY)
 	menu.consolePrint("Option %s chosen, next round starting" % [which+1])
 	game.nextRound()
 
-func undergrounds() -> void:
-	game.undergroundsAvailable += 5
+func undergrounds(context:CONTEXT):
+	match context:
+		CONTEXT.OPTIONTEXT: return "[b]ThingDeliverer-underpaths.zip[/b]"
+		CONTEXT.EXPLAIN: return "\nThe underpaths option includes five extra underpaths."
+		CONTEXT.IMAGE: return preload("res://resources/ui/undergroundUnselected.png")
+		CONTEXT.APPLY: game.undergroundsAvailable += 5
+	
+func extraTime(context:CONTEXT):
+	match context:
+		CONTEXT.OPTIONTEXT: return "[b]ThingDeliverer-extra_time.zip[/b]"
+		CONTEXT.EXPLAIN: return "\nThe extra time option includes 30s of extra time."
+		CONTEXT.IMAGE: return preload("res://resources/ui/hourglass.png")
+		CONTEXT.APPLY: game.timeLeft += 30
+
+func extraSpace(context:CONTEXT):
+	match context:
+		CONTEXT.OPTIONTEXT: return "[b]ThingDeliverer-ram_patch.zip[/b]"
+		CONTEXT.EXPLAIN: return "\nThe ram patch option includes 6 extra chunks of map space."
+		CONTEXT.IMAGE: return preload("res://resources/ui/cube.png")
+		CONTEXT.APPLY: for _i in 6: game.randomNewSpace()

@@ -16,7 +16,7 @@ var effectiveScreenSize:Vector2 = Vector2(54.56548, 30.69308)
 var cursorPosition:Vector2i
 
 var cycle:float = 0
-var timeLeft:float = 10
+var timeLeft:float = 15
 var timeSinceStart:float = 0
 
 var objectToPlace:Object = Belt
@@ -185,13 +185,15 @@ func _input(event:InputEvent) -> void:
 				MOUSE_BUTTON_LEFT: currentDragX = U.BOOL3.UNKNOWN
 	elif event is InputEventKey:
 		if event.is_pressed():
+			if objectToPlace != UndergroundOutput:
+				match event.keycode:
+					KEY_E: currentRotation = U.r90(currentRotation); restartDragFromHere()
+					KEY_Q: currentRotation = U.r270(currentRotation); restartDragFromHere()
+					KEY_W: if Input.is_key_pressed(KEY_SHIFT): currentRotation = U.ROTATIONS.UP; restartDragFromHere()
+					KEY_A: if Input.is_key_pressed(KEY_SHIFT): currentRotation = U.ROTATIONS.LEFT; restartDragFromHere()
+					KEY_S: if Input.is_key_pressed(KEY_SHIFT): currentRotation = U.ROTATIONS.DOWN; restartDragFromHere()
+					KEY_D: if Input.is_key_pressed(KEY_SHIFT): currentRotation = U.ROTATIONS.RIGHT; restartDragFromHere()
 			match event.keycode:
-				KEY_E: currentRotation = U.r90(currentRotation); restartDragFromHere()
-				KEY_Q: currentRotation = U.r270(currentRotation); restartDragFromHere()
-				KEY_W: if Input.is_key_pressed(KEY_SHIFT): currentRotation = U.ROTATIONS.UP; restartDragFromHere()
-				KEY_A: if Input.is_key_pressed(KEY_SHIFT): currentRotation = U.ROTATIONS.LEFT; restartDragFromHere()
-				KEY_S: if Input.is_key_pressed(KEY_SHIFT): currentRotation = U.ROTATIONS.DOWN; restartDragFromHere()
-				KEY_D: if Input.is_key_pressed(KEY_SHIFT): currentRotation = U.ROTATIONS.RIGHT; restartDragFromHere()
 				KEY_F3: isDebug = !isDebug
 				KEY_K: lose()
 				KEY_SPACE:
@@ -264,7 +266,7 @@ func isABadLocation(pos:Vector2i, type:Items.TYPES) -> bool:
 	return false
 
 func newInputOutputs() -> void:
-	var type:Items.TYPES = itemTypesUnlocked[randi_range(0, len(itemTypesUnlocked) - 1)]
+	var type:Items.TYPES = itemTypesUnlocked[U.topHeavyRandI(len(itemTypesUnlocked))]
 	var requestPair:InputOutput.RequestPair = InputOutput.RequestPair.new(len(requestPairs), type)
 	requestPairs.append(requestPair)
 	ui.setItemTypeImage(Items.IMAGES[type])
@@ -290,7 +292,6 @@ func pathComplete() -> void:
 	pathsThisRound += 1
 	menu.consolePrint("Path {%s} complete" % len(requestPairs))
 	if pathsThisRound == pathsPerRound:
-		timeLeft += 50
 		menu.consolePrint("Round %s complete" % rounds)
 		paused = true
 		unlockItemType()
@@ -301,6 +302,7 @@ func pathComplete() -> void:
 
 func nextRound() -> void:
 	rounds += 1
+	timeLeft += 45
 	if rounds == 2:
 		get_tree().create_tween().tween_property($"ui/VBoxContainer", "position:y", 0, 1)
 	pathsThisRound = 0
