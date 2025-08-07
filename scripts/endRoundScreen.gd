@@ -140,20 +140,20 @@ func _optionChosen(_meta, which:int) -> void: # i think theres a way to remove t
 func undergrounds(context:CONTEXT):
 	match context:
 		CONTEXT.OPTIONTEXT: return "[b]ThingDeliverer-underpaths.zip[/b]"
-		CONTEXT.EXPLAIN: return "\nThe underpaths option includes five extra underpaths."
+		CONTEXT.EXPLAIN: return "\nThe underpaths version includes five extra underpaths."
 		CONTEXT.IMAGE: return preload("res://resources/ui/undergroundUnselected.png")
 		CONTEXT.APPLY: game.undergroundsAvailable += 5
 	
 func extraTime(context:CONTEXT):
 	match context:
 		CONTEXT.OPTIONTEXT: return "[b]ThingDeliverer-extra_time.zip[/b]"
-		CONTEXT.EXPLAIN: return "\nThe extra time option includes 30s of extra time."
+		CONTEXT.EXPLAIN: return "\nThe extra time version includes 30s of extra time."
 		CONTEXT.IMAGE: return preload("res://resources/ui/hourglass.png")
 		CONTEXT.APPLY: game.timeLeft += 30
 
 func extraSpace(context:CONTEXT):
 	match context:
 		CONTEXT.OPTIONTEXT: return "[b]ThingDeliverer-ram_patch.zip[/b]"
-		CONTEXT.EXPLAIN: return "\nThe ram patch option includes 6 extra chunks of map space."
+		CONTEXT.EXPLAIN: return "\nThe ram patch version includes 6 extra chunks of map space."
 		CONTEXT.IMAGE: return preload("res://resources/ui/cube.png")
 		CONTEXT.APPLY: for _i in 6: game.randomNewSpace()
