@@ -42,7 +42,7 @@ var trulyPaused:bool = false # stop anims fully
 
 var partialPathIdIncr:int = 0
 
-var itemTypesUnlocked:Array[Items.TYPES] = [Items.TYPES.BOX]
+var itemTypesUnlocked:Array[Items.TYPES] = [Items.TYPES.GYRO, Items.TYPES.CHEMICAL, Items.TYPES.ARTIFACT, Items.TYPES.PARTICLE]
 
 var cameraPosition:Vector3 = Vector3(0,20,0):
 	set(value):
