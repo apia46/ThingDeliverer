@@ -115,11 +115,18 @@ func loadNext() -> void:
 	if game.rounds == 1: %body.text = " • There is now a timer. You must fulfill all requests of the next round within 60s"
 	elif game.rounds > 1: %body.text = " • 45s has been added to the timer"
 
-	%body.text += "\n • Added 4 extra chunks of map space\n"
+	%body.text += "\n • Added 4 extra chunks of map space"
 
-	match game.itemTypesUnlocked[-1]:
-		Items.TYPES.FRIDGE: %body.text += " • Fridge item has been implemented, but it is currently incompatible with underpaths"
-		Items.TYPES.MAGNET: %body.text += " • Magnet item has been implemented, but it currently cannot be pathed orthoganally adjacent to metallic items"
+	if game.unlockedItemTypeThisRound:
+		game.unlockedItemTypeThisRound = false
+		%body.text += "\n • "
+		match game.itemTypesUnlocked[-1]:
+			Items.TYPES.FRIDGE: %body.text += "Fridge item has been implemented, but it is currently incompatible with underpaths"
+			Items.TYPES.GYRO: %body.text += "Gyroscope item has been implemented, but it currently cannot turn counterclockwise"
+			Items.TYPES.MAGNET: %body.text += "Magnet item has been implemented, but it currently cannot be pathed orthoganally adjacent to metallic items"
+			Items.TYPES.CHEMICAL: %body.text += "Potassium Dichromate item has been implemented, but it currently cannot be exposed to light for longer than ten tiles at a time"
+			Items.TYPES.ARTIFACT: %body.text += "Graphical artifact item has been\n   has been, but it currently it currently cannot be cannot can only turn rotate once every change facing directions every two tiles      // a: who implemented this??"
+			Items.TYPES.PARTICLE: %body.text += "Entangled Particle items have been implemented"
 	
 	%body.text += "\n • "
 	%body.text += FLAVOR_TEXT[randi_range(0, len(FLAVOR_TEXT)-1)]

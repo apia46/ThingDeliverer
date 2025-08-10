@@ -29,6 +29,15 @@ class RequestPair:
 		id = _id
 		itemType = _itemType
 
+class EntangledRequestPair:
+	extends RequestPair
+
+	var input2:Inputter
+	var output2:Outputter
+	var completed1:bool = false
+	var completed2:bool = false
+	var difference:Vector2i
+
 func getSidesOf(_pathNode:PathNode) -> Array[PathNode]:
 	var toReturn:Array[PathNode] = []
 	if !pointing: toReturn.append(getPathNodeRelative(Vector2i(0, 1)))

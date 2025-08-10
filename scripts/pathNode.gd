@@ -19,7 +19,8 @@ func partialJoinAfter(node:PathNode) -> void:
 	if previousNode == node: return
 	if previousNode:
 		previousNode.nextNode = null
-		previousNode.entity.loadVisuals()
+		previousNode.partialPath.end = previousNode
+		previousNode.partialPath.update()
 	previousNode = node
 	node.nextNode = self
 	partialPath.joinAfter(node)

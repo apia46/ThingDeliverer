@@ -5,12 +5,12 @@
 [ext_resource type="ArrayMesh" uid="uid://dn8vl6dtajem2" path="res://meshes/box.tres" id="3_4msxo"]
 [ext_resource type="ArrayMesh" uid="uid://ciuvfptn6u6cr" path="res://meshes/space.tres" id="4_5fb3c"]
 [ext_resource type="ArrayMesh" uid="uid://b3pepo8f2l16e" path="res://meshes/fridge.tres" id="4_t7and"]
-[ext_resource type="ArrayMesh" uid="uid://dxhkwm10nbibg" path="res://meshes/gyroscope.tres" id="5_dqloj"]
+[ext_resource type="ArrayMesh" uid="uid://d4cxiporprt0j" path="res://meshes/gyroscope.tres" id="5_dqloj"]
 [ext_resource type="Script" uid="uid://c0sdghjdp8bqm" path="res://scripts/spaceVisuals.gd" id="5_gjmho"]
 [ext_resource type="ArrayMesh" uid="uid://cusecsajtvdgx" path="res://meshes/magnet.tres" id="5_ruw3y"]
 [ext_resource type="ArrayMesh" uid="uid://d3r4hqdiesiqd" path="res://meshes/chemical.tres" id="7_5yiy0"]
 [ext_resource type="ArrayMesh" uid="uid://b4l6xn5315pgx" path="res://meshes/artifact.tres" id="8_0f71q"]
-[ext_resource type="ArrayMesh" uid="uid://b30b88rs2e2t6" path="res://meshes/particle.tres" id="9_1id6j"]
+[ext_resource type="ArrayMesh" uid="uid://rdhcqjysupir" path="res://meshes/particle.tres" id="9_1id6j"]
 
 [sub_resource type="MultiMesh" id="MultiMesh_5fb3c"]
 resource_local_to_scene = true

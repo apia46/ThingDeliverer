@@ -42,7 +42,9 @@ var trulyPaused:bool = false # stop anims fully
 
 var partialPathIdIncr:int = 0
 
-var itemTypesUnlocked:Array[Items.TYPES] = [Items.TYPES.GYRO, Items.TYPES.CHEMICAL, Items.TYPES.ARTIFACT, Items.TYPES.PARTICLE]
+var itemTypesUnlocked:Array[Items.TYPES] = [Items.TYPES.PARTICLE]
+var itemTypesLocked:Array[Items.TYPES] = [Items.TYPES.FRIDGE, Items.TYPES.GYRO, Items.TYPES.MAGNET, Items.TYPES.CHEMICAL, Items.TYPES.ARTIFACT, Items.TYPES.BOX]
+var unlockedItemTypeThisRound:bool = false
 
 var cameraPosition:Vector3 = Vector3(0,20,0):
 	set(value):
@@ -206,15 +208,15 @@ func restartDragFromHere():
 		dragStartPos = screenspaceToWorldspace(get_viewport().get_mouse_position())
 		currentDragX = U.bool3not(currentDragX)
 
-func place() -> Entity:
+func place(placePosition:Vector2i=cursorPosition) -> Entity:
 	if paused: return
 	hoverTime = 0
-	var entityPresent: Entity = scene.getEntity(cursorPosition)
+	var entityPresent: Entity = scene.getEntity(placePosition)
 	if entityPresent is InputOutput: return null
-	if !scene.getSpace(cursorPosition): return null
+	if !scene.getSpace(placePosition): return null
 	if objectToPlace == UndergroundOutput and entityPresent is UndergroundInput: return null
 	if objectToPlace == UndergroundInput and undergroundsAvailable == 0 and !isDebug: return null
-	var result = scene.placeEntity(objectToPlace, cursorPosition, currentRotation, objectToPlace != UndergroundOutput)
+	var result = scene.placeEntity(objectToPlace, placePosition, currentRotation, objectToPlace != UndergroundOutput)
 	if result is UndergroundInput:
 		undergroundsAvailable -= 1
 		undergroundInputStoredNode = result.pathNode
@@ -226,6 +228,17 @@ func place() -> Entity:
 		result.pathNode.partialPath.joinAfter(undergroundInputStoredNode)
 		result.ready()
 		setCursor(Belt)
+	if result and result.pathNode.partialPath.getItemType() == Items.TYPES.PARTICLE and placePosition == cursorPosition:
+		var requestPair:InputOutput.EntangledRequestPair
+		var is2:bool
+		if result.pathNode.partialPath.start.entity is Inputter:
+			requestPair = result.pathNode.partialPath.start.entity.requestPair
+			is2 = result.pathNode.partialPath.start.entity == requestPair.input2
+		else:
+			requestPair = result.pathNode.partialPath.end.entity.requestPair
+			is2 = result.pathNode.partialPath.end.entity == requestPair.output2
+		if is2: place(cursorPosition - requestPair.difference)
+		else: place(cursorPosition + requestPair.difference)
 	return result
 
 func delete() -> Entity:
@@ -244,11 +257,13 @@ func tryZoomOut() -> void:
 		intendedCameraHeight *= 1.25
 		upperCameraHeight *= 1.25
 
-func randomUnlockedTile() -> Vector2i:
+func randomUnlockedTile(itemType:Items.TYPES) -> Vector2i:
+	@warning_ignore("integer_division") if itemType == Items.TYPES.ARTIFACT: return scene.spaces[scene.spaces.keys()[randi_range(0, len(scene.spaces) - 1)]].position + Vector2i(randi_range(0, Scene.SPACE_SIZE/2 - 1)*2, randi_range(0, Scene.SPACE_SIZE/2 - 1)*2)
 	return scene.spaces[scene.spaces.keys()[randi_range(0, len(scene.spaces) - 1)]].position + Vector2i(randi_range(0, Scene.SPACE_SIZE - 1), randi_range(0, Scene.SPACE_SIZE - 1))
 
 func isABadLocation(pos:Vector2i, type:Items.TYPES) -> bool:
 	# should have space
+	if !scene.getSpace(pos): return true
 	if scene.getEntity(pos): return true
 	# be out in the open
 	var nearCount:int = 0
@@ -267,25 +282,60 @@ func isABadLocation(pos:Vector2i, type:Items.TYPES) -> bool:
 
 func newInputOutputs() -> void:
 	var type:Items.TYPES = itemTypesUnlocked[U.topHeavyRandI(len(itemTypesUnlocked))]
-	var requestPair:InputOutput.RequestPair = InputOutput.RequestPair.new(len(requestPairs), type)
-	requestPairs.append(requestPair)
 	ui.setItemTypeImage(Items.IMAGES[type])
 
-	var inputPos:Vector2i = randomUnlockedTile()
-	while isABadLocation(inputPos, type):
-		inputPos = randomUnlockedTile()
-	var input:Inputter = scene.placeEntity(Inputter, inputPos, U.ROTATIONS.UP)
-	input.pathNode = PathNode.new(input, inputPos)
-	input.requestPair = requestPair
-	requestPair.input = input
+	if type == Items.TYPES.PARTICLE:
+		var requestPair:InputOutput.EntangledRequestPair = InputOutput.EntangledRequestPair.new(len(requestPairs), type)
+		requestPairs.append(requestPair)
 
-	var outputPos:Vector2i = randomUnlockedTile()
-	while outputPos.distance_squared_to(inputPos) < 36 or isABadLocation(outputPos, type):
-		outputPos = randomUnlockedTile()
-	var output:Outputter = scene.placeEntity(Outputter, outputPos, U.ROTATIONS.UP)
-	output.pathNode = PathNode.new(output, outputPos)
-	output.requestPair = requestPair
-	requestPair.output = output
+		var inputPos1:Vector2i
+		var outputPos1:Vector2i
+		var inputPos2:Vector2i
+		var outputPos2:Vector2i
+		while true:
+			inputPos1 = randomUnlockedTile(type)
+			outputPos1 = randomUnlockedTile(type)
+			inputPos2 = randomUnlockedTile(type)
+			outputPos2 = inputPos2 + outputPos1 - inputPos1
+			if outputPos1.distance_squared_to(inputPos1) < 36 or inputPos1 == outputPos2 or outputPos1 == inputPos2: continue
+			if isABadLocation(inputPos1, type) or isABadLocation(outputPos1, type) or isABadLocation(inputPos2, type) or isABadLocation(outputPos2, type): continue
+			break
+		requestPair.difference = inputPos2 - inputPos1
+		var input:Inputter = scene.placeEntity(Inputter, inputPos1, U.ROTATIONS.UP)
+		input.pathNode = PathNode.new(input, inputPos1)
+		input.requestPair = requestPair
+		requestPair.input = input
+		var output:Outputter = scene.placeEntity(Outputter, outputPos1, U.ROTATIONS.UP)
+		output.pathNode = PathNode.new(output, outputPos1)
+		output.requestPair = requestPair
+		requestPair.output = output
+		var input2:Inputter = scene.placeEntity(Inputter, inputPos2, U.ROTATIONS.UP)
+		input2.pathNode = PathNode.new(input2, inputPos2)
+		input2.requestPair = requestPair
+		requestPair.input2 = input2
+		var output2:Outputter = scene.placeEntity(Outputter, outputPos2, U.ROTATIONS.UP)
+		output2.pathNode = PathNode.new(output2, outputPos2)
+		output2.requestPair = requestPair
+		requestPair.output2 = output2
+	else:
+		var requestPair:InputOutput.RequestPair = InputOutput.RequestPair.new(len(requestPairs), type)
+		requestPairs.append(requestPair)
+
+		var inputPos:Vector2i = randomUnlockedTile(type)
+		while isABadLocation(inputPos, type):
+			inputPos = randomUnlockedTile(type)
+		var input:Inputter = scene.placeEntity(Inputter, inputPos, U.ROTATIONS.UP)
+		input.pathNode = PathNode.new(input, inputPos)
+		input.requestPair = requestPair
+		requestPair.input = input
+
+		var outputPos:Vector2i = randomUnlockedTile(type)
+		while outputPos.distance_squared_to(inputPos) < 36 or isABadLocation(outputPos, type):
+			outputPos = randomUnlockedTile(type)
+		var output:Outputter = scene.placeEntity(Outputter, outputPos, U.ROTATIONS.UP)
+		output.pathNode = PathNode.new(output, outputPos)
+		output.requestPair = requestPair
+		requestPair.output = output
 
 func pathComplete() -> void:
 	for requestPair in requestPairs: if !requestPair.completed: return
@@ -294,7 +344,7 @@ func pathComplete() -> void:
 	if pathsThisRound == pathsPerRound:
 		menu.consolePrint("Round %s complete" % rounds)
 		paused = true
-		unlockItemType()
+		checkIfUnlockItemType()
 		ui.showEndRoundScreen()
 		setCursor()
 	else: newInputOutputs()
@@ -314,9 +364,16 @@ func nextRound() -> void:
 	newInputOutputs()
 	setCursor()
 
-func unlockItemType():
-	if rounds == 1: itemTypesUnlocked.append(Items.TYPES.FRIDGE)
-	elif rounds == 2: itemTypesUnlocked.append(Items.TYPES.MAGNET)
+func checkIfUnlockItemType():
+	if rounds == 2: unlockItemType([Items.TYPES.FRIDGE, Items.TYPES.GYRO][randi_range(0,1)])
+	elif rounds == 5: unlockItemType([Items.TYPES.MAGNET, Items.TYPES.CHEMICAL][randi_range(0,1)])
+	elif rounds == 10: unlockItemType([Items.TYPES.ARTIFACT, Items.TYPES.PARTICLE][randi_range(0,1)])
+	elif rounds % 5 == 0: unlockItemType(itemTypesLocked[randi_range(0, len(itemTypesLocked) - 1)])
+
+func unlockItemType(type:Items.TYPES):
+	unlockedItemTypeThisRound = true
+	itemTypesLocked.remove_at(itemTypesLocked.find(type))
+	itemTypesUnlocked.append(type)
 
 func randomNewSpace() -> void:
 	while true:
