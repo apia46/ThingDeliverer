@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c80273crm7b1m"]
 
-[ext_resource type="ArrayMesh" uid="uid://dwijxmx3xnije" path="res://meshes/beltStraight.tres" id="1_yf2io"]
+[ext_resource type="ArrayMesh" uid="uid://1a6wq36ikf1g" path="res://meshes/beltStraight.tres" id="1_yf2io"]
 
 [node name="beltStraight" type="MeshInstance3D"]
 mesh = ExtResource("1_yf2io")

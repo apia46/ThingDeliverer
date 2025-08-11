@@ -258,6 +258,7 @@ func place(placePosition:Vector2i=cursorPosition) -> Entity:
 			if undergroundsAvailable == 0: return result
 			twicePlacing = true
 		if result is UndergroundOutput:
+			if !undergroundInputStoredNode2: return result
 			setCursor(UndergroundOutput)
 			twicePlacing = true
 		var requestPair:InputOutput.EntangledRequestPair = result.pathNode.partialPath.getRequestPair()
@@ -372,7 +373,7 @@ func newInputOutputs() -> void:
 		requestPair.input = input
 
 		var outputPos:Vector2i = randomUnlockedTile(type)
-		while outputPos.distance_squared_to(inputPos) < 36 or isABadLocation(outputPos, type):
+		while outputPos.distance_squared_to(inputPos) < 36 or (type == Items.TYPES.CHEMICAL and outputPos.distance_squared_to(inputPos) > 256) or isABadLocation(outputPos, type):
 			outputPos = randomUnlockedTile(type)
 		var output:Outputter = scene.placeEntity(Outputter, outputPos, U.ROTATIONS.UP)
 		output.pathNode = PathNode.new(output, outputPos)
@@ -408,9 +409,9 @@ func nextRound() -> void:
 
 func checkIfUnlockItemType():
 	if rounds == 2: unlockItemType([Items.TYPES.FRIDGE, Items.TYPES.GYRO][randi_range(0,1)])
-	elif rounds == 5: unlockItemType([Items.TYPES.MAGNET, Items.TYPES.CHEMICAL][randi_range(0,1)])
-	elif rounds == 10: unlockItemType([Items.TYPES.ARTIFACT, Items.TYPES.PARTICLE][randi_range(0,1)])
-	elif rounds % 5 == 0 and len(itemTypesLocked) > 0: unlockItemType(itemTypesLocked[randi_range(0, len(itemTypesLocked) - 1)])
+	elif rounds == 4: unlockItemType([Items.TYPES.MAGNET, Items.TYPES.CHEMICAL][randi_range(0,1)])
+	elif rounds == 7: unlockItemType([Items.TYPES.ARTIFACT, Items.TYPES.PARTICLE][randi_range(0,1)])
+	elif rounds > 9 and rounds % 5 == 0 and len(itemTypesLocked) > 0: unlockItemType(itemTypesLocked[randi_range(0, len(itemTypesLocked) - 1)])
 
 func unlockItemType(type:Items.TYPES):
 	unlockedItemTypeThisRound = true

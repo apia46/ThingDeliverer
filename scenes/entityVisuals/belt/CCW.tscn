@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dbiinrinjxyp6"]
 
-[ext_resource type="ArrayMesh" uid="uid://q60awu7aq5bm" path="res://meshes/beltCCW.tres" id="1_3klop"]
+[ext_resource type="ArrayMesh" uid="uid://bo8pndvqsc1bp" path="res://meshes/beltCCW.tres" id="1_3klop"]
 
 [node name="beltCCW" type="MeshInstance3D"]
 mesh = ExtResource("1_3klop")

@@ -74,4 +74,5 @@ static func timeToText(time:float, decimals:bool=false):
 static func boolToText(condition:Variant): return "✓" if condition else "X"
 
 static func topHeavyRandI(values:int) -> int:
-	return int((1 - randf() * randf())*values)
+	if randi_range(0,1): return int((1 - randf() * randf())*values)
+	return int(randf()*values)

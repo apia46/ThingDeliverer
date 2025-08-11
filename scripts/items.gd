@@ -54,7 +54,7 @@ func removeDisplay(display:Display) -> Display:
 	return null
 
 static func isMetallic(item:TYPES):
-	return item == TYPES.FRIDGE
+	return item in [TYPES.FRIDGE, TYPES.GYRO]
 
 class Display:
 	extends RefCounted

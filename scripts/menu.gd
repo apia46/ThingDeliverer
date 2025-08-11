@@ -74,6 +74,7 @@ func confirmEndRun() -> void:
 
 func startGame(timerExists:bool, hardMode:bool) -> void:
 	if gaming: return
+	gaming = true
 	var timer = create_tween()
 	timer.tween_interval(0.2)
 	timer.tween_callback(func():
@@ -81,7 +82,6 @@ func startGame(timerExists:bool, hardMode:bool) -> void:
 		increase.y = 200
 		_process(0)
 	)
-	gaming = true
 	%gameFile.visible = true
 	%gameFileButton.button_pressed = true
 	_chooseFile(0)
