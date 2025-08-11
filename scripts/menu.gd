@@ -9,15 +9,20 @@ var paused:bool = true
 var currentFile:int = 1
 var gaming:bool = false
 
+var increase:Vector2i = Vector2i(200, 0)
+
 func _ready() -> void:
 	var timer = create_tween()
 	timer.tween_interval(0.2)
 	timer.tween_callback(func():
-		var tween = create_tween().set_parallel().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
-		tween.tween_property(self, "position:x", 0, 1.5)
-		tween.tween_property(self, "size", Vector2(get_viewport().size), 1.5)
+		var tween = create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+		tween.tween_property(self, "increase:x", 0, 1.5)
 		%mainMenu.loadDialogue(0)
 	)
+
+func _process(_delta):
+	position.x = -increase.x
+	size = get_viewport().size +increase
 
 func togglePause(withoutConsole:bool=false) -> void:
 	if paused: retreat(withoutConsole)
@@ -26,14 +31,12 @@ func togglePause(withoutConsole:bool=false) -> void:
 
 func retreat(withoutConsole:bool=false) -> void:
 	var tween = create_tween().set_parallel().set_trans(Tween.TRANS_CUBIC)
-	tween.tween_property(self, "position:x", -200, 0.2)
-	if withoutConsole: tween.tween_property(self, "size:x", get_viewport().size.x + 200, 0.2)
-	else: tween.tween_property(self, "size", Vector2(get_viewport().size) + Vector2(200, 200), 0.2)
+	if withoutConsole: tween.tween_property(self, "increase:x", 200, 0.2)
+	else: tween.tween_property(self, "increase", Vector2i(200, 200), 0.2)
 
 func entreat() -> void:
 	var tween = create_tween().set_parallel().set_trans(Tween.TRANS_CUBIC)
-	tween.tween_property(self, "position:x", 0, 0.2)
-	tween.tween_property(self, "size", Vector2(get_viewport().size), 0.2)
+	tween.tween_property(self, "increase", Vector2i(0, 0), 0.2)
 
 func consoleSet(string:String) -> void:
 	%console.clear()
@@ -75,7 +78,8 @@ func startGame(timerExists:bool, hardMode:bool) -> void:
 	timer.tween_interval(0.2)
 	timer.tween_callback(func():
 		%consoleCont.visible = true
-		size.y = get_viewport().size.y + 200
+		increase.y = 200
+		_process(0)
 	)
 	gaming = true
 	%gameFile.visible = true
