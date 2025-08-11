@@ -29,7 +29,8 @@ var whichAutocomplete:int = -1
 
 var offsetEnd:int = 0
 
-var difficulty
+var timerExists:bool
+var hardMode:bool
 
 func _ready() -> void:
 	%lines.get_v_scroll_bar().visible = false
@@ -118,8 +119,11 @@ func type() -> void:
 	%text.text = %text.text.insert(len(%text.text) - offsetEnd, DIALOGUE[dialogueToRead][dialogueIndex])
 
 func autocompleted(which:int) -> void:
-	if whichAutocomplete == 5:
-		whichAutocomplete = -1
-		return menu.startGame()
+	match whichAutocomplete:
+		1: timerExists = !which
+		3: hardMode = !!which
+		5:
+			whichAutocomplete = -1
+			return menu.startGame(timerExists, hardMode)
 	loadDialogue(whichAutocomplete + which + 1)
 	whichAutocomplete = -1

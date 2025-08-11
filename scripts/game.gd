@@ -64,12 +64,23 @@ const HOVER_OUTSPEED:float = 2
 var hoverPosition:Vector2i = Vector2i(0, 0)
 var hoverTime:float = 0
 
+var timerExists:bool
+var hardMode:bool
+
 func _ready() -> void:
 	for x in range(-2, 2): for y in range(-2, 2):
 		scene.newSpace(Vector2i(x*Scene.SPACE_SIZE,y*Scene.SPACE_SIZE))
 	newInputOutputs()
 	setCursor(Belt)
 	menu.consoleSet("Game Started")
+
+func settings(_timerExists:bool, _hardMode:bool) -> void:
+	timerExists = _timerExists
+	hardMode = _hardMode
+	if hardMode:
+		pathsPerRound = 8
+		ui.updatePathsCount()
+	
 
 func _process(delta:float) -> void:
 	var previousCursorPosition:Vector2i = cursorPosition
@@ -115,7 +126,7 @@ func _process(delta:float) -> void:
 		cycle -= Items.SPACES_PER_ITEM
 	scene.items.updateDisplays()
 	
-	if !paused && rounds > 1:
+	if !paused && rounds > 1 && timerExists:
 		timeLeft -= delta
 		if timeLeft < 0: lose()
 	ui.updateTimer()
@@ -384,7 +395,7 @@ func pathComplete() -> void:
 func nextRound() -> void:
 	rounds += 1
 	timeLeft += 45
-	if rounds == 2:
+	if rounds == 2 and timerExists:
 		get_tree().create_tween().tween_property($"ui/VBoxContainer", "position:y", 0, 1)
 	pathsThisRound = 0
 	ui.updateRoundsCount()
@@ -399,7 +410,7 @@ func checkIfUnlockItemType():
 	if rounds == 2: unlockItemType([Items.TYPES.FRIDGE, Items.TYPES.GYRO][randi_range(0,1)])
 	elif rounds == 5: unlockItemType([Items.TYPES.MAGNET, Items.TYPES.CHEMICAL][randi_range(0,1)])
 	elif rounds == 10: unlockItemType([Items.TYPES.ARTIFACT, Items.TYPES.PARTICLE][randi_range(0,1)])
-	elif rounds % 5 == 0: unlockItemType(itemTypesLocked[randi_range(0, len(itemTypesLocked) - 1)])
+	elif rounds % 5 == 0 and len(itemTypesLocked) > 0: unlockItemType(itemTypesLocked[randi_range(0, len(itemTypesLocked) - 1)])
 
 func unlockItemType(type:Items.TYPES):
 	unlockedItemTypeThisRound = true

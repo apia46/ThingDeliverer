@@ -112,10 +112,11 @@ var options = [undergrounds, extraTime, extraSpace]
 func loadNext() -> void:
 	%version.text = "Build " + str(game.rounds+1)
 
-	if game.rounds == 1: %body.text = " • There is now a timer. You must fulfill all requests of the next round within 60s"
-	elif game.rounds > 1: %body.text = " • 45s has been added to the timer"
-
-	%body.text += "\n • Added 4 extra chunks of map space"
+	if game.timerExists:
+		if game.rounds == 1: %body.text = " • There is now a timer. You must fulfill all requests of the next round within 60s"
+		elif game.rounds > 1: %body.text = " • 45s has been added to the timer"
+		%body.text += "\n • Added 4 extra chunks of map space"
+	else: %body.text = " • Added 4 extra chunks of map space"
 
 	if game.unlockedItemTypeThisRound:
 		game.unlockedItemTypeThisRound = false
@@ -127,6 +128,8 @@ func loadNext() -> void:
 			Items.TYPES.CHEMICAL: %body.text += "Potassium Dichromate item has been implemented, but it currently cannot be exposed to light for longer than ten tiles at a time"
 			Items.TYPES.ARTIFACT: %body.text += "Graphical artifact item has been\n   has been, but it currently it currently cannot be cannot can only turn rotate once every change facing directions every two tiles      // a: who implemented this??"
 			Items.TYPES.PARTICLE: %body.text += "Entangled Particle items have been implemented"
+		if len(game.itemTypesLocked) == 0:
+			%body.text += "This is the last item planned to be added for now"
 	
 	%body.text += "\n • "
 	%body.text += FLAVOR_TEXT[randi_range(0, len(FLAVOR_TEXT)-1)]
@@ -138,6 +141,13 @@ func loadNext() -> void:
 		optionNode.get_child(0).texture = options[option].call(CONTEXT.IMAGE)
 		optionNode.get_child(1).text = "[url]" + options[option].call(CONTEXT.OPTIONTEXT) + "[/url]"
 		%body.text += options[option].call(CONTEXT.EXPLAIN)
+		if options[option] == extraTime and !game.timerExists: %body.text += " (but there isn't a timer so this doesn't do anything)"
+	
+	%undergroundExplain.visible = false
+	if game.rounds == 1: 
+		%body.text += "\n\n(by the way, underpaths work like this):"
+		%undergroundExplain.visible = true
+	%scrollContainer.set_deferred("scroll_vertical", 0)
 
 func _optionChosen(_meta, which:int) -> void: # i think theres a way to remove the first param bu	t i cant bother to figure it out
 	options[which].call(CONTEXT.APPLY)

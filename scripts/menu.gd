@@ -39,6 +39,9 @@ func consoleSet(string:String) -> void:
 	%console.clear()
 	%console.append_text(string)
 
+func consolePrintWithoutTime(string:String) -> void:
+	%console.append_text("\n"+string)
+
 func consolePrint(string:String) -> void:
 	%console.append_text("\n[" + U.timeToText(game.timeSinceStart, true) + "] " + string)
 
@@ -66,7 +69,7 @@ func confirmEndRun() -> void:
 	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	game.queue_free()
 
-func startGame() -> void:
+func startGame(timerExists:bool, hardMode:bool) -> void:
 	if gaming: return
 	var timer = create_tween()
 	timer.tween_interval(0.2)
@@ -81,3 +84,6 @@ func startGame() -> void:
 	game = preload("res://scenes/game.tscn").instantiate()
 	%gameCont.add_child(game)
 	togglePause(true)
+	game.settings(timerExists, hardMode)
+	consolePrintWithoutTime("Timer: enabled" if timerExists else "Timer: disabled")
+	consolePrintWithoutTime("Difficulty: hard" if hardMode else "Difficulty: normal")
