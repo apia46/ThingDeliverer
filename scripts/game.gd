@@ -21,6 +21,8 @@ var timeSinceStart:float = 0
 
 var objectToPlace:Object = Belt
 var undergroundInputStoredNode:PathNode
+var undergroundInputStoredNode2:PathNode
+var twicePlacing:bool = false
 var undergroundsAvailable = 0:
 	set(value):
 		undergroundsAvailable = value
@@ -219,34 +221,63 @@ func place(placePosition:Vector2i=cursorPosition) -> Entity:
 	var result = scene.placeEntity(objectToPlace, placePosition, currentRotation, objectToPlace != UndergroundOutput)
 	if result is UndergroundInput:
 		undergroundsAvailable -= 1
-		undergroundInputStoredNode = result.pathNode
+		if twicePlacing:
+			undergroundInputStoredNode2 = result.pathNode
+			twicePlacing = false
+		else:undergroundInputStoredNode = result.pathNode
 		setCursor(UndergroundOutput)
 	elif result is UndergroundOutput:
 		result.pathNode = PathNode.new(result, result.position)
-		result.pathNode.previousNode = undergroundInputStoredNode
-		undergroundInputStoredNode.nextNode = result.pathNode
-		result.pathNode.partialPath.joinAfter(undergroundInputStoredNode)
+		if twicePlacing:
+			result.pathNode.previousNode = undergroundInputStoredNode2
+			undergroundInputStoredNode2.nextNode = result.pathNode
+			result.pathNode.partialPath.joinAfter(undergroundInputStoredNode2)
+			undergroundInputStoredNode2 = null
+			twicePlacing = false
+		else:
+			result.pathNode.previousNode = undergroundInputStoredNode
+			undergroundInputStoredNode.nextNode = result.pathNode
+			result.pathNode.partialPath.joinAfter(undergroundInputStoredNode)
+			undergroundInputStoredNode = null
+		setCursor(Belt, true)
 		result.ready()
-		setCursor(Belt)
 	if result and result.pathNode.partialPath.getItemType() == Items.TYPES.PARTICLE and placePosition == cursorPosition:
-		var requestPair:InputOutput.EntangledRequestPair
+		if result is UndergroundInput:
+			setCursor(UndergroundInput, true)
+			if undergroundsAvailable == 0: return result
+			twicePlacing = true
+		if result is UndergroundOutput:
+			setCursor(UndergroundOutput)
+			twicePlacing = true
+		var requestPair:InputOutput.EntangledRequestPair = result.pathNode.partialPath.getRequestPair()
 		var is2:bool
 		if result.pathNode.partialPath.start.entity is Inputter:
-			requestPair = result.pathNode.partialPath.start.entity.requestPair
 			is2 = result.pathNode.partialPath.start.entity == requestPair.input2
 		else:
-			requestPair = result.pathNode.partialPath.end.entity.requestPair
 			is2 = result.pathNode.partialPath.end.entity == requestPair.output2
 		if is2: place(cursorPosition - requestPair.difference)
 		else: place(cursorPosition + requestPair.difference)
 	return result
 
-func delete() -> Entity:
+func delete(deletePosition:Vector2i=cursorPosition) -> Entity:
 	if paused: return
+	if objectToPlace == UndergroundOutput:
+		setCursor(UndergroundInput)
+		return null
 	hoverTime = 0
-	var entityPresent: Entity = scene.getEntity(cursorPosition)
+	var entityPresent: Entity = scene.getEntity(deletePosition)
 	if entityPresent is InputOutput: return null
-	return scene.deleteEntity(cursorPosition)
+	var result = scene.deleteEntity(deletePosition)
+	if result and result.pathNode.partialPath.getItemType() == Items.TYPES.PARTICLE and deletePosition == cursorPosition:
+		var requestPair:InputOutput.EntangledRequestPair = result.pathNode.partialPath.getRequestPair()
+		var is2:bool
+		if result.pathNode.partialPath.start.entity is Inputter:
+			is2 = result.pathNode.partialPath.start.entity == requestPair.input2
+		else:
+			is2 = result.pathNode.partialPath.end.entity == requestPair.output2
+		if is2: delete(cursorPosition - requestPair.difference)
+		else: delete(cursorPosition + requestPair.difference)
+	return result
 
 func tryZoomIn() -> void:
 	if intendedCameraHeight > 1:
@@ -295,9 +326,9 @@ func newInputOutputs() -> void:
 		while true:
 			inputPos1 = randomUnlockedTile(type)
 			outputPos1 = randomUnlockedTile(type)
-			inputPos2 = randomUnlockedTile(type)
+			inputPos2 = randomUnlockedTile(Items.TYPES.ARTIFACT) + (inputPos1 % 2) # so that they are the same parity. fucked sorry
 			outputPos2 = inputPos2 + outputPos1 - inputPos1
-			if outputPos1.distance_squared_to(inputPos1) < 36 or inputPos1 == outputPos2 or outputPos1 == inputPos2: continue
+			if outputPos1.distance_squared_to(inputPos1) < 36 or inputPos1.distance_squared_to(outputPos2) < 9 or outputPos1.distance_squared_to(inputPos2) < 9: continue
 			if isABadLocation(inputPos1, type) or isABadLocation(outputPos1, type) or isABadLocation(inputPos2, type) or isABadLocation(outputPos2, type): continue
 			break
 		requestPair.difference = inputPos2 - inputPos1
@@ -392,11 +423,16 @@ func addRunningTimer(time:float, running:Callable):
 	timer.start(time)
 	timers.append(timer)
 
-func setCursor(object:Variant=null) -> void:
+func setCursor(object:Variant=null, safe:=false) -> void:
 	if object:
-		if object == UndergroundInput and !undergroundsAvailable: return setCursor(Belt)
+		if object == UndergroundInput and !isDebug and !undergroundsAvailable: return setCursor(Belt)
 
 		if (object == UndergroundOutput) != (objectToPlace == UndergroundOutput): currentRotation = U.r180(currentRotation)
+		if objectToPlace == UndergroundOutput and object != UndergroundOutput and !safe:
+			if undergroundInputStoredNode: scene.deleteEntity(undergroundInputStoredNode.position)
+			undergroundInputStoredNode = null
+			if undergroundInputStoredNode2: scene.deleteEntity(undergroundInputStoredNode2.position)
+			undergroundInputStoredNode2 = null
 		objectToPlace = object
 		match objectToPlace:
 			Belt: cursor.mesh = preload("res://meshes/beltStraight.tres")

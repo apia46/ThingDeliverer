@@ -70,6 +70,7 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -200.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_con2f")
@@ -277,6 +278,7 @@ mouse_default_cursor_shape = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_13sgg")
 
 [node name="mainMenu" parent="hbox/rightSide/openFile" instance=ExtResource("9_70i5f")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="config" parent="hbox/rightSide/openFile" instance=ExtResource("9_mj5lg")]

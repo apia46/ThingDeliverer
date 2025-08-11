@@ -9,6 +9,16 @@ var paused:bool = true
 var currentFile:int = 1
 var gaming:bool = false
 
+func _ready() -> void:
+	var timer = create_tween()
+	timer.tween_interval(0.2)
+	timer.tween_callback(func():
+		var tween = create_tween().set_parallel().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+		tween.tween_property(self, "position:x", 0, 1.5)
+		tween.tween_property(self, "size", Vector2(get_viewport().size), 1.5)
+		%mainMenu.loadDialogue(0)
+	)
+
 func togglePause(withoutConsole:bool=false) -> void:
 	if paused: retreat(withoutConsole)
 	else: entreat()
@@ -43,6 +53,7 @@ func _chooseFile(which:int) -> void:
 		%openFile.get_child(currentFile).visible = false
 		%openFile.get_child(which).visible = true
 		currentFile = which
+		if which == 1: %mainMenu.loadDialogue(0)
 
 func confirmEndRun() -> void:
 	consolePrint("Game stopped")

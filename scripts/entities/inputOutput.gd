@@ -38,6 +38,15 @@ class EntangledRequestPair:
 	var completed2:bool = false
 	var difference:Vector2i
 
+	func updateAll() -> void:
+		var paths = []
+		for entity in [input, output, input2, output2]:
+			if entity and entity.pathNode.partialPath not in paths:
+				paths.append(entity.pathNode.partialPath)
+		for path in paths:
+			path.update()
+
+
 func getSidesOf(_pathNode:PathNode) -> Array[PathNode]:
 	var toReturn:Array[PathNode] = []
 	if !pointing: toReturn.append(getPathNodeRelative(Vector2i(0, 1)))

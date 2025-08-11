@@ -26,6 +26,8 @@ func setHover(entity:Entity):
 
 const LBRACE:String = "[color=#FFD700]{[/color]"
 const RBRACE:String = "[color=#FFD700]}[/color]"
+const LPAR:String = "[color=#FFD700]([/color]"
+const RPAR:String = "[color=#FFD700])[/color]"
 const TAB:String = "	"
 
 static func noneName(string:String, append:int=0) -> String: return string + APPENDS[append]
@@ -35,6 +37,7 @@ static func typeName(string:String, append:int=0) -> String: return "[color=#ED6
 static func opName(string:String, append:int=0) -> String: return "[color=#557BCC]" + string + "[/color]" + APPENDS[append]
 static func specialName(string:String, append:int=0) -> String: return "[color=#D7BA7D]" + string + "[/color]" + APPENDS[append]
 static func commentName(string:String, append:int=0) -> String: return "[color=#437E6F]" + string + "[/color]" + APPENDS[append]
+static func funcName(string:String, append:int=0) -> String: return "[color=#DCDCAA]" + string + "[/color]" + APPENDS[append]
 
 
 static func attribute(attrName:String, value:Variant, append:int=0, color:bool=true) -> String: return TAB + varName(attrName) + ": " + (enumName(str(value), append) if color else noneName(str(value), append)) + "\n"

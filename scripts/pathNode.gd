@@ -20,7 +20,7 @@ func partialJoinAfter(node:PathNode) -> void:
 	if previousNode:
 		previousNode.nextNode = null
 		previousNode.partialPath.end = previousNode
-		previousNode.partialPath.update()
+		previousNode.partialPath.tryUpdate()
 	previousNode = node
 	node.nextNode = self
 	partialPath.joinAfter(node)

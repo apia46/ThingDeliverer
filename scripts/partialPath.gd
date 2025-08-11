@@ -45,7 +45,7 @@ func update() -> void:
 
 	if getItemType() != Items.TYPES.MAGNET:
 		for path in adjacentPaths:
-			if path.getItemType() == Items.TYPES.MAGNET: path.update()
+			if path.getItemType() == Items.TYPES.MAGNET: path.tryUpdate()
 	
 	if start.entity is Inputter and start.entity.requestPair.itemType == Items.TYPES.PARTICLE:
 		var requestPair:InputOutput.RequestPair = start.entity.requestPair
@@ -75,13 +75,13 @@ func update() -> void:
 	
 func splitAt(pathNode:PathNode) -> void:
 	for side in pathNode.entity.getSidesOf(pathNode):
-		if side and side.partialPath.getItemType() == Items.TYPES.MAGNET: side.partialPath.update()
+		if side and side.partialPath.getItemType() == Items.TYPES.MAGNET: side.partialPath.tryUpdate()
 	var head:PathNode = pathNode
 	if start.previousNode || pathNode.nextNode == start:
 		# there is a loop
 		start = pathNode.nextNode
 		end = pathNode.previousNode
-		update()
+		tryUpdate()
 		return
 	if head.nextNode:
 		var forwards:PartialPath = PartialPath.new(game, head.nextNode)
@@ -89,16 +89,16 @@ func splitAt(pathNode:PathNode) -> void:
 			head = head.nextNode
 			head.partialPath = forwards
 		forwards.end = end
-		forwards.update()
+		forwards.tryUpdate()
 	end = pathNode.previousNode
 	if end: end.nextNode = null # hghghghhhh
-	update()
+	tryUpdate()
 
 func joinAfter(pathNode:PathNode) -> void:
 	var toJoin = pathNode.partialPath
 	if toJoin == self:
 		# is a loop; could have left a broken lead if the loop was welded shut; regenerate from loop point
-		update()
+		tryUpdate()
 		toJoin = PartialPath.new(game, pathNode.nextNode)
 		pathNode.nextNode.partialPath = toJoin
 	var head:PathNode = pathNode.nextNode
@@ -108,7 +108,7 @@ func joinAfter(pathNode:PathNode) -> void:
 		head.partialPath = toJoin
 		if head == pathNode.nextNode: break
 	toJoin.end = head
-	toJoin.update()
+	toJoin.tryUpdate()
 
 func getColorMaterial() -> BaseMaterial3D: return STATES_COLORS[getState()]
 
@@ -144,6 +144,16 @@ func hoverInfo() -> String:
 	+ H.TAB + H.attribute("state", STATES_NAMES[getState()]) \
 	+ H.TAB + H.RBRACE
 
+func tryUpdate() -> void:
+	if getItemType() == Items.TYPES.PARTICLE:
+		getRequestPair().updateAll()
+	else:
+		update()
+
+func getRequestPair() -> InputOutput.RequestPair:
+	if start.entity is Inputter: return start.entity.requestPair
+	if end.entity is Outputter: return end.entity.requestPair
+	return null
 
 # type checks
 func fridgeError() -> bool:
@@ -202,9 +212,10 @@ func particleError() -> bool:
 		while true:
 			if head1.nextNode and head2.nextNode:
 				if head1.nextNode.position - head1.position != head2.nextNode.position - head2.position: return true
+				# i know this isnt everything that needs to be checked but i cant be bothered. go exploit this really inefficiently by desyncing from redirection or whatever
 				head1 = head1.nextNode
 				head2 = head2.nextNode
-			elif head1.nextNode or head2.nextNode: return false
+			elif head1.nextNode or head2.nextNode: return true
 			else: break
 	else:
 		requestPair = end.entity.requestPair
@@ -215,6 +226,6 @@ func particleError() -> bool:
 				if tail1.previousNode.position - tail1.position != tail2.previousNode.position - tail2.position: return true
 				tail1 = tail1.previousNode
 				tail2 = tail2.previousNode
-			elif tail1.previousNode or tail2.previousNode: return false
+			elif tail1.previousNode or tail2.previousNode: return true
 			else: break
 	return false
