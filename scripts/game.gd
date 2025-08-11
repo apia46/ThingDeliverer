@@ -42,8 +42,8 @@ var trulyPaused:bool = false # stop anims fully
 
 var partialPathIdIncr:int = 0
 
-var itemTypesUnlocked:Array[Items.TYPES] = [Items.TYPES.PARTICLE]
-var itemTypesLocked:Array[Items.TYPES] = [Items.TYPES.FRIDGE, Items.TYPES.GYRO, Items.TYPES.MAGNET, Items.TYPES.CHEMICAL, Items.TYPES.ARTIFACT, Items.TYPES.BOX]
+var itemTypesUnlocked:Array[Items.TYPES] = [Items.TYPES.BOX]
+var itemTypesLocked:Array[Items.TYPES] = [Items.TYPES.FRIDGE, Items.TYPES.GYRO, Items.TYPES.MAGNET, Items.TYPES.CHEMICAL, Items.TYPES.ARTIFACT, Items.TYPES.PARTICLE]
 var unlockedItemTypeThisRound:bool = false
 
 var cameraPosition:Vector3 = Vector3(0,20,0):
@@ -394,6 +394,8 @@ func addRunningTimer(time:float, running:Callable):
 
 func setCursor(object:Variant=null) -> void:
 	if object:
+		if object == UndergroundInput and !undergroundsAvailable: return setCursor(Belt)
+
 		if (object == UndergroundOutput) != (objectToPlace == UndergroundOutput): currentRotation = U.r180(currentRotation)
 		objectToPlace = object
 		match objectToPlace:

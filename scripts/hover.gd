@@ -34,6 +34,8 @@ static func enumName(string:String, append:int=0) -> String: return "[color=#4FC
 static func typeName(string:String, append:int=0) -> String: return "[color=#ED61DF]" + string + "[/color]" + APPENDS[append]
 static func opName(string:String, append:int=0) -> String: return "[color=#557BCC]" + string + "[/color]" + APPENDS[append]
 static func specialName(string:String, append:int=0) -> String: return "[color=#D7BA7D]" + string + "[/color]" + APPENDS[append]
+static func commentName(string:String, append:int=0) -> String: return "[color=#437E6F]" + string + "[/color]" + APPENDS[append]
+
 
 static func attribute(attrName:String, value:Variant, append:int=0, color:bool=true) -> String: return TAB + varName(attrName) + ": " + (enumName(str(value), append) if color else noneName(str(value), append)) + "\n"
 

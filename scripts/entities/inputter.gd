@@ -25,6 +25,7 @@ func asNodeOutputTo(node:PathNode) -> PathNode:
 	return pathNode if node.position == position + U.rotate(Vector2i(0,-1), rotation) else null
 
 func checkNext() -> void:
+	if game.isDebug: scene.newDebugVisual(position, Color(1, 0, 0.4))
 	if pathNode.nextNode and !pointing:
 		rotation = U.v2itorot(pathNode.nextNode.position - position)
 		pointing = true
@@ -32,6 +33,8 @@ func checkNext() -> void:
 	if !pathNode.nextNode and pointing:
 		pointing = false
 		loadVisuals()
+		for node in getSidesOf(pathNode):
+			if node: node.entity.checkPrevious()
 
 func hoverInfo(append:int=0) -> String:
 	return super(2) \

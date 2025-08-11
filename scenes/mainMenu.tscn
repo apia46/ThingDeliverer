@@ -1,10 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://nx5gf4q6wtto"]
+[gd_scene load_steps=5 format=3 uid="uid://nx5gf4q6wtto"]
 
 [ext_resource type="Script" uid="uid://bx65ej8gfoiid" path="res://scripts/mainMenu.gd" id="1_3d1i7"]
 [ext_resource type="FontFile" uid="uid://b872nh8bkgph8" path="res://resources/ui/Inconsolata-SemiBold.ttf" id="1_5mbse"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3d1i7"]
 bg_color = Color(0.129412, 0.109804, 0.180392, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_3d1i7"]
+blend_mode = 1
 
 [node name="mainMenu" type="PanelContainer"]
 anchors_preset = 15
@@ -15,22 +18,96 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_3d1i7")
 script = ExtResource("1_3d1i7")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(75, 0)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/PanelContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer"]
+[node name="lines" type="RichTextLabel" parent="HBoxContainer/PanelContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/default_color = Color(0.547633, 0.547633, 0.547633, 1)
+theme_override_fonts/normal_font = ExtResource("1_5mbse")
+theme_override_font_sizes/normal_font_size = 32
+text = "1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19"
+scroll_active = false
+
+[node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="text" type="RichTextLabel" parent="HBoxContainer/MarginContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("1_5mbse")
-text = "placeholder main menu"
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "text"
+autowrap_mode = 0
 
-[node name="Button" type="Button" parent="MarginContainer"]
+[node name="cursorLocator" type="Control" parent="HBoxContainer/MarginContainer2"]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-text = "play game"
+size_flags_horizontal = 0
+size_flags_vertical = 0
 
-[connection signal="pressed" from="MarginContainer/Button" to="." method="_startGame"]
+[node name="cursor" type="Control" parent="HBoxContainer/MarginContainer2/cursorLocator"]
+unique_name_in_owner = true
+anchors_preset = 0
+
+[node name="cursorRect" type="ColorRect" parent="HBoxContainer/MarginContainer2/cursorLocator/cursor"]
+unique_name_in_owner = true
+material = SubResource("CanvasItemMaterial_3d1i7")
+layout_mode = 0
+offset_top = 1.0
+offset_right = 2.0
+offset_bottom = 36.0
+color = Color(0.727428, 0.727428, 0.727428, 1)
+
+[node name="autocomplete" type="PanelContainer" parent="HBoxContainer/MarginContainer2/cursorLocator/cursor"]
+layout_mode = 0
+offset_top = 35.0
+offset_right = 40.0
+offset_bottom = 75.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/MarginContainer2/cursorLocator/cursor/autocomplete"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="HBoxContainer/MarginContainer2/cursorLocator/cursor/autocomplete"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_5mbse")
+theme_override_font_sizes/font_size = 32
+text = "new()"
+
+[connection signal="pressed" from="HBoxContainer/MarginContainer2/cursorLocator/cursor/autocomplete/Button" to="." method="autocompleted" binds= [0]]

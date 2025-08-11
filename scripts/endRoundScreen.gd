@@ -149,7 +149,9 @@ func undergrounds(context:CONTEXT):
 		CONTEXT.OPTIONTEXT: return "[b]ThingDeliverer-underpaths.zip[/b]"
 		CONTEXT.EXPLAIN: return "\nThe underpaths version includes five extra underpaths."
 		CONTEXT.IMAGE: return preload("res://resources/ui/undergroundUnselected.png")
-		CONTEXT.APPLY: game.undergroundsAvailable += 5
+		CONTEXT.APPLY:
+			game.ui.hotbar.visible = true
+			game.undergroundsAvailable += 5
 	
 func extraTime(context:CONTEXT):
 	match context:
