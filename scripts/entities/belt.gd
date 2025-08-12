@@ -46,6 +46,7 @@ func updateNext() -> void:
 func loadVisuals() -> void:
 	#print(str(!visualInstance) + str(currentlyDisplayedPreviousDirection) + str(previousDirection))
 	assert(!deleted)
+	if deleted: return game.menu.consoleError("ERROR: Belt tried to load visuals after deletion. Please try to replicate this and notify")
 
 	var changingInstance:bool = !visualInstance or currentlyDisplayedPreviousDirection != previousDirection
 	if changingInstance:

@@ -16,7 +16,7 @@ var effectiveScreenSize:Vector2 = Vector2(54.56548, 30.69308)
 var cursorPosition:Vector2i
 
 var cycle:float = 0
-var timeLeft:float = 15
+var timeLeft:float = 0
 var timeSinceStart:float = 0
 
 var objectToPlace:Object = Belt
@@ -64,6 +64,8 @@ const HOVER_OUTSPEED:float = 2
 var hoverPosition:Vector2i = Vector2i(0, 0)
 var hoverTime:float = 0
 
+var timerMultiplier:float = 1.5
+
 var timerExists:bool
 var hardMode:bool
 
@@ -80,6 +82,7 @@ func settings(_timerExists:bool, _hardMode:bool) -> void:
 	if hardMode:
 		pathsPerRound = 8
 		ui.updatePathsCount()
+		timerMultiplier = 1
 	
 
 func _process(delta:float) -> void:
@@ -395,7 +398,7 @@ func pathComplete() -> void:
 
 func nextRound() -> void:
 	rounds += 1
-	timeLeft += 45
+	timeLeft += 60 * timerMultiplier
 	if rounds == 2 and timerExists:
 		get_tree().create_tween().tween_property($"ui/VBoxContainer", "position:y", 0, 1)
 	pathsThisRound = 0

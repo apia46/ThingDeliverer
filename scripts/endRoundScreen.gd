@@ -113,8 +113,8 @@ func loadNext() -> void:
 	%version.text = "Build " + str(game.rounds+1)
 
 	if game.timerExists:
-		if game.rounds == 1: %body.text = " • There is now a timer. You must fulfill all requests of the next round within 60s"
-		elif game.rounds > 1: %body.text = " • 45s has been added to the timer"
+		if game.rounds == 1: %body.text = " • There is now a timer. You must fulfill all requests of the next round within %ss" % [int(60*game.timerMultiplier)]
+		elif game.rounds > 1: %body.text = " • %ss has been added to the timer" % [int(60*game.timerMultiplier)]
 		%body.text += "\n • Added 4 extra chunks of map space"
 	else: %body.text = " • Added 4 extra chunks of map space"
 
@@ -166,9 +166,9 @@ func undergrounds(context:CONTEXT):
 func extraTime(context:CONTEXT):
 	match context:
 		CONTEXT.OPTIONTEXT: return "[b]ThingDeliverer-extra_time.zip[/b]"
-		CONTEXT.EXPLAIN: return "\nThe extra time version includes 30s of extra time."
+		CONTEXT.EXPLAIN: return "\nThe extra time version includes %ss of extra time." % [int(30*game.timerMultiplier)]
 		CONTEXT.IMAGE: return preload("res://resources/ui/hourglass.png")
-		CONTEXT.APPLY: game.timeLeft += 30
+		CONTEXT.APPLY: game.timeLeft += 30 * game.timerMultiplier
 
 func extraSpace(context:CONTEXT):
 	match context:
