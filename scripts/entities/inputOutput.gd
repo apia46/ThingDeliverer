@@ -28,6 +28,13 @@ class RequestPair:
 	func _init(_id:int, _itemType:Items.TYPES):
 		id = _id
 		itemType = _itemType
+	
+	func getPaths() -> Array[PartialPath]:
+		var paths:Array[PartialPath] = []
+		for entity in [input, output]:
+			if entity and entity.pathNode.partialPath not in paths:
+				paths.append(entity.pathNode.partialPath)
+		return paths
 
 class EntangledRequestPair:
 	extends RequestPair
@@ -38,13 +45,15 @@ class EntangledRequestPair:
 	var completed2:bool = false
 	var difference:Vector2i
 
-	func updateAll() -> void:
-		var paths = []
+	func getPaths() -> Array[PartialPath]:
+		var paths:Array[PartialPath] = []
 		for entity in [input, output, input2, output2]:
 			if entity and entity.pathNode.partialPath not in paths:
 				paths.append(entity.pathNode.partialPath)
-		for path in paths:
-			path.update()
+		return paths
+
+	func updateAll() -> void:
+		for path in getPaths(): path.update()
 
 
 func getSidesOf(_pathNode:PathNode) -> Array[PathNode]:

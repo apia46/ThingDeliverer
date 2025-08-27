@@ -9,6 +9,7 @@ const CAMERA_MOVE_SPEED:float = 2
 @onready var ui = $"ui"
 @onready var cursor = $"ui/SubViewportContainer/cursorViewport/cursor"
 @onready var hover:H = $"hover"
+@onready var pathDisplay:PathDisplay = $"pathDisplay"
 
 var intendedCameraHeight:float = 20
 var upperCameraHeight: float = 20
@@ -59,8 +60,8 @@ var dragStartPos:Vector2i
 
 var isDebug:bool = false
 
-const HOVER_INSPEED:float = 2
-const HOVER_OUTSPEED:float = 2
+const HOVER_INSPEED:float = 5
+const HOVER_OUTSPEED:float = 5
 var hoverPosition:Vector2i = Vector2i(0, 0)
 var hoverTime:float = 0
 
@@ -140,19 +141,18 @@ func _process(delta:float) -> void:
 	if hovered and !paused:
 		hoverPosition = cursorPosition
 		hover.setHover(hovered)
+		if hovered: pathDisplay.hovered = hovered.asPathNodeAt(cursorPosition)
 		if cursorPosition == previousCursorPosition: hoverTime += delta * HOVER_INSPEED
 		else: hoverTime -= delta * HOVER_OUTSPEED
-	else: hoverTime -= delta * HOVER_OUTSPEED
+	else:
+		pathDisplay.hovered = null
+		hoverTime -= delta * HOVER_OUTSPEED
 	hoverTime = clampf(hoverTime, 0, 1)
-	hover.modulate.a = (hoverTime - 0.6) * 3
+	hover.modulate.a = int(hovered and !paused)
+	hover.position.x = get_viewport().size.x - hover.size.x - 20
+	hover.position.y = 20
 	cursor.transparency = (hoverTime - 0.6) * 3
-	hover.position = worldspaceToScreenspace(Vector2(hoverPosition) + Vector2(0.5, 0.8)) + Vector2(8, 8)
-	var bottomRightCorner:Vector2 = hover.position + hover.size - Vector2(get_viewport().size) + Vector2(32, 14) # add bottom right expand margins and some margins
-	if bottomRightCorner.y > 0: hover.position.y = worldspaceToScreenspace(Vector2(hoverPosition) + Vector2(0.5, 0.2)).y - hover.size.y - 8
-	if bottomRightCorner.x > 0:
-		for child in hover.get_children(): child.size_flags_horizontal = 8
-		hover.position.x -= hover.size.x + 16
-	else: for child in hover.get_children(): child.size_flags_horizontal = 0
+	pathDisplay.modulate.a = (hoverTime - 0.6) * 3
 
 func heldClick(previousCursorPosition:Vector2i) -> void:
 	# placeDrag, deletedrag

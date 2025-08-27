@@ -11,12 +11,19 @@ var typeError:String = ""
 
 enum STATES {INCOMPLETE, HAS_INPUT, HAS_OUTPUT, COMPLETE, ERROR}
 const STATES_NAMES:Array[String] = ["INCOMPLETE", "HAS_INPUT", "HAS_OUTPUT", "COMPLETE", "ERROR"]
-const STATES_COLORS:Array[BaseMaterial3D] = [
+const STATES_COLOR_MATERIALS:Array[BaseMaterial3D] = [
 	null,
 	preload("res://scenes/entityVisuals/materials/Blue.tres"),
 	preload("res://scenes/entityVisuals/materials/Orange.tres"),
 	preload("res://scenes/entityVisuals/materials/White.tres"),
 	preload("res://scenes/entityVisuals/materials/Red.tres")
+]
+const STATES_COLOR:Array[Color] = [
+	Color(),
+	Color(0x00ffffff),
+	Color(0xffff00ff),
+	Color(0xffffffff),
+	Color(0xff00ffff)
 ]
 
 func _init(_game:Game, _start:PathNode) -> void:
@@ -110,7 +117,8 @@ func joinAfter(pathNode:PathNode) -> void:
 	toJoin.end = head
 	toJoin.tryUpdate()
 
-func getColorMaterial() -> BaseMaterial3D: return STATES_COLORS[getState()]
+func getColorMaterial() -> BaseMaterial3D: return STATES_COLOR_MATERIALS[getState()]
+func getColor() -> Color: return STATES_COLOR[getState()]
 
 func mispairedError() -> Array[int]:
 	if start.entity is Inputter and end.entity is Outputter and start.entity.requestPair != end.entity.requestPair:
@@ -154,6 +162,21 @@ func getRequestPair() -> InputOutput.RequestPair:
 	if start.entity is Inputter: return start.entity.requestPair
 	if end.entity is Outputter: return end.entity.requestPair
 	return null
+
+func getRequestPairs() -> Array[InputOutput.RequestPair]:
+	var out:Array[InputOutput.RequestPair] = []
+	if start.entity is Inputter: out.append(start.entity.requestPair)
+	if end.entity is Outputter and end.entity.requestPair not in out: out.append(end.entity.requestPair)
+	return out
+
+func enumerate() -> Array[PathNode]:
+	var output:Array[PathNode] = []
+	var head:PathNode = start
+	while true:
+		output.append(head)
+		if head == end: break
+		head = head.nextNode
+	return output
 
 # type checks
 func fridgeError() -> bool:

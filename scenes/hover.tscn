@@ -6,17 +6,19 @@
 [ext_resource type="StyleBox" uid="uid://dy0jw7vyrp3pc" path="res://resources/ui/stylebox.tres" id="4_axufu"]
 
 [node name="hover" type="VBoxContainer"]
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 169.0
-offset_bottom = 113.0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -317.0
+offset_bottom = 148.0
+grow_horizontal = 0
 mouse_filter = 2
 theme_override_constants/separation = 16
 script = ExtResource("1_kvef0")
 
 [node name="main" type="PanelContainer" parent="."]
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 8
 theme_override_styles/panel = ExtResource("4_axufu")
 
 [node name="margins" type="MarginContainer" parent="main"]
@@ -42,5 +44,4 @@ autowrap_mode = 0
 
 [node name="hoverError" parent="." instance=ExtResource("3_vfl0y")]
 layout_mode = 2
-size_flags_horizontal = 0
 theme_override_styles/panel = ExtResource("4_axufu")

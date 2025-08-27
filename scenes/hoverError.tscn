@@ -21,6 +21,7 @@ expand_margin_bottom = 6.0
 [node name="hoverError" type="PanelContainer"]
 offset_right = 93.0
 offset_bottom = 18.0
+size_flags_horizontal = 8
 theme_override_styles/panel = SubResource("StyleBoxFlat_wk2q6")
 
 [node name="text" type="RichTextLabel" parent="."]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bson8b2xh0e3u"]
+[gd_scene load_steps=22 format=3 uid="uid://bson8b2xh0e3u"]
 
 [ext_resource type="Script" uid="uid://g34ijtt88ye" path="res://scripts/menu.gd" id="1_con2f"]
 [ext_resource type="Texture2D" uid="uid://cfek1u0gilq6a" path="res://resources/ui/horizontalLine.png" id="2_mhnvy"]
@@ -28,6 +28,9 @@ expand_margin_left = 8.0
 expand_margin_top = 6.0
 expand_margin_bottom = 6.0
 
+[sub_resource type="LabelSettings" id="LabelSettings_ufwb2"]
+font_size = 24
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g3eks"]
 bg_color = Color(0.309804, 0.756863, 1, 0.0784314)
 
@@ -37,7 +40,7 @@ bg_color = Color(0.309804, 0.756863, 1, 0.192157)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_13sgg"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_g3eks"]
-font_size = 12
+font_size = 18
 font_color = Color(0.847059, 0.847059, 0.847059, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_13sgg"]
@@ -103,6 +106,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="hbox/leftSide/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "File System"
+label_settings = SubResource("LabelSettings_ufwb2")
 
 [node name="horizLine" type="TextureRect" parent="hbox/leftSide/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -144,8 +148,8 @@ mouse_filter = 2
 [node name="icon" type="TextureRect" parent="hbox/leftSide/MarginContainer/VBoxContainer/MarginContainer/files/gameFile/hbox"]
 layout_mode = 2
 size_flags_horizontal = 0
-size_flags_vertical = 4
 texture = ExtResource("3_13sgg")
+expand_mode = 3
 
 [node name="filename" type="Label" parent="hbox/leftSide/MarginContainer/VBoxContainer/MarginContainer/files/gameFile/hbox"]
 layout_mode = 2
@@ -175,8 +179,8 @@ mouse_filter = 2
 [node name="icon" type="TextureRect" parent="hbox/leftSide/MarginContainer/VBoxContainer/MarginContainer/files/file2/hbox"]
 layout_mode = 2
 size_flags_horizontal = 0
-size_flags_vertical = 4
 texture = ExtResource("3_v86rl")
+expand_mode = 3
 
 [node name="filename" type="Label" parent="hbox/leftSide/MarginContainer/VBoxContainer/MarginContainer/files/file2/hbox"]
 layout_mode = 2
@@ -204,8 +208,8 @@ mouse_filter = 2
 [node name="icon" type="TextureRect" parent="hbox/leftSide/MarginContainer/VBoxContainer/MarginContainer/files/file3/hbox"]
 layout_mode = 2
 size_flags_horizontal = 0
-size_flags_vertical = 4
 texture = ExtResource("3_4ytvr")
+expand_mode = 3
 
 [node name="filename" type="Label" parent="hbox/leftSide/MarginContainer/VBoxContainer/MarginContainer/files/file3/hbox"]
 layout_mode = 2
@@ -233,8 +237,8 @@ mouse_filter = 2
 [node name="icon" type="TextureRect" parent="hbox/leftSide/MarginContainer/VBoxContainer/MarginContainer/files/file4/hbox"]
 layout_mode = 2
 size_flags_horizontal = 0
-size_flags_vertical = 4
 texture = ExtResource("5_13sgg")
+expand_mode = 3
 
 [node name="filename" type="Label" parent="hbox/leftSide/MarginContainer/VBoxContainer/MarginContainer/files/file4/hbox"]
 layout_mode = 2
