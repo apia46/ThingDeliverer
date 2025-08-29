@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://cj7bhtxrqv3ld"]
+
+[ext_resource type="Texture2D" uid="uid://du18wxauv3027" path="res://resources/dottedLine.png" id="1_6vvau"]
+
+[sub_resource type="Gradient" id="Gradient_6vvau"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
+
+[node name="dottedLine" type="Line2D"]
+texture_repeat = 2
+points = PackedVector2Array(674, 459, 397, 488)
+width = 8.0
+gradient = SubResource("Gradient_6vvau")
+texture = ExtResource("1_6vvau")
+texture_mode = 1

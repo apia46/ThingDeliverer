@@ -142,8 +142,7 @@ func _process(delta:float) -> void:
 		hoverPosition = cursorPosition
 		hover.setHover(hovered)
 		if hovered: pathDisplay.hovered = hovered.asPathNodeAt(cursorPosition)
-		if cursorPosition == previousCursorPosition: hoverTime += delta * HOVER_INSPEED
-		else: hoverTime -= delta * HOVER_OUTSPEED
+		hoverTime += delta * HOVER_INSPEED
 	else:
 		pathDisplay.hovered = null
 		hoverTime -= delta * HOVER_OUTSPEED

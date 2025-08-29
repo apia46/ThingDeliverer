@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://dddwu1sve42so"]
+[gd_scene load_steps=10 format=3 uid="uid://dddwu1sve42so"]
 
 [ext_resource type="Script" uid="uid://b3e7nd381f1kx" path="res://scripts/game.gd" id="1_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://cs4uk7wcoe057" path="res://scenes/scene.tscn" id="2_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://di6yfmmtdym8e" path="res://scenes/ui.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://n41t2vjmsuh" path="res://scenes/hover.tscn" id="4_lbhrr"]
 [ext_resource type="Script" uid="uid://b8dl1dtf0fbox" path="res://scripts/pathDisplay.gd" id="5_iywne"]
+[ext_resource type="PackedScene" uid="uid://cj7bhtxrqv3ld" path="res://scenes/dottedLine.tscn" id="6_p57ef"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_lnu2h"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -40,3 +41,19 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 20,
 
 [node name="pathDisplay" type="Node2D" parent="."]
 script = ExtResource("5_iywne")
+
+[node name="dottedLine" parent="pathDisplay" instance=ExtResource("6_p57ef")]
+
+[node name="dottedLine2" parent="pathDisplay" instance=ExtResource("6_p57ef")]
+
+[node name="dottedLine3" parent="pathDisplay" instance=ExtResource("6_p57ef")]
+
+[node name="dottedLine4" parent="pathDisplay" instance=ExtResource("6_p57ef")]
+
+[node name="dottedLine5" parent="pathDisplay" instance=ExtResource("6_p57ef")]
+
+[node name="dottedLine6" parent="pathDisplay" instance=ExtResource("6_p57ef")]
+
+[node name="dottedLine7" parent="pathDisplay" instance=ExtResource("6_p57ef")]
+
+[node name="dottedLine8" parent="pathDisplay" instance=ExtResource("6_p57ef")]
