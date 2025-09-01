@@ -152,6 +152,7 @@ func _process(delta:float) -> void:
 	hover.position.y = 20
 	cursor.transparency = (hoverTime - 0.6) * 3
 	pathDisplay.modulate.a = (hoverTime - 0.6) * 3
+	$"dottedLines".modulate.a = (hoverTime - 0.6) * 3
 
 func heldClick(previousCursorPosition:Vector2i) -> void:
 	# placeDrag, deletedrag
@@ -476,6 +477,7 @@ func lose() -> void:
 				at %s connections
 				at game.gd""" % [rounds, len(requestPairs)-1])
 	menu.consolePrint("Select game.gd to try again")
+	menu.consolePrint("Press [F] to review")
 
 class RunningTimer:
 	extends Timer

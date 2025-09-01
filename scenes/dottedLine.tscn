@@ -7,7 +7,6 @@ colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
 
 [node name="dottedLine" type="Line2D"]
 texture_repeat = 2
-points = PackedVector2Array(674, 459, 397, 488)
 width = 8.0
 gradient = SubResource("Gradient_6vvau")
 texture = ExtResource("1_6vvau")

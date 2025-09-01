@@ -39,21 +39,23 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 20,
 
 [node name="hover" parent="." instance=ExtResource("4_lbhrr")]
 
+[node name="dottedLines" type="Node2D" parent="."]
+
+[node name="dottedLine" parent="dottedLines" instance=ExtResource("6_p57ef")]
+
+[node name="dottedLine2" parent="dottedLines" instance=ExtResource("6_p57ef")]
+
+[node name="dottedLine3" parent="dottedLines" instance=ExtResource("6_p57ef")]
+
+[node name="dottedLine4" parent="dottedLines" instance=ExtResource("6_p57ef")]
+
+[node name="dottedLine5" parent="dottedLines" instance=ExtResource("6_p57ef")]
+
+[node name="dottedLine6" parent="dottedLines" instance=ExtResource("6_p57ef")]
+
+[node name="dottedLine7" parent="dottedLines" instance=ExtResource("6_p57ef")]
+
+[node name="dottedLine8" parent="dottedLines" instance=ExtResource("6_p57ef")]
+
 [node name="pathDisplay" type="Node2D" parent="."]
 script = ExtResource("5_iywne")
-
-[node name="dottedLine" parent="pathDisplay" instance=ExtResource("6_p57ef")]
-
-[node name="dottedLine2" parent="pathDisplay" instance=ExtResource("6_p57ef")]
-
-[node name="dottedLine3" parent="pathDisplay" instance=ExtResource("6_p57ef")]
-
-[node name="dottedLine4" parent="pathDisplay" instance=ExtResource("6_p57ef")]
-
-[node name="dottedLine5" parent="pathDisplay" instance=ExtResource("6_p57ef")]
-
-[node name="dottedLine6" parent="pathDisplay" instance=ExtResource("6_p57ef")]
-
-[node name="dottedLine7" parent="pathDisplay" instance=ExtResource("6_p57ef")]
-
-[node name="dottedLine8" parent="pathDisplay" instance=ExtResource("6_p57ef")]
