@@ -69,10 +69,14 @@ var timerMultiplier:float = 1.5
 
 var timerExists:bool
 var hardMode:bool
+var spaceGenType:SpaceGenType = SpaceGenType.RANDOM_WALK
+enum SpaceGenType { BULLSHIT, RANDOM_WALK, DIAMOND, CITY }
+
+var reviewing:bool = false
 
 func _ready() -> void:
-	for x in range(-2, 2): for y in range(-2, 2):
-		scene.newSpace(Vector2i(x*Scene.SPACE_SIZE,y*Scene.SPACE_SIZE))
+	scene.newSpace(U.v2(0))
+	for _i in 15: randomNewSpace()
 	newInputOutputs()
 	setCursor(Belt)
 	menu.consoleSet("Game Started")
@@ -124,14 +128,15 @@ func _process(delta:float) -> void:
 			else: cursorPosition.x = clamp(cursorPosition.x, inputPosition.x + 1, inputPosition.x + 5)
 	cursor.position = U.fxz(cursorPosition) + U.v3(0.5)
 	
-	if !paused: cycle += 4 * delta
-	elif !trulyPaused: cycle += delta
+	if !trulyPaused:
+		if !paused: cycle += 4 * delta
+		else: cycle += delta
 	if cycle >= Items.SPACES_PER_ITEM:
 		cycle -= Items.SPACES_PER_ITEM
 	scene.items.updateDisplays()
 	
-	if !paused && rounds > 1 && timerExists:
-		timeLeft -= delta
+	if !paused and rounds > 1 and timerExists and !reviewing:
+		timeLeft -= delta*10
 		if timeLeft < 0: lose()
 	ui.updateTimer()
 
@@ -155,6 +160,7 @@ func _process(delta:float) -> void:
 	$"dottedLines".modulate.a = (hoverTime - 0.6) * 3
 
 func heldClick(previousCursorPosition:Vector2i) -> void:
+	if reviewing: return
 	# placeDrag, deletedrag
 	
 	var readFromCurrentDragX = objectToPlace == Belt and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
@@ -182,6 +188,7 @@ func heldClick(previousCursorPosition:Vector2i) -> void:
 
 func _input(event:InputEvent) -> void:
 	if event is InputEventKey and event.is_pressed() and event.keycode == KEY_ESCAPE and !trulyPaused: menu.togglePause()
+	if event is InputEventKey and event.is_pressed() and event.keycode == KEY_R and trulyPaused: review()
 	if paused: return
 	if event is InputEventMouseMotion:
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
@@ -213,7 +220,7 @@ func _input(event:InputEvent) -> void:
 					KEY_D: if Input.is_key_pressed(KEY_SHIFT): currentRotation = U.ROTATIONS.RIGHT; restartDragFromHere()
 			match event.keycode:
 				KEY_F3: isDebug = !isDebug
-				KEY_K: lose()
+				KEY_K: randomNewSpace()
 				KEY_SPACE:
 					if intendedCameraHeight > 50: intendedCameraHeight = 20
 					else: intendedCameraHeight = 76.2939453125; upperCameraHeight = 76.2939453125
@@ -225,7 +232,7 @@ func restartDragFromHere():
 		currentDragX = U.bool3not(currentDragX)
 
 func place(placePosition:Vector2i=cursorPosition) -> Entity:
-	if paused: return
+	if paused or reviewing: return
 	hoverTime = 0
 	var entityPresent: Entity = scene.getEntity(placePosition)
 	if entityPresent is InputOutput: return null
@@ -275,7 +282,7 @@ func place(placePosition:Vector2i=cursorPosition) -> Entity:
 	return result
 
 func delete(deletePosition:Vector2i=cursorPosition) -> Entity:
-	if paused: return
+	if paused or reviewing: return
 	if objectToPlace == UndergroundOutput:
 		setCursor(UndergroundInput)
 		return null
@@ -422,10 +429,34 @@ func unlockItemType(type:Items.TYPES):
 	itemTypesUnlocked.append(type)
 
 func randomNewSpace() -> void:
-	while true:
-		var space:Space = scene.spaces[scene.spaces.keys()[randi_range(0, len(scene.spaces) - 1)]]
-		var randomPosition = space.position + U.V2I_DIRECTIONS[randi_range(0,3)] * Scene.SPACE_SIZE
-		if scene.newSpace(randomPosition): return
+	match spaceGenType:
+		SpaceGenType.BULLSHIT:
+			while true:
+				var space:Space = scene.spaces[scene.spaces.keys()[randi_range(0, len(scene.spaces) - 1)]]
+				var randomPosition = space.position + U.V2I_DIRECTIONS[randi_range(0,3)] * Scene.SPACE_SIZE
+				if scene.newSpace(randomPosition): return
+		SpaceGenType.RANDOM_WALK:
+			var randomWalkPos = Vector2i(0,0)
+			while true:
+				if randi_range(0,1): randomWalkPos.x += 1 if randi_range(0,1) else -1
+				else: randomWalkPos.y += 1 if randi_range(0,1) else -1
+				if scene.newSpace(randomWalkPos*Scene.SPACE_SIZE): return
+		SpaceGenType.CITY:
+			var randomWalkPos = Vector2i(0,0)
+			while true:
+				var direction:Vector2i
+				if (randi_range(0,1) or randomWalkPos.x%2!=0) and randomWalkPos.y%2==0: direction = Vector2i((1 if randi_range(0,1) else -1), 0)
+				else: direction = Vector2i(0, (1 if randi_range(0,1) else -1))
+				randomWalkPos += direction
+				if !scene.getSpace(randomWalkPos*Scene.SPACE_SIZE):
+					var rot:U.ROTATIONS = U.v2itorot(direction)
+					if scene.getSpace((randomWalkPos+direction)*Scene.SPACE_SIZE):
+						if randi_range(0,max(10,1000-randomWalkPos.length_squared())): continue
+					elif scene.getSpace((randomWalkPos+U.rotate(Vector2i(1, -1), rot))*Scene.SPACE_SIZE)\
+					or scene.getSpace((randomWalkPos+U.rotate(Vector2i(-1, -1), rot))*Scene.SPACE_SIZE):
+						if randi_range(0,max(10,1000-randomWalkPos.length_squared())): randomWalkPos += direction
+					scene.newSpace(randomWalkPos*Scene.SPACE_SIZE)
+					return
 
 func addRunningTimer(time:float, running:Callable):
 	var timer = RunningTimer.new()
@@ -477,7 +508,18 @@ func lose() -> void:
 				at %s connections
 				at game.gd""" % [rounds, len(requestPairs)-1])
 	menu.consolePrint("Select game.gd to try again")
-	menu.consolePrint("Press [F] to review")
+	menu.consolePrint("Press [R] to review")
+
+func review():
+	if reviewing: return
+	paused = false
+	var tween = create_tween()
+	tween.tween_property(menu.overlay, "modulate:a", 0, 0.5)
+	tween.tween_callback(func(): menu.overlay.mouse_filter = Control.MouseFilter.MOUSE_FILTER_IGNORE)
+	reviewing = true
+	timeLeft = 0
+	ui.updateTimer()
+	ui.hotbar.visible = false
 
 class RunningTimer:
 	extends Timer

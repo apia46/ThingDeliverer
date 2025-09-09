@@ -146,6 +146,7 @@ size_flags_horizontal = 0
 mouse_filter = 2
 
 [node name="icon" type="TextureRect" parent="hbox/leftSide/MarginContainer/VBoxContainer/MarginContainer/files/gameFile/hbox"]
+texture_filter = 2
 layout_mode = 2
 size_flags_horizontal = 0
 texture = ExtResource("3_13sgg")
@@ -177,6 +178,7 @@ size_flags_horizontal = 0
 mouse_filter = 2
 
 [node name="icon" type="TextureRect" parent="hbox/leftSide/MarginContainer/VBoxContainer/MarginContainer/files/file2/hbox"]
+texture_filter = 2
 layout_mode = 2
 size_flags_horizontal = 0
 texture = ExtResource("3_v86rl")
@@ -206,6 +208,7 @@ size_flags_horizontal = 0
 mouse_filter = 2
 
 [node name="icon" type="TextureRect" parent="hbox/leftSide/MarginContainer/VBoxContainer/MarginContainer/files/file3/hbox"]
+texture_filter = 2
 layout_mode = 2
 size_flags_horizontal = 0
 texture = ExtResource("3_4ytvr")
@@ -235,6 +238,7 @@ size_flags_horizontal = 0
 mouse_filter = 2
 
 [node name="icon" type="TextureRect" parent="hbox/leftSide/MarginContainer/VBoxContainer/MarginContainer/files/file4/hbox"]
+texture_filter = 2
 layout_mode = 2
 size_flags_horizontal = 0
 texture = ExtResource("5_13sgg")
