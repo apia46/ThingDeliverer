@@ -9,9 +9,11 @@ func _input(event: InputEvent) -> void:
 		match event.keycode:
 			KEY_1: belt()
 			KEY_2: underground()
+			KEY_3: throughpath()
 
 func belt() -> void: game.setCursor(Belt)
 func underground() -> void: game.setCursor(UndergroundInput)
+func throughpath() -> void: game.setCursor(Throughpath)
 
 func updateTimer() -> void:
 	%timerBar.value = game.timeLeft

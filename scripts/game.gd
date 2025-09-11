@@ -93,7 +93,7 @@ func settings(_timerExists:bool, _hardMode:bool, _mapType:SpaceGenType) -> void:
 
 func _process(delta:float) -> void:
 	var previousCursorPosition:Vector2i = cursorPosition
-	cursorPosition = screenspaceToWorldspace(get_viewport().get_mouse_position())
+	setCursorPosition()
 	if !paused and !Input.is_key_pressed(KEY_SHIFT):
 		if Input.is_key_pressed(KEY_A):
 			cameraPosition.x -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
@@ -156,9 +156,13 @@ func _process(delta:float) -> void:
 	hover.modulate.a = int(hovered and !paused)
 	hover.position.x = get_viewport().size.x - hover.size.x - 20
 	hover.position.y = 20
-	cursor.transparency = (hoverTime - 0.6) * 3
 	pathDisplay.modulate.a = (hoverTime - 0.6) * 3
 	$"dottedLines".modulate.a = (hoverTime - 0.6) * 3
+
+func setCursorPosition() -> void:
+	if objectToPlace == Throughpath:
+		cursorPosition = floor(Vector2(0.5, -0.5) + U.xz(cameraPosition) + (get_viewport().get_mouse_position() / Vector2(get_viewport().size) - U.v2(0.5)) * effectiveScreenSize)
+	else: cursorPosition = screenspaceToWorldspace(get_viewport().get_mouse_position())
 
 func heldClick(previousCursorPosition:Vector2i) -> void:
 	if reviewing: return
@@ -195,7 +199,7 @@ func _input(event:InputEvent) -> void:
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
 			cameraPosition -= U.fxz(event.relative) * intendedCameraHeight * 0.00237
 		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
-			cursorPosition = screenspaceToWorldspace(event.position)
+			setCursorPosition()
 			heldClick(screenspaceToWorldspace(event.position - event.relative))
 	elif event is InputEventMouseButton:
 		if event.is_pressed():
@@ -232,14 +236,23 @@ func restartDragFromHere():
 		dragStartPos = screenspaceToWorldspace(get_viewport().get_mouse_position())
 		currentDragX = U.bool3not(currentDragX)
 
+func cantPlace(placePosition) -> bool:
+	var entityPresent: Entity = scene.getEntity(placePosition)
+	if entityPresent is InputOutput: return true
+	if !scene.getSpace(placePosition): return true
+	if objectToPlace == UndergroundOutput and entityPresent is UndergroundInput: return true
+	if objectToPlace == UndergroundInput and undergroundsAvailable == 0 and !isDebug: return true
+	return false
+
 func place(placePosition:Vector2i=cursorPosition) -> Entity:
 	if paused or reviewing: return
 	hoverTime = 0
-	var entityPresent: Entity = scene.getEntity(placePosition)
-	if entityPresent is InputOutput: return null
-	if !scene.getSpace(placePosition): return null
-	if objectToPlace == UndergroundOutput and entityPresent is UndergroundInput: return null
-	if objectToPlace == UndergroundInput and undergroundsAvailable == 0 and !true: return null
+	if cantPlace(placePosition): return null
+	if objectToPlace == Throughpath:
+		if cantPlace(placePosition + Vector2i(-1, 0)): return null
+		if cantPlace(placePosition + Vector2i(-1, 1)): return null
+		if cantPlace(placePosition + Vector2i(0, 1)): return null
+		
 	var result = scene.placeEntity(objectToPlace, placePosition, currentRotation, objectToPlace != UndergroundOutput)
 	if result is UndergroundInput:
 		undergroundsAvailable -= 1
@@ -263,7 +276,7 @@ func place(placePosition:Vector2i=cursorPosition) -> Entity:
 			undergroundInputStoredNode = null
 		setCursor(Belt, true)
 		result.ready()
-	if result and result.pathNode.partialPath.getItemType() == Items.TYPES.PARTICLE and placePosition == cursorPosition:
+	if result and !(result is Throughpath or result is ThroughpathReference) and result.pathNode.partialPath.getItemType() == Items.TYPES.PARTICLE and placePosition == cursorPosition:
 		if result is UndergroundInput:
 			setCursor(UndergroundInput, true)
 			if undergroundsAvailable == 0: return result
@@ -291,7 +304,7 @@ func delete(deletePosition:Vector2i=cursorPosition) -> Entity:
 	var entityPresent: Entity = scene.getEntity(deletePosition)
 	if entityPresent is InputOutput: return null
 	var result = scene.deleteEntity(deletePosition)
-	if result and result.pathNode.partialPath.getItemType() == Items.TYPES.PARTICLE and deletePosition == cursorPosition:
+	if result and !(result is Throughpath or result is ThroughpathReference) and result.pathNode.partialPath.getItemType() == Items.TYPES.PARTICLE and deletePosition == cursorPosition:
 		var requestPair:InputOutput.EntangledRequestPair = result.pathNode.partialPath.getRequestPair()
 		var is2:bool
 		if result.pathNode.partialPath.start.entity is Inputter:
@@ -485,6 +498,7 @@ func setCursor(object:Variant=null, safe:=false) -> void:
 			Belt: cursor.mesh = preload("res://meshes/beltStraight.tres")
 			UndergroundInput: cursor.mesh = preload("res://meshes/undergroundInput.tres")
 			UndergroundOutput: cursor.mesh = preload("res://meshes/undergroundOutput.tres")
+			Throughpath: cursor.mesh = preload("res://meshes/throughpath.tres")
 	cursor.visible = !paused
 	cursor.rotation.y = U.rotToRad(currentRotation)
 

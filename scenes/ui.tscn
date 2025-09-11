@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://di6yfmmtdym8e"]
+[gd_scene load_steps=28 format=3 uid="uid://di6yfmmtdym8e"]
 
 [ext_resource type="Script" uid="uid://dr4q4w60f0ren" path="res://scripts/ui.gd" id="1_7dvkv"]
 [ext_resource type="Texture2D" uid="uid://uuygo8yxh7q6" path="res://resources/ui/ends.png" id="1_p7vwb"]
@@ -9,7 +9,9 @@
 [ext_resource type="Texture2D" uid="uid://dq6lwha8kj606" path="res://resources/ui/undergroundUnselected.png" id="8_cgfq5"]
 [ext_resource type="FontFile" uid="uid://mgbewlhf6ayn" path="res://resources/ui/SpaceMono-Bold.woff" id="8_ktti3"]
 [ext_resource type="PackedScene" uid="uid://dwcm4ycttlsw1" path="res://scenes/endRoundScreen.tscn" id="9_cgfq5"]
+[ext_resource type="Texture2D" uid="uid://by5gwlrddllbg" path="res://resources/ui/throughpathUnselected.png" id="10_6rmj2"]
 [ext_resource type="Texture2D" uid="uid://iagavfhfb3sj" path="res://resources/ui/itemTypes/box.png" id="10_7dvkv"]
+[ext_resource type="Texture2D" uid="uid://c27rlgamollad" path="res://resources/ui/throughpathSelected.png" id="11_vsj0x"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cgfq5"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -132,7 +134,6 @@ layout_mode = 1
 
 [node name="hotbar" type="HBoxContainer" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -184,6 +185,32 @@ texture_disabled = ExtResource("7_p7vwb")
 stretch_mode = 0
 
 [node name="undergroundsCount" type="Label" parent="hotbar/hotbarPanel/hotbarInner/underground"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -18.0
+offset_top = -14.0
+offset_right = 18.0
+offset_bottom = 4.0
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_7dvkv")
+text = "0"
+label_settings = SubResource("LabelSettings_vdcm2")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="thoughpath" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner"]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+texture_normal = ExtResource("10_6rmj2")
+texture_pressed = ExtResource("11_vsj0x")
+texture_hover = ExtResource("11_vsj0x")
+texture_disabled = ExtResource("11_vsj0x")
+stretch_mode = 0
+
+[node name="throughpathCount" type="Label" parent="hotbar/hotbarPanel/hotbarInner/thoughpath"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 5
@@ -304,3 +331,4 @@ flip_v = true
 
 [connection signal="pressed" from="hotbar/hotbarPanel/hotbarInner/belt" to="." method="belt"]
 [connection signal="pressed" from="hotbar/hotbarPanel/hotbarInner/underground" to="." method="underground"]
+[connection signal="pressed" from="hotbar/hotbarPanel/hotbarInner/thoughpath" to="." method="throughpath"]
