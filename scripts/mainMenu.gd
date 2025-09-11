@@ -10,11 +10,14 @@ var DIALOGUE:Array[String] = [
 "# ThingDeliverer v0.1.1
 # Check the README.md for controls and information
 # Use [Esc] to open the menu while in the game") + "\n\n" + H.opName("var", 1) + H.varName("game") + " = " + H.typeName("ThingDeliverer") + ".",
-	H.funcName("new") + H.LPAR + "\n" + H.TAB + "\n" + H.TAB + "\n" + H.RPAR + "\n",
+	H.funcName("new") + H.LPAR + "\n" + H.TAB + "\n" + H.TAB + "\n" + H.TAB + "\n" + H.RPAR + "\n",
 	H.typeName("Timer") + "." + H.enumName("NORMAL", 2),
 	H.typeName("Timer") + "." + H.enumName("INFINITE", 2),
-	H.typeName("Difficulty") + "." + H.enumName("NORMAL"),
-	H.typeName("Difficulty") + "." + H.enumName("HARD"),
+	H.typeName("Difficulty") + "." + H.enumName("NORMAL", 2),
+	H.typeName("Difficulty") + "." + H.enumName("HARD", 2),
+	H.typeName("MapType") + "." + H.enumName("NORMAL"),
+	H.typeName("MapType") + "." + H.enumName("UNFAIR"),
+	H.typeName("MapType") + "." + H.enumName("WEIRD"),
 ]
 
 @onready var menu:Menu = get_node("/root/menu")
@@ -32,6 +35,7 @@ var offsetEnd:int = 0
 
 var timerExists:bool
 var hardMode:bool
+var mapType:Game.SpaceGenType
 
 func _ready() -> void:
 	%lines.get_v_scroll_bar().visible = false
@@ -92,9 +96,9 @@ func loadAutocomplete(which:int) -> void:
 		0:
 			showAutocompleteButton(0, "new()", METHOD_ICON)
 		1:
-			cursorPosition = Vector2i(4, cursorPosition.y-3)
+			cursorPosition = Vector2i(4, cursorPosition.y-4)
 			%cursor.position = cursorPosition * Vector2i(0, 35)
-			offsetEnd += 28
+			offsetEnd += 30
 			showAutocompleteButton(0, "Timer.NORMAL")
 			showAutocompleteButton(1, "Timer.INFINITE")
 		2, 3:
@@ -106,6 +110,14 @@ func loadAutocomplete(which:int) -> void:
 			showAutocompleteButton(1, "Difficulty.HARD")
 		4, 5:
 			whichAutocomplete = 5
+			cursorPosition = Vector2i(4, cursorPosition.y+1)
+			%cursor.position = cursorPosition * Vector2i(0, 35)
+			offsetEnd -= 2
+			showAutocompleteButton(0, 'MapType.NORMAL')
+			showAutocompleteButton(1, 'MapType.UNFAIR')
+			showAutocompleteButton(2, 'MapType.WEIRD')
+		6, 7, 8:
+			whichAutocomplete = 8
 			cursorPosition = Vector2i(0, cursorPosition.y+2)
 			%cursor.position = cursorPosition * Vector2i(0, 35)
 			offsetEnd = 0
@@ -123,8 +135,9 @@ func autocompleted(which:int) -> void:
 	match whichAutocomplete:
 		1: timerExists = !which
 		3: hardMode = !!which
-		5:
+		5: mapType = which as Game.SpaceGenType
+		8:
 			whichAutocomplete = -1
-			return menu.startGame(timerExists, hardMode)
+			return menu.startGame(timerExists, hardMode, mapType)
 	loadDialogue(whichAutocomplete + which + 1)
 	whichAutocomplete = -1

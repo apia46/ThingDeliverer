@@ -72,7 +72,7 @@ func confirmEndRun() -> void:
 	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	game.queue_free()
 
-func startGame(timerExists:bool, hardMode:bool) -> void:
+func startGame(timerExists:bool, hardMode:bool, mapType:Game.SpaceGenType) -> void:
 	if gaming: return
 	gaming = true
 	var timer = create_tween()
@@ -88,6 +88,7 @@ func startGame(timerExists:bool, hardMode:bool) -> void:
 	game = preload("res://scenes/game.tscn").instantiate()
 	%gameCont.add_child(game)
 	togglePause(true)
-	game.settings(timerExists, hardMode)
+	game.settings(timerExists, hardMode, mapType)
 	consolePrintWithoutTime("Timer: enabled" if timerExists else "Timer: disabled")
 	consolePrintWithoutTime("Difficulty: hard" if hardMode else "Difficulty: normal")
+	consolePrintWithoutTime("Map type: " + ["normal", "unfair", "weird"][mapType])

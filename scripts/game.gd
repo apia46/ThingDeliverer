@@ -69,21 +69,22 @@ var timerMultiplier:float = 1.5
 
 var timerExists:bool
 var hardMode:bool
-var spaceGenType:SpaceGenType = SpaceGenType.RANDOM_WALK
-enum SpaceGenType { BULLSHIT, RANDOM_WALK, DIAMOND, CITY }
+var spaceGenType:SpaceGenType = SpaceGenType.CITY
+enum SpaceGenType { RANDOM_WALK, BULLSHIT, CITY }
 
 var reviewing:bool = false
 
 func _ready() -> void:
 	scene.newSpace(U.v2(0))
-	for _i in 15: randomNewSpace()
-	newInputOutputs()
 	setCursor(Belt)
 	menu.consoleSet("Game Started")
 
-func settings(_timerExists:bool, _hardMode:bool) -> void:
+func settings(_timerExists:bool, _hardMode:bool, _mapType:SpaceGenType) -> void:
 	timerExists = _timerExists
 	hardMode = _hardMode
+	spaceGenType = _mapType
+	for _i in 15: randomNewSpace()
+	newInputOutputs()
 	if hardMode:
 		pathsPerRound = 8
 		ui.updatePathsCount()
@@ -136,7 +137,7 @@ func _process(delta:float) -> void:
 	scene.items.updateDisplays()
 	
 	if !paused and rounds > 1 and timerExists and !reviewing:
-		timeLeft -= delta*10
+		timeLeft -= delta
 		if timeLeft < 0: lose()
 	ui.updateTimer()
 
@@ -238,7 +239,7 @@ func place(placePosition:Vector2i=cursorPosition) -> Entity:
 	if entityPresent is InputOutput: return null
 	if !scene.getSpace(placePosition): return null
 	if objectToPlace == UndergroundOutput and entityPresent is UndergroundInput: return null
-	if objectToPlace == UndergroundInput and undergroundsAvailable == 0 and !isDebug: return null
+	if objectToPlace == UndergroundInput and undergroundsAvailable == 0 and !true: return null
 	var result = scene.placeEntity(objectToPlace, placePosition, currentRotation, objectToPlace != UndergroundOutput)
 	if result is UndergroundInput:
 		undergroundsAvailable -= 1
@@ -383,7 +384,7 @@ func newInputOutputs() -> void:
 		requestPair.input = input
 
 		var outputPos:Vector2i = randomUnlockedTile(type)
-		while outputPos.distance_squared_to(inputPos) < 36 or (type == Items.TYPES.CHEMICAL and outputPos.distance_squared_to(inputPos) > 256) or isABadLocation(outputPos, type):
+		while outputPos.distance_squared_to(inputPos) < 36 or (type in [Items.TYPES.CHEMICAL, Items.TYPES.GYRO] and outputPos.distance_squared_to(inputPos) > 256) or isABadLocation(outputPos, type):
 			outputPos = randomUnlockedTile(type)
 		var output:Outputter = scene.placeEntity(Outputter, outputPos, U.ROTATIONS.UP)
 		output.pathNode = PathNode.new(output, outputPos)

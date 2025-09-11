@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://cs4uk7wcoe057" path="res://scenes/scene.tscn" id="2_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://di6yfmmtdym8e" path="res://scenes/ui.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://n41t2vjmsuh" path="res://scenes/hover.tscn" id="4_lbhrr"]
-[ext_resource type="Script" uid="uid://b8dl1dtf0fbox" path="res://scripts/pathDisplay.gd" id="5_iywne"]
+[ext_resource type="Script" path="res://scripts/pathDisplay.gd" id="5_iywne"]
 [ext_resource type="PackedScene" uid="uid://cj7bhtxrqv3ld" path="res://scenes/dottedLine.tscn" id="6_p57ef"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_lnu2h"]
