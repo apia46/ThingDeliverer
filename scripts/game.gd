@@ -158,9 +158,11 @@ func _process(delta:float) -> void:
 	hover.position.y = 20
 	pathDisplay.modulate.a = (hoverTime - 0.6) * 3
 	$"dottedLines".modulate.a = (hoverTime - 0.6) * 3
+	
+	if objectToPlace == Throughpath: currentRotation = U.ROTATIONS.UP
 
-func setCursorPosition() -> void:
-	if objectToPlace == Throughpath:
+func setCursorPosition(placing:bool=true) -> void:
+	if objectToPlace == Throughpath and placing:
 		cursorPosition = floor(Vector2(0.5, -0.5) + U.xz(cameraPosition) + (get_viewport().get_mouse_position() / Vector2(get_viewport().size) - U.v2(0.5)) * effectiveScreenSize)
 	else: cursorPosition = screenspaceToWorldspace(get_viewport().get_mouse_position())
 
@@ -209,7 +211,9 @@ func _input(event:InputEvent) -> void:
 				MOUSE_BUTTON_LEFT:
 					dragStartPos = cursorPosition
 					place()
-				MOUSE_BUTTON_RIGHT: delete()
+				MOUSE_BUTTON_RIGHT:
+					setCursorPosition(false)
+					delete()
 		else:
 			match event.button_index:
 				MOUSE_BUTTON_LEFT: currentDragX = U.BOOL3.UNKNOWN

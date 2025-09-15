@@ -70,8 +70,8 @@ func delete() -> void:
 	if itemDisplay: scene.items.removeDisplay(itemDisplay)
 	super()
 
-func asNodeOutputTo(node:PathNode) -> PathNode: return pathNode if node.position == position + U.rotate(Vector2i(0,-1), rotation) else null
-func asNodeInputFrom(node:PathNode) -> PathNode: return pathNode if node.position != position + U.rotate(Vector2i(0,-1), rotation) else null
+func asNodeOutputTo(node:PathNode) -> PathNode: return pathNode if node.position == position + U.rotate(Vector2i(0,-1), rotation) or node.position == position + U.rotate(Vector2i(0,-2), rotation) else null
+func asNodeInputFrom(node:PathNode) -> PathNode: return pathNode if node.position != position + U.rotate(Vector2i(0,-1), rotation) or position + U.rotate(Vector2i(0,-2), rotation) else null
 
 func hoverInfo(append:int=0) -> String:
 	return super(2) \
