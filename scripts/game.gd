@@ -93,7 +93,6 @@ func settings(_timerExists:bool, _hardMode:bool, _mapType:SpaceGenType) -> void:
 
 func _process(delta:float) -> void:
 	var previousCursorPosition:Vector2i = cursorPosition
-	setCursorPosition()
 	if !paused and !Input.is_key_pressed(KEY_SHIFT):
 		if Input.is_key_pressed(KEY_A):
 			cameraPosition.x -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
@@ -117,6 +116,7 @@ func _process(delta:float) -> void:
 	
 	FLOOR_MATERIAL.set_shader_parameter("interpolation", clamp(cameraPosition.y * 0.05 - 0.75, 0, 1))
 	
+	setCursorPosition(true)
 	if objectToPlace == UndergroundOutput:
 		var inputPosition = undergroundInputStoredNode.position
 		if U.isVertical(currentRotation):
@@ -128,7 +128,8 @@ func _process(delta:float) -> void:
 			if currentRotation == U.ROTATIONS.RIGHT: cursorPosition.x = clamp(cursorPosition.x, inputPosition.x - 5, inputPosition.x - 1)
 			else: cursorPosition.x = clamp(cursorPosition.x, inputPosition.x + 1, inputPosition.x + 5)
 	cursor.position = U.fxz(cursorPosition) + U.v3(0.5)
-	
+	setCursorPosition()
+
 	if !trulyPaused:
 		if !paused: cycle += 4 * delta
 		else: cycle += delta
@@ -161,7 +162,7 @@ func _process(delta:float) -> void:
 	
 	if objectToPlace == Throughpath: currentRotation = U.ROTATIONS.UP
 
-func setCursorPosition(placing:bool=true) -> void:
+func setCursorPosition(placing:bool=false) -> void:
 	if objectToPlace == Throughpath and placing:
 		cursorPosition = floor(Vector2(0.5, -0.5) + U.xz(cameraPosition) + (get_viewport().get_mouse_position() / Vector2(get_viewport().size) - U.v2(0.5)) * effectiveScreenSize)
 	else: cursorPosition = screenspaceToWorldspace(get_viewport().get_mouse_position())
@@ -209,10 +210,11 @@ func _input(event:InputEvent) -> void:
 				MOUSE_BUTTON_WHEEL_UP: tryZoomIn()
 				MOUSE_BUTTON_WHEEL_DOWN: tryZoomOut()
 				MOUSE_BUTTON_LEFT:
+					setCursorPosition(true)
 					dragStartPos = cursorPosition
 					place()
 				MOUSE_BUTTON_RIGHT:
-					setCursorPosition(false)
+					setCursorPosition()
 					delete()
 		else:
 			match event.button_index:
