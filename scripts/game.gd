@@ -271,7 +271,7 @@ func _input(event:InputEvent) -> void:
 					KEY_D: if Input.is_key_pressed(KEY_SHIFT): currentRotation = U.ROTATIONS.RIGHT; restartDragFromHere()
 			match event.keycode:
 				KEY_F3: isDebug = !isDebug
-				KEY_K: pathComplete(true)
+				KEY_K: if isDebug: pathComplete(true)
 				KEY_SPACE:
 					@warning_ignore("int_as_enum_without_cast") if tutorialState == TutorialStates.CAMERA_ZOOM: tutorialState += 1
 					if intendedCameraHeight > 50: intendedCameraHeight = 20

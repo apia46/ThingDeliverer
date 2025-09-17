@@ -68,7 +68,8 @@ texture = ExtResource("2_xqf51")
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 text = "A game about delivering things.
-This was made for the Techquity Aotearoa High School Game Jam 2025."
+This was made for the Techquity Aotearoa High School Game Jam 2025.
+The official download link is at https://apia46.itch.io/thingdeliverer/"
 label_settings = SubResource("LabelSettings_llexs")
 autowrap_mode = 2
 
@@ -127,7 +128,7 @@ texture = ExtResource("2_xqf51")
 [node name="para6" type="Label" parent="ScrollContainer/margin/vbox"]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
-text = "These have limited uses but can path belts through eachother."
+text = "These can be used to path belts through eachother, allowing you to make the graph non-planar. However, you are only given a limited amount of them."
 label_settings = SubResource("LabelSettings_llexs")
 autowrap_mode = 2
 
@@ -155,6 +156,32 @@ custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 text = "Throughpaths route each connection to their counterpart directly across.
 Two throughpaths placed adjacently will not connect with eachother."
+label_settings = SubResource("LabelSettings_llexs")
+autowrap_mode = 2
+
+[node name="heading5" type="MarginContainer" parent="ScrollContainer/margin/vbox"]
+layout_mode = 2
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="vbox" type="VBoxContainer" parent="ScrollContainer/margin/vbox/heading5"]
+layout_mode = 2
+
+[node name="subtitle" type="Label" parent="ScrollContainer/margin/vbox/heading5/vbox"]
+layout_mode = 2
+text = "Credits"
+label_settings = SubResource("LabelSettings_t3jrt")
+
+[node name="horizLine" type="TextureRect" parent="ScrollContainer/margin/vbox/heading5/vbox"]
+layout_mode = 2
+texture = ExtResource("2_xqf51")
+
+[node name="para7" type="Label" parent="ScrollContainer/margin/vbox"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+text = "Thanks to everyone who playtested and gave feedback and suggestions
+Thanks to everyone who contributed flavor text (specific attributions are in the source code)
+Inspired mostly by Factorio and shapez2 but I wouldn't be surprised if other sources are noticeable"
 label_settings = SubResource("LabelSettings_llexs")
 autowrap_mode = 2
 

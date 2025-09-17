@@ -135,13 +135,13 @@ func loadNext() -> void:
 			Items.TYPES.ARTIFACT: %body.text += "Graphical artifact item has been\n   has been, but it currently it currently cannot be cannot can only turn rotate once every change facing directions every two tiles      // a: who implemented this??"
 			Items.TYPES.PARTICLE: %body.text += "Entangled Particle items have been implemented"
 		if len(game.itemTypesLocked) == 0:
-			%body.text += "This is the last item planned to be added for now"
+			%body.text += "\n • This is the last item planned to be added for now"
 	
 	%body.text += "\n • "
 	%body.text += FLAVOR_TEXT[randi_range(0, len(FLAVOR_TEXT)-1)]
 
 	if game.rounds > 2:
-		%body.text += "\n\nDue to these changes, there is a choice of versions for this build."
+		%body.text += "\n\nThere is a choice of versions for this build."
 
 		options = OPTIONS.duplicate()
 		options.remove_at(randi_range(0, 3))

@@ -7,9 +7,8 @@ const PLAY_ICON:CompressedTexture2D = preload("res://resources/ui/play.png")
 
 var DIALOGUE:Array[String] = [
 	H.commentName(
-"# ThingDeliverer v0.1.1
-# Check the README.md for controls and information
-# Use [Esc] to open the menu while in the game") + "\n\n" + H.opName("var", 1) + H.varName("game") + " = " + H.typeName("ThingDeliverer") + ".",
+"# ThingDeliverer v1.0.0
+# Hopefully nothing is horribly broken") + "\n\n" + H.opName("var", 1) + H.varName("game") + " = " + H.typeName("ThingDeliverer") + ".",
 	H.funcName("new") + H.LPAR + "\n" + H.TAB + "\n" + H.TAB + "\n" + H.TAB + "\n" + H.RPAR + "\n",
 	H.typeName("Timer") + "." + H.enumName("NORMAL", 2),
 	H.typeName("Timer") + "." + H.enumName("INFINITE", 2),
