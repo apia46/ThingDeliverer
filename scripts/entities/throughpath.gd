@@ -40,22 +40,33 @@ func checkPrevious() -> void: checkPreviousOf(self.pathNode)
 func updateNext() -> void: updateNextOf(self.pathNode)
 
 func checkPreviousOf(node:PathNode) -> void:
-	if game.isDebug: scene.newDebugVisual(position, Color(0, 1, 0.4))
 	var previousNode = getNodeInputFromRelative(node, NEAR_SIDE[node.position - position])
-	if !previousNode:
+	if !previousNode or previousNode.entity.getName() == "Throughpath": # easiest way to catch both throughpaths and throughpathreferences
 		previousNode = getNodeInputFromRelative(node, NEAR_SIDE[node.position - position]*-2)
-	if previousNode: node.partialJoinAfter(previousNode)
-	if game.isDebug and previousNode: scene.newDebugVisual(position+Vector2i(0, -1), Color(0, 1, 0.4))
+	if previousNode and previousNode.entity.getName() != "Throughpath": node.partialJoinAfter(previousNode)
 	loadVisuals()
 
-func updateNextOf(node:PathNode) -> void:
-	if node.nextNode: node.nextNode.entity.checkPrevious()
-	elif node.previousNode:
-		var direction:Vector2i = node.previousNode.position-node.position
-		var thisNode:PathNode
-		if abs(direction.x) + abs(direction.y) == 2: thisNode = getNodeOutputFromRelative(node,Vector2(direction)*-0.5)
-		else: thisNode = getNodeOutputFromRelative(node,Vector2(direction)*2)
-		if thisNode: thisNode.entity.checkPrevious()
+func updateNextOf(thisNode:PathNode) -> void:
+	if thisNode.nextNode: thisNode.nextNode.entity.checkPrevious()
+	elif thisNode.previousNode:
+		var direction:Vector2i = thisNode.previousNode.position-thisNode.position
+		var checkNode:PathNode
+		if abs(direction.x) + abs(direction.y) == 2:
+			checkNode = getNodeOutputFromRelative(thisNode,Vector2(direction)*-0.5)
+			if game.isDebug: scene.newDebugVisual(Vector2(thisNode.position)+Vector2(direction)*-0.5, Color(0, 0.4, 1))
+		else:
+			checkNode = getNodeOutputFromRelative(thisNode,direction*-2)
+			if game.isDebug: scene.newDebugVisual(Vector2(thisNode.position)+Vector2(direction)*-2, Color(0.6, 0.4, 1))
+		if checkNode: checkNode.entity.checkPrevious()
+	else:
+		var checkNode:PathNode
+		checkNode = getNodeOutputFromRelative(thisNode,NEAR_SIDE[thisNode.position-position])
+		if game.isDebug: scene.newDebugVisual(thisNode.position+NEAR_SIDE[thisNode.position-position], Color(0, 0.4, 1))
+		if !checkNode:
+			if game.isDebug: scene.newDebugVisual(thisNode.position+NEAR_SIDE[thisNode.position-position]*-2, Color(0.6, 0.4, 1))
+			checkNode = getNodeOutputFromRelative(thisNode,NEAR_SIDE[thisNode.position-position]*-2)
+		if checkNode:
+			checkNode.entity.checkPrevious()
 
 func asNodeOutputTo(node:PathNode) -> PathNode: return asNodeInputFrom(node) # because its symmetrical
 func asNodeInputFrom(node:PathNode) -> PathNode:

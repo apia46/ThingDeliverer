@@ -58,7 +58,7 @@ var cameraPosition:Vector3 = Vector3(0,20,0):
 var currentDragX:U.BOOL3 = U.BOOL3.UNKNOWN # current drag direction; used for the thing with the belt
 var dragStartPos:Vector2i
 
-var isDebug:bool = false
+var isDebug:bool = true
 
 const HOVER_INSPEED:float = 5
 const HOVER_OUTSPEED:float = 5

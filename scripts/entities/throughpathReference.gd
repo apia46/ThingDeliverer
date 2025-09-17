@@ -14,10 +14,6 @@ func ready() -> void:
 	super()
 
 func loadVisuals() -> void:
-	if game.isDebug:
-		if visualInstance: visualInstance.queue_free()
-		visualInstance = preload("res://scenes/debugVisual.tscn").instantiate()
-	super()
 	if !isReady: return
 	throughpath.loadVisuals()
 
