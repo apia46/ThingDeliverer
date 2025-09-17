@@ -27,12 +27,13 @@ func ready() -> void:
 		ref.subId = idIter
 		idIter += 1
 		ref.isReady = true
-		ref.checkPrevious()
-		ref.updateNext()
 	isReady = true
 	super()
 	checkPrevious()
 	updateNext()
+	for ref in references:
+		ref.checkPrevious()
+		ref.updateNext()
 	print("ready")
 
 func checkPrevious() -> void: checkPreviousOf(self.pathNode)

@@ -255,10 +255,13 @@ func place(placePosition:Vector2i=cursorPosition) -> Entity:
 	hoverTime = 0
 	if cantPlace(placePosition): return null
 	if objectToPlace == Throughpath:
+		if cantPlace(placePosition): return null
 		if cantPlace(placePosition + Vector2i(-1, 0)): return null
 		if cantPlace(placePosition + Vector2i(-1, 1)): return null
 		if cantPlace(placePosition + Vector2i(0, 1)): return null
-		
+		scene.deleteEntity(placePosition + Vector2i(-1, 0))
+		scene.deleteEntity(placePosition + Vector2i(-1, 1))
+		scene.deleteEntity(placePosition + Vector2i(0, 1))
 	var result = scene.placeEntity(objectToPlace, placePosition, currentRotation, objectToPlace != UndergroundOutput)
 	if result is UndergroundInput:
 		undergroundsAvailable -= 1
