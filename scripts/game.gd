@@ -36,6 +36,7 @@ var throughpathsAvailable = 0:
 var currentRotation:U.ROTATIONS = U.ROTATIONS.UP:
 	set(value):
 		currentRotation = value
+		@warning_ignore("int_as_enum_without_cast") if tutorialState == TutorialStates.ROTATION: tutorialState += 1
 		setCursor()
 
 var timers:Array[Timer] = []
@@ -62,7 +63,7 @@ var cameraPosition:Vector3 = Vector3(0,20,0):
 var currentDragX:U.BOOL3 = U.BOOL3.UNKNOWN # current drag direction; used for the thing with the belt
 var dragStartPos:Vector2i
 
-var isDebug:bool = true
+var isDebug:bool = false
 
 const HOVER_INSPEED:float = 5
 const HOVER_OUTSPEED:float = 5
@@ -77,6 +78,30 @@ var spaceGenType:SpaceGenType = SpaceGenType.CITY
 enum SpaceGenType { RANDOM_WALK, BULLSHIT, CITY }
 
 var reviewing:bool = false
+
+enum TutorialStates { CAMERA_MOVE, CAMERA_ZOOM, PLACEMENT, ROTATION, SOLVE_PATH, FINAL, CHOOSE_ENTITY, UNDERPATHS, THROUGHPATHS, NONE }
+var tutorialState:TutorialStates = TutorialStates.NONE:
+	set(value):
+		tutorialState = value
+		match value:
+			TutorialStates.CAMERA_MOVE:
+				ui.showTutorial("Use [MMB] drag to move the camera.\nAlternatively, use [WASD] to move the camera.")
+			TutorialStates.CAMERA_ZOOM:
+				ui.showTutorial("Use [MMB] scroll to zoom the camera in/out.\nAlternatively, use [SPACE] to toggle between two preset camera zoom levels.")
+			TutorialStates.PLACEMENT:
+				ui.showTutorial("Place entities with [LMB].\nDelete entities with [RMB].")
+			TutorialStates.ROTATION:
+				ui.showTutorial("Use [Q] and [E] or [Shift] + [WASD] to rotate the entity held in cursor.")
+			TutorialStates.SOLVE_PATH:
+				ui.showTutorial("Connect the input <+> to the output [x] using belts.")
+			TutorialStates.FINAL:
+				ui.showTutorial("These controls can be found in the README page.\nYou can press [Esc] to bring up the menu.\nHave fun!")
+			TutorialStates.CHOOSE_ENTITY:
+				ui.showTutorial("Click on the icon or use [123] to change entity to place.")
+			TutorialStates.UNDERPATHS:
+				ui.showTutorial("Underpaths can create a bypass to up to 4 tiles away.\n[LMB] to place the input, and then [LMB] again to place the output. [RMB] to cancel.")
+			TutorialStates.THROUGHPATHS:
+				ui.showTutorial("Throughpaths can be used to path belts through eachother.\nTwo throughpaths placed adjacently will not connect with eachother.")
 
 func _ready() -> void:
 	scene.newSpace(U.v2(0))
@@ -93,6 +118,7 @@ func settings(_timerExists:bool, _hardMode:bool, _mapType:SpaceGenType) -> void:
 		pathsPerRound = 8
 		ui.updatePathsCount()
 		timerMultiplier = 1
+	if menu.config.showTutorial: tutorialState = TutorialStates.CAMERA_MOVE
 	
 
 func _process(delta:float) -> void:
@@ -100,15 +126,19 @@ func _process(delta:float) -> void:
 	if !paused and !Input.is_key_pressed(KEY_SHIFT):
 		if Input.is_key_pressed(KEY_A):
 			cameraPosition.x -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+			@warning_ignore("int_as_enum_without_cast") if tutorialState == TutorialStates.CAMERA_MOVE: tutorialState += 1
 			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
 		if Input.is_key_pressed(KEY_W):
 			cameraPosition.z -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+			@warning_ignore("int_as_enum_without_cast") if tutorialState == TutorialStates.CAMERA_MOVE: tutorialState += 1
 			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
 		if Input.is_key_pressed(KEY_S):
 			cameraPosition.z += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+			@warning_ignore("int_as_enum_without_cast") if tutorialState == TutorialStates.CAMERA_MOVE: tutorialState += 1
 			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
 		if Input.is_key_pressed(KEY_D):
 			cameraPosition.x += delta * CAMERA_MOVE_SPEED * intendedCameraHeight
+			@warning_ignore("int_as_enum_without_cast") if tutorialState == TutorialStates.CAMERA_MOVE: tutorialState += 1
 			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT): heldClick(previousCursorPosition)
 	
 	cameraPosition.y += (intendedCameraHeight - cameraPosition.y) * delta * 10
@@ -120,7 +150,7 @@ func _process(delta:float) -> void:
 	
 	FLOOR_MATERIAL.set_shader_parameter("interpolation", clamp(cameraPosition.y * 0.05 - 0.75, 0, 1))
 	
-	setCursorPosition(true)
+	setCursorPosition()
 	if objectToPlace == UndergroundOutput:
 		var inputPosition = undergroundInputStoredNode.position
 		if U.isVertical(currentRotation):
@@ -132,7 +162,6 @@ func _process(delta:float) -> void:
 			if currentRotation == U.ROTATIONS.RIGHT: cursorPosition.x = clamp(cursorPosition.x, inputPosition.x - 5, inputPosition.x - 1)
 			else: cursorPosition.x = clamp(cursorPosition.x, inputPosition.x + 1, inputPosition.x + 5)
 	cursor.position = U.fxz(cursorPosition) + U.v3(0.5)
-	setCursorPosition()
 
 	if !trulyPaused:
 		if !paused: cycle += 4 * delta
@@ -204,6 +233,7 @@ func _input(event:InputEvent) -> void:
 	if paused: return
 	if event is InputEventMouseMotion:
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
+			@warning_ignore("int_as_enum_without_cast") if tutorialState == TutorialStates.CAMERA_MOVE: tutorialState += 1
 			cameraPosition -= U.fxz(event.relative) * intendedCameraHeight * 0.00237
 		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 			setCursorPosition()
@@ -214,7 +244,7 @@ func _input(event:InputEvent) -> void:
 				MOUSE_BUTTON_WHEEL_UP: tryZoomIn()
 				MOUSE_BUTTON_WHEEL_DOWN: tryZoomOut()
 				MOUSE_BUTTON_LEFT:
-					setCursorPosition(true)
+					if objectToPlace != UndergroundOutput: setCursorPosition(true)
 					dragStartPos = cursorPosition
 					place()
 				MOUSE_BUTTON_RIGHT:
@@ -235,8 +265,9 @@ func _input(event:InputEvent) -> void:
 					KEY_D: if Input.is_key_pressed(KEY_SHIFT): currentRotation = U.ROTATIONS.RIGHT; restartDragFromHere()
 			match event.keycode:
 				KEY_F3: isDebug = !isDebug
-				KEY_K: randomNewSpace()
+				KEY_K: pathComplete(true)
 				KEY_SPACE:
+					@warning_ignore("int_as_enum_without_cast") if tutorialState == TutorialStates.CAMERA_ZOOM: tutorialState += 1
 					if intendedCameraHeight > 50: intendedCameraHeight = 20
 					else: intendedCameraHeight = 76.2939453125; upperCameraHeight = 76.2939453125
 
@@ -257,6 +288,7 @@ func cantPlace(placePosition) -> bool:
 
 func place(placePosition:Vector2i=cursorPosition) -> Entity:
 	if paused or reviewing: return
+	@warning_ignore("int_as_enum_without_cast") if tutorialState == TutorialStates.PLACEMENT: tutorialState += 1
 	hoverTime = 0
 	if cantPlace(placePosition): return null
 	if objectToPlace == Throughpath:
@@ -268,6 +300,7 @@ func place(placePosition:Vector2i=cursorPosition) -> Entity:
 		scene.deleteEntity(placePosition + Vector2i(-1, 0))
 		scene.deleteEntity(placePosition + Vector2i(-1, 1))
 		scene.deleteEntity(placePosition + Vector2i(0, 1))
+		@warning_ignore("int_as_enum_without_cast") if tutorialState == TutorialStates.THROUGHPATHS: ui.hideTutorial(1.5)
 	var result = scene.placeEntity(objectToPlace, placePosition, currentRotation, objectToPlace != UndergroundOutput)
 	if result is UndergroundInput:
 		undergroundsAvailable -= 1
@@ -291,6 +324,7 @@ func place(placePosition:Vector2i=cursorPosition) -> Entity:
 			undergroundInputStoredNode = null
 		setCursor(Belt, true)
 		result.ready()
+		@warning_ignore("int_as_enum_without_cast") if tutorialState == TutorialStates.UNDERPATHS: ui.hideTutorial(1.5)
 	if result and !(result is Throughpath or result is ThroughpathReference) and result.pathNode.partialPath.getItemType() == Items.TYPES.PARTICLE and placePosition == cursorPosition:
 		if result is UndergroundInput:
 			setCursor(UndergroundInput, true)
@@ -331,10 +365,12 @@ func delete(deletePosition:Vector2i=cursorPosition) -> Entity:
 	return result
 
 func tryZoomIn() -> void:
+	@warning_ignore("int_as_enum_without_cast") if tutorialState == TutorialStates.CAMERA_ZOOM: tutorialState += 1
 	if intendedCameraHeight > 1:
 		intendedCameraHeight *= 0.8
 
 func tryZoomOut() -> void:
+	@warning_ignore("int_as_enum_without_cast") if tutorialState == TutorialStates.CAMERA_ZOOM: tutorialState += 1
 	if intendedCameraHeight < 100:
 		intendedCameraHeight *= 1.25
 		upperCameraHeight *= 1.25
@@ -419,9 +455,12 @@ func newInputOutputs() -> void:
 		output.requestPair = requestPair
 		requestPair.output = output
 
-func pathComplete() -> void:
-	for requestPair in requestPairs: if !requestPair.completed: return
+func pathComplete(forced:=false) -> void:
+	if !forced:
+		for requestPair in requestPairs:
+			if !requestPair.completed: return
 	pathsThisRound += 1
+	@warning_ignore("int_as_enum_without_cast") if tutorialState == TutorialStates.SOLVE_PATH: tutorialState += 1
 	menu.consolePrint("Path {%s} complete" % len(requestPairs))
 	if pathsThisRound == pathsPerRound:
 		menu.consolePrint("Round %s complete" % rounds)
@@ -442,7 +481,7 @@ func nextRound() -> void:
 	ui.updatePathsCount()
 	paused = false
 	ui.hideEndRoundScreen()
-	for _i in 4: randomNewSpace()
+	for _i in 5: randomNewSpace()
 	newInputOutputs()
 	setCursor()
 
@@ -502,6 +541,8 @@ func setCursor(object:Variant=null, safe:=false) -> void:
 	if object:
 		if object == UndergroundInput and !isDebug and !undergroundsAvailable: return setCursor(Belt)
 		if object == Throughpath and !isDebug and !throughpathsAvailable: return setCursor(Belt)
+
+		@warning_ignore("int_as_enum_without_cast") if object == UndergroundInput and tutorialState == TutorialStates.CHOOSE_ENTITY: tutorialState += 1
 
 		if (object == UndergroundOutput) != (objectToPlace == UndergroundOutput): currentRotation = U.r180(currentRotation)
 		if objectToPlace == UndergroundOutput and object != UndergroundOutput and !safe:

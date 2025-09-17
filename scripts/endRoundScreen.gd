@@ -113,16 +113,22 @@ func loadNext() -> void:
 	%version.text = "Build " + str(game.rounds+1)
 
 	if game.timerExists:
-		if game.rounds == 1: %body.text = " • There is now a timer. You must fulfill all requests of the next round within %ss" % [int(60*game.timerMultiplier)]
+		if game.rounds == 1:
+			%body.text = " • There is now a timer. You must fulfill all requests of the next round within %ss" % [int(60*game.timerMultiplier)]
+			
 		elif game.rounds > 1: %body.text = " • %ss has been added to the timer" % [int(60*game.timerMultiplier)]
-		%body.text += "\n • Added 4 extra chunks of map space"
-	else: %body.text = " • Added 4 extra chunks of map space"
+		%body.text += "\n • Added 5 extra chunks of map space"
+	else: %body.text = " • Added 5 extra chunks of map space"
+	if game.rounds == 1:
+		%body.text += "\n • Underpaths have been implemented. They are resource intensive, though, so they have a limited number of uses"
+	if game.rounds == 2:
+		%body.text += "\n • Throughpaths have been implemented. They are resource intensive, though, so they have a limited number of uses"
 
 	if game.unlockedItemTypeThisRound:
 		game.unlockedItemTypeThisRound = false
 		%body.text += "\n • "
 		match game.itemTypesUnlocked[-1]:
-			Items.TYPES.FRIDGE: %body.text += "Fridge item has been implemented, but it is currently incompatible with underpaths"
+			Items.TYPES.FRIDGE: %body.text += "Fridge item has been implemented, but it is currently incompatible with underpaths and throughpaths"
 			Items.TYPES.GYRO: %body.text += "Gyroscope item has been implemented, but it currently cannot turn counterclockwise"
 			Items.TYPES.MAGNET: %body.text += "Magnet item has been implemented, but it currently cannot be pathed orthoganally adjacent to metallic items"
 			Items.TYPES.CHEMICAL: %body.text += "Potassium Dichromate item has been implemented, but it currently cannot be exposed to light for longer than ten tiles at a time"
@@ -134,27 +140,41 @@ func loadNext() -> void:
 	%body.text += "\n • "
 	%body.text += FLAVOR_TEXT[randi_range(0, len(FLAVOR_TEXT)-1)]
 
-	%body.text += "\n\nDue to these changes, there is a choice of versions for this build.\n"
+	if game.rounds > 2:
+		%body.text += "\n\nDue to these changes, there is a choice of versions for this build."
 
-	options = OPTIONS.duplicate()
-	options.remove_at(randi_range(0, 3))
+		options = OPTIONS.duplicate()
+		options.remove_at(randi_range(0, 3))
+		
+		%horizLine.visible = true
+		%horizLine2.visible = true
+		
+		%assetCount.text = "3"
 
-	for option in 3:
-		var optionNode:HBoxContainer = %options.get_child(option*2)
-		optionNode.get_child(0).texture = options[option].call(CONTEXT.IMAGE)
-		optionNode.get_child(1).text = "[url]" + options[option].call(CONTEXT.OPTIONTEXT) + "[/url]"
-		%body.text += options[option].call(CONTEXT.EXPLAIN)
-		if options[option] == extraTime and !game.timerExists: %body.text += " (but there isn't a timer so this doesn't do anything)"
-	
-	%undergroundExplain.visible = false
-	if game.rounds == 1: 
-		%body.text += "\n\n(by the way, underpaths work like this):"
-		%undergroundExplain.visible = true
+		for option in 3:
+			var optionNode:HBoxContainer = %options.get_child(option*2)
+			optionNode.get_child(0).texture = options[option].call(CONTEXT.IMAGE)
+			optionNode.get_child(1).text = "[url]" + options[option].call(CONTEXT.OPTIONTEXT) + "[/url]"
+			optionNode.get_node("margin").visible = true
+			optionNode.get_node("margin/vcont/panel").tooltip_text = options[option].call(CONTEXT.EXPLAIN)
+			optionNode.visible = true
+			if options[option] == extraTime and !game.timerExists: optionNode.get_node("margin/vcont/panel").tooltip_text += " (but there isn't a timer so this doesn't do anything)"
+		
 	%scrollContainer.set_deferred("scroll_vertical", 0)
 
 func _optionChosen(_meta, which:int) -> void: # i think theres a way to remove the first param bu	t i cant bother to figure it out
-	options[which].call(CONTEXT.APPLY)
-	menu.consolePrint("Option %s chosen, next round starting" % [which+1])
+	if game.rounds > 2:
+		options[which].call(CONTEXT.APPLY)
+		menu.consolePrint("Option %s chosen, next round starting" % [which+1])
+	elif game.rounds == 1:
+		game.undergroundsAvailable += 5
+		game.tutorialState = game.TutorialStates.CHOOSE_ENTITY
+		game.ui.hotbar.visible = true
+		menu.consolePrint("Next round starting")
+	elif game.rounds == 2:
+		game.throughpathsAvailable += 3
+		game.tutorialState = game.TutorialStates.THROUGHPATHS
+		game.ui.hotbar.get_node("hotbarPanel/hotbarInner/thoughpath").visible = true
 	game.nextRound()
 
 func undergrounds(context:CONTEXT):
@@ -163,7 +183,6 @@ func undergrounds(context:CONTEXT):
 		CONTEXT.EXPLAIN: return "\nThe underpaths version includes eight extra underpaths."
 		CONTEXT.IMAGE: return preload("res://resources/ui/undergroundUnselected.png")
 		CONTEXT.APPLY:
-			game.ui.hotbar.visible = true
 			game.undergroundsAvailable += 8
 
 func throughpaths(context:CONTEXT):
@@ -172,7 +191,6 @@ func throughpaths(context:CONTEXT):
 		CONTEXT.EXPLAIN: return "\nThe underpaths version includes four extra throughpaths."
 		CONTEXT.IMAGE: return preload("res://resources/ui/throughpathUnselected.png")
 		CONTEXT.APPLY:
-			game.ui.hotbar.visible = true
 			game.throughpathsAvailable += 4
 
 func extraTime(context:CONTEXT):

@@ -1,14 +1,12 @@
-[gd_scene load_steps=18 format=3 uid="uid://dwcm4ycttlsw1"]
+[gd_scene load_steps=17 format=3 uid="uid://dwcm4ycttlsw1"]
 
 [ext_resource type="Script" uid="uid://cpjc0gipy7vj5" path="res://scripts/endRoundScreen.gd" id="1_klblk"]
-[ext_resource type="Texture2D" uid="uid://jeygvpwmmcg4" path="res://resources/ui/undergroundsExplain.png" id="6_6ubk6"]
 [ext_resource type="StyleBox" uid="uid://dy0jw7vyrp3pc" path="res://resources/ui/stylebox.tres" id="6_itomd"]
 [ext_resource type="Texture2D" uid="uid://bsh7twtwe0shu" path="res://resources/ui/hourglass.png" id="7_6ubk6"]
 [ext_resource type="FontFile" uid="uid://xinijcy13jse" path="res://resources/ui/NotoSans-Bold.ttf" id="7_nlhyi"]
 [ext_resource type="Texture2D" uid="uid://cfek1u0gilq6a" path="res://resources/ui/horizontalLine.png" id="8_6ubk6"]
 [ext_resource type="Texture2D" uid="uid://c8p50pstmxuep" path="res://resources/ui/cube.png" id="8_nlhyi"]
 [ext_resource type="FontFile" uid="uid://u5t8a6v4my7y" path="res://resources/ui/NotoSans-Regular.ttf" id="9_3khar"]
-[ext_resource type="Texture2D" uid="uid://dq6lwha8kj606" path="res://resources/ui/undergroundUnselected.png" id="10_3khar"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vj7qv"]
 bg_color = Color(0, 0, 0, 0.501961)
@@ -57,8 +55,21 @@ expand_margin_right = 6.0
 expand_margin_bottom = 2.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_a50cc"]
-font = ExtResource("9_3khar")
+font = ExtResource("7_nlhyi")
 font_size = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_itomd"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 4.0
+expand_margin_right = 4.0
 
 [node name="endRoundScreen" type="Panel"]
 anchors_preset = 15
@@ -162,12 +173,6 @@ Due to these changes, there is a choice of versions for this build."
 label_settings = SubResource("LabelSettings_pspes")
 autowrap_mode = 2
 
-[node name="undergroundExplain" type="TextureRect" parent="MarginContainer/menu/scrollContainer/margin/vcont"]
-unique_name_in_owner = true
-layout_mode = 2
-texture = ExtResource("6_6ubk6")
-stretch_mode = 2
-
 [node name="heading2" type="MarginContainer" parent="MarginContainer/menu/scrollContainer/margin/vcont"]
 layout_mode = 2
 theme_override_constants/margin_top = 8
@@ -197,9 +202,10 @@ alignment = 1
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_nlhyi")
 
-[node name="Label" type="Label" parent="MarginContainer/menu/scrollContainer/margin/vcont/heading2/vbox/HBoxContainer/vcont/3"]
+[node name="assetCount" type="Label" parent="MarginContainer/menu/scrollContainer/margin/vcont/heading2/vbox/HBoxContainer/vcont/3"]
+unique_name_in_owner = true
 layout_mode = 2
-text = "3"
+text = "1"
 label_settings = SubResource("LabelSettings_a50cc")
 
 [node name="options" type="PanelContainer" parent="MarginContainer/menu/scrollContainer/margin/vcont"]
@@ -215,7 +221,7 @@ layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option"]
 layout_mode = 2
-texture = ExtResource("10_3khar")
+texture = ExtResource("8_nlhyi")
 
 [node name="label" type="RichTextLabel" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option"]
 layout_mode = 2
@@ -223,16 +229,37 @@ theme_override_colors/default_color = Color(0.309804, 0.756863, 1, 1)
 theme_override_fonts/normal_font = ExtResource("9_3khar")
 theme_override_fonts/bold_font = ExtResource("7_nlhyi")
 bbcode_enabled = true
-text = "[url]5x [b]Underpaths[/b][/url]"
+text = "[url][b]ThingDeliverer.zip[/b][/url]"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
 
+[node name="margin" type="MarginContainer" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 8
+
+[node name="vcont" type="VBoxContainer" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option/margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="panel" type="PanelContainer" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option/margin/vcont"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_itomd")
+
+[node name="explain" type="Label" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option/margin/vcont/panel"]
+layout_mode = 2
+text = "?"
+label_settings = SubResource("LabelSettings_a50cc")
+
 [node name="horizLine" type="TextureRect" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2
 texture = ExtResource("8_6ubk6")
 
 [node name="option2" type="HBoxContainer" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options"]
+visible = false
 layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option2"]
@@ -250,11 +277,31 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 0
 
+[node name="margin" type="MarginContainer" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option2"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+
+[node name="vcont" type="VBoxContainer" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option2/margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="panel" type="PanelContainer" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option2/margin/vcont"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_itomd")
+
+[node name="explain" type="Label" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option2/margin/vcont/panel"]
+layout_mode = 2
+text = "?"
+label_settings = SubResource("LabelSettings_a50cc")
+
 [node name="horizLine2" type="TextureRect" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2
 texture = ExtResource("8_6ubk6")
 
 [node name="option3" type="HBoxContainer" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options"]
+visible = false
 layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option3"]
@@ -263,14 +310,31 @@ texture = ExtResource("8_nlhyi")
 
 [node name="label" type="RichTextLabel" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option3"]
 layout_mode = 2
-size_flags_horizontal = 3
 theme_override_colors/default_color = Color(0.309804, 0.756863, 1, 1)
 theme_override_fonts/normal_font = ExtResource("9_3khar")
 theme_override_fonts/bold_font = ExtResource("7_nlhyi")
 bbcode_enabled = true
 text = "[url][b]Third Option[/b][/url]"
+fit_content = true
 scroll_active = false
 autowrap_mode = 0
+
+[node name="margin" type="MarginContainer" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option3"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+
+[node name="vcont" type="VBoxContainer" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option3/margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="panel" type="PanelContainer" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option3/margin/vcont"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_itomd")
+
+[node name="explain" type="Label" parent="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option3/margin/vcont/panel"]
+layout_mode = 2
+text = "?"
+label_settings = SubResource("LabelSettings_a50cc")
 
 [connection signal="meta_clicked" from="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option/label" to="." method="_optionChosen" binds= [0]]
 [connection signal="meta_clicked" from="MarginContainer/menu/scrollContainer/margin/vcont/options/options/option2/label" to="." method="_optionChosen" binds= [1]]

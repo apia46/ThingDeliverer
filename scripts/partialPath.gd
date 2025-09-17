@@ -43,7 +43,7 @@ func update() -> void:
 		else: break		# in case of loops
 
 	typeError = ""
-	if fridgeError(): typeError = H.specialName("TypeError") + ": item of type " + H.enumName("FRIDGE") + " cannot enter " + H.typeName("Underpaths")
+	if fridgeError(): typeError = H.specialName("TypeError") + ": item of type " + H.enumName("FRIDGE") + " cannot enter " + H.typeName("Underpaths") + " or " + H.typeName("Throughpaths")
 	if magnetError(adjacentPaths): typeError = H.specialName("TypeError") + ": item of type " + H.enumName("MAGNET") + " cannot be adjacent to " + H.typeName("Metallic") + " items"
 	if gyroError(): typeError = H.specialName("TypeError") + ": item of type " + H.enumName("GYRO") + " cannot turn counterclockwise"
 	if chemicalError(): typeError = H.specialName("TypeError") + ": item of type " + H.enumName("CHEMICAL") + " cannot be exposed for\nlonger than ten consecutive tiles"
@@ -183,7 +183,7 @@ func fridgeError() -> bool:
 	if getItemType() != Items.TYPES.FRIDGE: return false
 	var head:PathNode = start
 	while true:
-		if head.entity is UndergroundInput: return true
+		if head.entity is UndergroundInput or head.entity is Throughpath or head.entity is ThroughpathReference: return true
 		if head.nextNode: head = head.nextNode
 		else: break
 	return false

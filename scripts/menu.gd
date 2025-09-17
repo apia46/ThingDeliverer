@@ -4,6 +4,7 @@ class_name Menu
 var game:Game
 @onready var overlay:Panel = %overlay
 @onready var mainMenuButton:Button = %mainMenuButton
+@onready var config = $"hbox/rightSide/openFile/config"
 
 var paused:bool = true
 var currentFile:int = 1
@@ -22,7 +23,7 @@ func _ready() -> void:
 
 func _process(_delta):
 	position.x = -increase.x
-	size = get_viewport().size +increase
+	size = (get_viewport().size + increase) / config.uiScale
 
 func togglePause(withoutConsole:bool=false) -> void:
 	if paused: retreat(withoutConsole)

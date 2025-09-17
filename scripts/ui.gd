@@ -3,6 +3,9 @@ extends Control
 @onready var game = get_node("..")
 
 @onready var hotbar = %hotbar
+@onready var tutorial = %tutorial
+@onready var tutorialText = %tutorialText
+var tutorialTween:float = 1
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.is_pressed():
@@ -10,6 +13,35 @@ func _input(event: InputEvent) -> void:
 			KEY_1: belt()
 			KEY_2: underground()
 			KEY_3: throughpath()
+
+func _process(_delta):
+	tutorial.position = size - tutorial.size - Vector2(16, 16)
+	tutorial.position.x += (tutorial.size.x+32)*tutorialTween
+
+func showTutorial(text):
+	if tutorialTween == 1:
+		%tutorialProgress.value = 0
+		var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+		tutorialText.text = text
+		tutorial.size = Vector2(0,0)
+		tween.tween_property(self, "tutorialTween", 0, 0.5)
+		if game.tutorialState == game.TutorialStates.FINAL:
+			tween.tween_callback(hideTutorial)
+	else:
+		var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+		tween.tween_interval(1.5)
+		tween.tween_property(self, "tutorialTween", 1, 0.5)
+		tween.tween_interval(0.5)
+		tween.tween_callback(showTutorial.bind(text))
+		var tween2 = create_tween()
+		tween2.tween_property(%tutorialProgress, "value", 1, 1.5)
+
+func hideTutorial(time:float=5):
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	tween.tween_interval(time)
+	tween.tween_property(self, "tutorialTween", 1, 0.5)
+	var tween2 = create_tween()
+	tween2.tween_property(%tutorialProgress, "value", 1, time)
 
 func belt() -> void: game.setCursor(Belt)
 func underground() -> void: game.setCursor(UndergroundInput)

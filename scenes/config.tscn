@@ -1,9 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://bfc6y23eofsdn"]
+[gd_scene load_steps=6 format=3 uid="uid://bfc6y23eofsdn"]
 
 [ext_resource type="FontFile" uid="uid://b872nh8bkgph8" path="res://resources/ui/Inconsolata-SemiBold.ttf" id="1_duhc1"]
+[ext_resource type="Script" uid="uid://bi3ram0iw4jfs" path="res://scripts/config.gd" id="1_vvbjn"]
+[ext_resource type="Texture2D" uid="uid://sbtmh1l4q4dr" path="res://resources/ui/unchecked.png" id="3_0d2gn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t8hcq"]
 bg_color = Color(0.129412, 0.109804, 0.180392, 1)
+
+[sub_resource type="Theme" id="Theme_14yi8"]
 
 [node name="config" type="PanelContainer"]
 anchors_preset = 15
@@ -12,15 +16,87 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_t8hcq")
+script = ExtResource("1_vvbjn")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 4
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
-[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="text" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("1_duhc1")
-text = "placeholder config menu"
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "[color=#FFD700]{[/color]"
+fit_content = true
+autowrap_mode = 0
+
+[node name="showTutorial" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="text" type="RichTextLabel" parent="MarginContainer/VBoxContainer/showTutorial"]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("1_duhc1")
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "   [color=#9CDCFE] show_tutorial[/color]: [color=#4FC1FF] true[/color]"
+fit_content = true
+autowrap_mode = 0
+
+[node name="check" type="CheckBox" parent="MarginContainer/VBoxContainer/showTutorial"]
+layout_mode = 2
+theme = SubResource("Theme_14yi8")
+theme_override_icons/unchecked = ExtResource("3_0d2gn")
+
+[node name="text2" type="RichTextLabel" parent="MarginContainer/VBoxContainer/showTutorial"]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("1_duhc1")
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = ","
+fit_content = true
+autowrap_mode = 0
+
+[node name="uiScale" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="text" type="RichTextLabel" parent="MarginContainer/VBoxContainer/uiScale"]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("1_duhc1")
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "   [color=#9CDCFE] ui_scale[/color]: [color=#4FC1FF]100%[/color]"
+fit_content = true
+autowrap_mode = 0
+
+[node name="HSlider" type="HSlider" parent="MarginContainer/VBoxContainer/uiScale"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 25.0
+max_value = 400.0
+step = 5.0
+value = 100.0
+exp_edit = true
+tick_count = 7
+
+[node name="text2" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("1_duhc1")
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "[color=#FFD700]}[/color]"
+fit_content = true
+autowrap_mode = 0
+
+[connection signal="toggled" from="MarginContainer/VBoxContainer/showTutorial/check" to="." method="_showTutorial_toggle"]
+[connection signal="drag_ended" from="MarginContainer/VBoxContainer/uiScale/HSlider" to="." method="_uiScale_change"]

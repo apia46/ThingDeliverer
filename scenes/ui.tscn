@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://di6yfmmtdym8e"]
+[gd_scene load_steps=31 format=3 uid="uid://di6yfmmtdym8e"]
 
 [ext_resource type="Script" uid="uid://dr4q4w60f0ren" path="res://scripts/ui.gd" id="1_7dvkv"]
 [ext_resource type="Texture2D" uid="uid://uuygo8yxh7q6" path="res://resources/ui/ends.png" id="1_p7vwb"]
@@ -104,6 +104,20 @@ spacing_bottom = -4
 [sub_resource type="LabelSettings" id="LabelSettings_ktti3"]
 font = SubResource("FontVariation_6rmj2")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h1mc3"]
+bg_color = Color(0.180392, 0.156863, 0.247059, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.666667, 0.67451, 0.768627, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cof4p"]
+
 [node name="ui" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -146,6 +160,7 @@ layout_mode = 1
 
 [node name="hotbar" type="HBoxContainer" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -214,6 +229,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="thoughpath" type="TextureButton" parent="hotbar/hotbarPanel/hotbarInner"]
+visible = false
 custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
 texture_normal = ExtResource("10_6rmj2")
@@ -340,6 +356,46 @@ layout_mode = 2
 texture = ExtResource("1_p7vwb")
 flip_h = true
 flip_v = true
+
+[node name="tutorial" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -60.0
+offset_right = -297.0
+offset_bottom = -38.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_h1mc3")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="tutorial"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="tutorial/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+
+[node name="tutorialText" type="RichTextLabel" parent="tutorial/VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 14
+text = "This is the tutorial"
+fit_content = true
+autowrap_mode = 0
+
+[node name="tutorialProgress" type="ProgressBar" parent="tutorial/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_cof4p")
+max_value = 1.0
+show_percentage = false
 
 [connection signal="pressed" from="hotbar/hotbarPanel/hotbarInner/belt" to="." method="belt"]
 [connection signal="pressed" from="hotbar/hotbarPanel/hotbarInner/underground" to="." method="underground"]
