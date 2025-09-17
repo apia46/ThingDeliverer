@@ -24,6 +24,11 @@ func updateUndergroundsCount() -> void:
 	if game.undergroundsAvailable == 0: %undergroundsCount.get_theme_stylebox("normal").border_color = Color("#aaacc4")
 	else: %undergroundsCount.get_theme_stylebox("normal").border_color = Color("#ffd800")
 
+func updateThroughpathsCount() -> void:
+	%throughpathsCount.text = str(game.throughpathsAvailable)
+	if game.throughpathsAvailable == 0: %throughpathsCount.get_theme_stylebox("normal").border_color = Color("#aaacc4")
+	else: %throughpathsCount.get_theme_stylebox("normal").border_color = Color("#ffd800")
+
 func updateRoundsCount() -> void: %roundsCount.text = "Round " + str(game.rounds)
 
 func updatePathsCount() -> void: %pathsCount.text = str(game.pathsThisRound) + "/" + str(game.pathsPerRound)

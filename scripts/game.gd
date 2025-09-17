@@ -28,6 +28,10 @@ var undergroundsAvailable = 0:
 	set(value):
 		undergroundsAvailable = value
 		ui.updateUndergroundsCount()
+var throughpathsAvailable = 0:
+	set(value):
+		throughpathsAvailable = value
+		ui.updateThroughpathsCount()
 
 var currentRotation:U.ROTATIONS = U.ROTATIONS.UP:
 	set(value):
@@ -248,6 +252,7 @@ func cantPlace(placePosition) -> bool:
 	if !scene.getSpace(placePosition): return true
 	if objectToPlace == UndergroundOutput and entityPresent is UndergroundInput: return true
 	if objectToPlace == UndergroundInput and undergroundsAvailable == 0 and !isDebug: return true
+	if objectToPlace ==  Throughpath and throughpathsAvailable == 0 and !isDebug: return true
 	return false
 
 func place(placePosition:Vector2i=cursorPosition) -> Entity:
@@ -259,6 +264,7 @@ func place(placePosition:Vector2i=cursorPosition) -> Entity:
 		if cantPlace(placePosition + Vector2i(-1, 0)): return null
 		if cantPlace(placePosition + Vector2i(-1, 1)): return null
 		if cantPlace(placePosition + Vector2i(0, 1)): return null
+		throughpathsAvailable -= 1
 		scene.deleteEntity(placePosition + Vector2i(-1, 0))
 		scene.deleteEntity(placePosition + Vector2i(-1, 1))
 		scene.deleteEntity(placePosition + Vector2i(0, 1))
@@ -495,6 +501,7 @@ func addRunningTimer(time:float, running:Callable):
 func setCursor(object:Variant=null, safe:=false) -> void:
 	if object:
 		if object == UndergroundInput and !isDebug and !undergroundsAvailable: return setCursor(Belt)
+		if object == Throughpath and !isDebug and !throughpathsAvailable: return setCursor(Belt)
 
 		if (object == UndergroundOutput) != (objectToPlace == UndergroundOutput): currentRotation = U.r180(currentRotation)
 		if objectToPlace == UndergroundOutput and object != UndergroundOutput and !safe:

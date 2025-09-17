@@ -18,8 +18,9 @@ func loadVisuals() -> void:
 	super()
 
 func checkPrevious() -> void:
-	if game.isDebug: scene.newDebugVisual(position, Color(0, 1, 0.4))
+	#if game.isDebug: scene.newDebugVisual(position, Color(0, 1, 0.4))
 	# print("out ", pathNode.path)
+	pass
 
 func updateNext() -> void:
 	if pathNode.nextNode: pathNode.nextNode.entity.checkPrevious()

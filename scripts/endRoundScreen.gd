@@ -100,7 +100,7 @@ const FLAVOR_TEXT:Array[String] = [
 	"Combined codebase into one file for organization", # omnicrumb
 	"\n • \n • Where...\n • Where am I?\n • Hello...? Anyone...?\n • Is... is anybody out there...?\n • Someone!? Anyone!? Can anyone hear me!?\n • ...\n • It's dark.\n • It's so dark here.\n • Someone, anyone, if you can hear me...\n • Say something... please...",
 ]
-var OPTIONS:Array[Callable] = [undergrounds, extraTime, extraSpace]
+var OPTIONS:Array[Callable] = [undergrounds, throughpaths, extraTime, extraSpace]
 
 enum CONTEXT {EXPLAIN, OPTIONTEXT, APPLY, IMAGE}
 
@@ -136,6 +136,9 @@ func loadNext() -> void:
 
 	%body.text += "\n\nDue to these changes, there is a choice of versions for this build.\n"
 
+	options = OPTIONS.duplicate()
+	options.remove_at(randi_range(0, 3))
+
 	for option in 3:
 		var optionNode:HBoxContainer = %options.get_child(option*2)
 		optionNode.get_child(0).texture = options[option].call(CONTEXT.IMAGE)
@@ -157,12 +160,21 @@ func _optionChosen(_meta, which:int) -> void: # i think theres a way to remove t
 func undergrounds(context:CONTEXT):
 	match context:
 		CONTEXT.OPTIONTEXT: return "[b]ThingDeliverer-underpaths.zip[/b]"
-		CONTEXT.EXPLAIN: return "\nThe underpaths version includes five extra underpaths."
+		CONTEXT.EXPLAIN: return "\nThe underpaths version includes eight extra underpaths."
 		CONTEXT.IMAGE: return preload("res://resources/ui/undergroundUnselected.png")
 		CONTEXT.APPLY:
 			game.ui.hotbar.visible = true
-			game.undergroundsAvailable += 5
-	
+			game.undergroundsAvailable += 8
+
+func throughpaths(context:CONTEXT):
+	match context:
+		CONTEXT.OPTIONTEXT: return "[b]ThingDeliverer-throughpaths.zip[/b]"
+		CONTEXT.EXPLAIN: return "\nThe underpaths version includes four extra throughpaths."
+		CONTEXT.IMAGE: return preload("res://resources/ui/throughpathUnselected.png")
+		CONTEXT.APPLY:
+			game.ui.hotbar.visible = true
+			game.throughpathsAvailable += 4
+
 func extraTime(context:CONTEXT):
 	match context:
 		CONTEXT.OPTIONTEXT: return "[b]ThingDeliverer-extra_time.zip[/b]"

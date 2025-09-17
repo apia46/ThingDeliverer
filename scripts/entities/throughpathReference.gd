@@ -8,6 +8,7 @@ var pathNode:PathNode
 var itemDisplay:Items.Display
 var subId:int
 var isReady:bool = false # because it doesnt get access to the throughpath before the throughpath's ready is called, things that refer to it need to be skipped within readying
+var isDeleted:bool = false # so that it doesnt get deleted again by throughpath
 
 func ready() -> void:
 	pathNode = PathNode.new(self, position)
@@ -25,10 +26,12 @@ func loadVisuals() -> void:
 	elif itemDisplay: itemDisplay = scene.items.removeDisplay(itemDisplay)
 
 func delete() -> void:
+	isDeleted = true
+	if !throughpath.deleted:
+		scene.deleteEntity(throughpath.position)
 	pathNode.delete()
 	if itemDisplay: scene.items.removeDisplay(itemDisplay)
 	super()
-	scene.deleteEntity(throughpath.position)
 
 func asNodeOutputTo(node:PathNode) -> PathNode: return throughpath.asNodeOutputTo(node) if isReady else null
 func asNodeInputFrom(node:PathNode) -> PathNode: return throughpath.asNodeInputFrom(node) if isReady else null

@@ -13,7 +13,7 @@ func loadVisuals() -> void:
 	super()
 
 func checkPrevious() -> void:
-	if game.isDebug: scene.newDebugVisual(position, Color(0, 1, 0.4))
+	#if game.isDebug: scene.newDebugVisual(position, Color(0, 1, 0.4))
 	var previousNode = getNodeInputFromRelative(pathNode, Vector2i(0,1))
 	if previousNode: pathNode.partialJoinAfter(previousNode)
 

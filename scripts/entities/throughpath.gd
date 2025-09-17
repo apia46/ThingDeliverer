@@ -14,9 +14,9 @@ var references:Array[ThroughpathReference] = []
 var pathNode:PathNode
 var itemDisplay:Items.Display
 var isReady:bool = false # because it has to initialise the references, functions naming them directly need to be skipped within the readying
+var isDeleted:bool = false # just to make sure it doesnt get told to delete itself again by the references
 
 func ready() -> void:
-	print("readying")
 	pathNode = PathNode.new(self, position)
 	references.append(scene.placeEntity(ThroughpathReference, position + Vector2i(-1, 0), U.ROTATIONS.UP))
 	references.append(scene.placeEntity(ThroughpathReference, position + Vector2i(-1, 1), U.ROTATIONS.UP))
@@ -34,7 +34,6 @@ func ready() -> void:
 	for ref in references:
 		ref.checkPrevious()
 		ref.updateNext()
-	print("ready")
 
 func checkPrevious() -> void: checkPreviousOf(self.pathNode)
 func updateNext() -> void: updateNextOf(self.pathNode)
@@ -70,7 +69,7 @@ func updateNextOf(thisNode:PathNode) -> void:
 
 func asNodeOutputTo(node:PathNode) -> PathNode: return asNodeInputFrom(node) # because its symmetrical
 func asNodeInputFrom(node:PathNode) -> PathNode:
-	if !isReady: return null
+	if !isReady or isDeleted: return null
 	if (node.position - position).x == 0: return pathNode
 	elif (node.position - position).x == -1: return references[1].pathNode
 	elif (node.position - position).y == 0: return references[0].pathNode
@@ -84,11 +83,13 @@ func getSidesOf(node:PathNode) -> Array[PathNode]:
 	return toReturn
 
 func delete() -> void:
+	isDeleted = true
 	pathNode.delete()
 	if itemDisplay: scene.items.removeDisplay(itemDisplay)
 	super()
+	game.throughpathsAvailable += 1
 	for ref in references:
-		scene.deleteEntity(ref.position)
+		if !ref.isDeleted: scene.deleteEntity(ref.position)
 
 func loadVisuals() -> void:
 	if !visualInstance:

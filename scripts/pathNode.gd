@@ -29,7 +29,10 @@ func partialJoinAfter(node:PathNode) -> void:
 func delete() -> void:
 	if nextNode: nextNode.previousNode = null # is this necessary?
 	partialPath.splitAt(self)
-	entity.updateNext()
+	if entity is Throughpath:
+		entity.updateNext()
+	else:
+		entity.updateNext()
 	if previousNode:
 		previousNode.nextNode = null # cant before updatenext because of loop detection in partialpath. fucked up i know
 		previousNode.entity.checkNext()

@@ -34,8 +34,8 @@ func loadVisuals() -> void:
 func unloadVisuals() -> void:
 	if visualInstance: visualInstance.queue_free()
 
-func getEntityRelative(difference:Vector2i, debug:=false) -> Entity:
-	if debug: scene.newDebugVisual(position + U.rotate(difference, rotation), Color(0, 0.4, 1))
+func getEntityRelative(difference:Vector2i, _debug:=false) -> Entity:
+	#if debug: scene.newDebugVisual(position + U.rotate(difference, rotation), Color(0, 0.4, 1))
 	return scene.getEntity(position + U.rotate(difference, rotation))
 
 func getPathNodeRelative(difference:Vector2i) -> PathNode:

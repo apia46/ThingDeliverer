@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://di6yfmmtdym8e"]
+[gd_scene load_steps=29 format=3 uid="uid://di6yfmmtdym8e"]
 
 [ext_resource type="Script" uid="uid://dr4q4w60f0ren" path="res://scripts/ui.gd" id="1_7dvkv"]
 [ext_resource type="Texture2D" uid="uid://uuygo8yxh7q6" path="res://resources/ui/ends.png" id="1_p7vwb"]
@@ -34,7 +34,7 @@ bg_color = Color(0.180392, 0.156863, 0.247059, 1)
 border_width_top = 4
 border_color = Color(0.666667, 0.67451, 0.768627, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7dvkv"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6rmj2"]
 bg_color = Color(0.180392, 0.156863, 0.247059, 1)
 border_width_left = 2
 border_width_top = 2
@@ -54,6 +54,18 @@ spacing_bottom = -5
 [sub_resource type="LabelSettings" id="LabelSettings_vdcm2"]
 line_spacing = 0.0
 font = SubResource("FontVariation_vdcm2")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vsj0x"]
+bg_color = Color(0.180392, 0.156863, 0.247059, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.666667, 0.67451, 0.768627, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cgfq5"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -195,7 +207,7 @@ offset_top = -14.0
 offset_right = 18.0
 offset_bottom = 4.0
 grow_horizontal = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_7dvkv")
+theme_override_styles/normal = SubResource("StyleBoxFlat_6rmj2")
 text = "0"
 label_settings = SubResource("LabelSettings_vdcm2")
 horizontal_alignment = 1
@@ -210,7 +222,7 @@ texture_hover = ExtResource("11_vsj0x")
 texture_disabled = ExtResource("11_vsj0x")
 stretch_mode = 0
 
-[node name="throughpathCount" type="Label" parent="hotbar/hotbarPanel/hotbarInner/thoughpath"]
+[node name="throughpathsCount" type="Label" parent="hotbar/hotbarPanel/hotbarInner/thoughpath"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 5
@@ -221,7 +233,7 @@ offset_top = -14.0
 offset_right = 18.0
 offset_bottom = 4.0
 grow_horizontal = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_7dvkv")
+theme_override_styles/normal = SubResource("StyleBoxFlat_vsj0x")
 text = "0"
 label_settings = SubResource("LabelSettings_vdcm2")
 horizontal_alignment = 1

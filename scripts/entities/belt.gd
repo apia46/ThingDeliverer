@@ -21,7 +21,7 @@ func ready() -> void:
 	updateNext()
 
 func checkPrevious() -> void:
-	if game.isDebug: scene.newDebugVisual(position, Color(0, 1, 0.4))
+	#if game.isDebug: scene.newDebugVisual(position, Color(0, 1, 0.4))
 	var previousNode:PathNode
 	previousDirection = U.ROTATIONS.DOWN
 	for direction in U.V2I_DIRECTIONS_NO_UP:
