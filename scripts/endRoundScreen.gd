@@ -168,12 +168,12 @@ func _optionChosen(_meta, which:int) -> void: # i think theres a way to remove t
 		menu.consolePrint("Option %s chosen, next round starting" % [which+1])
 	elif game.rounds == 1:
 		game.undergroundsAvailable += 5
-		game.tutorialState = game.TutorialStates.CHOOSE_ENTITY
+		if menu.config.showTutorialEntities: game.tutorialState = game.TutorialStates.CHOOSE_ENTITY
 		game.ui.hotbar.visible = true
 		menu.consolePrint("Next round starting")
 	elif game.rounds == 2:
 		game.throughpathsAvailable += 3
-		game.tutorialState = game.TutorialStates.THROUGHPATHS
+		if menu.config.showTutorialEntities: game.tutorialState = game.TutorialStates.THROUGHPATHS
 		game.ui.hotbar.get_node("hotbarPanel/hotbarInner/thoughpath").visible = true
 	game.nextRound()
 

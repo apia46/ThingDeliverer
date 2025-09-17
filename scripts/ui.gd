@@ -25,7 +25,7 @@ func showTutorial(text):
 		tutorialText.text = text
 		tutorial.size = Vector2(0,0)
 		tween.tween_property(self, "tutorialTween", 0, 0.5)
-		if game.tutorialState == game.TutorialStates.FINAL:
+		if game.tutorialState in [game.TutorialStates.FINAL, game.TutorialStates.FINAL_2]:
 			tween.tween_callback(hideTutorial)
 	else:
 		var tween = create_tween().set_trans(Tween.TRANS_CUBIC)

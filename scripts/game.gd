@@ -79,7 +79,7 @@ enum SpaceGenType { RANDOM_WALK, BULLSHIT, CITY }
 
 var reviewing:bool = false
 
-enum TutorialStates { CAMERA_MOVE, CAMERA_ZOOM, PLACEMENT, ROTATION, SOLVE_PATH, FINAL, CHOOSE_ENTITY, UNDERPATHS, THROUGHPATHS, NONE }
+enum TutorialStates { CAMERA_MOVE, CAMERA_ZOOM, PLACEMENT, ROTATION, SOLVE_PATH, FINAL, CHOOSE_ENTITY, UNDERPATHS, THROUGHPATHS, FINAL_2, NONE }
 var tutorialState:TutorialStates = TutorialStates.NONE:
 	set(value):
 		tutorialState = value
@@ -96,12 +96,18 @@ var tutorialState:TutorialStates = TutorialStates.NONE:
 				ui.showTutorial("Connect the input <+> to the output [x] using belts.")
 			TutorialStates.FINAL:
 				ui.showTutorial("These controls can be found in the README page.\nYou can press [Esc] to bring up the menu.\nHave fun!")
+				menu.config.setShowTutorial(false)
+				menu.consolePrint("show_controls_tutorial automatically disabled")
 			TutorialStates.CHOOSE_ENTITY:
 				ui.showTutorial("Click on the icon or use [123] to change entity to place.")
 			TutorialStates.UNDERPATHS:
 				ui.showTutorial("Underpaths can create a bypass to up to 4 tiles away.\n[LMB] to place the input, and then [LMB] again to place the output. [RMB] to cancel.")
 			TutorialStates.THROUGHPATHS:
 				ui.showTutorial("Throughpaths can be used to path belts through eachother.\nTwo throughpaths placed adjacently will not connect with eachother.")
+			TutorialStates.FINAL_2:
+				ui.showTutorial("These entities are also explained in the README page.")
+				menu.config.setShowTutorialEntities(false)
+				menu.consolePrint("show_entities_tutorial automatically disabled")
 
 func _ready() -> void:
 	scene.newSpace(U.v2(0))
@@ -300,7 +306,7 @@ func place(placePosition:Vector2i=cursorPosition) -> Entity:
 		scene.deleteEntity(placePosition + Vector2i(-1, 0))
 		scene.deleteEntity(placePosition + Vector2i(-1, 1))
 		scene.deleteEntity(placePosition + Vector2i(0, 1))
-		@warning_ignore("int_as_enum_without_cast") if tutorialState == TutorialStates.THROUGHPATHS: ui.hideTutorial(1.5)
+		@warning_ignore("int_as_enum_without_cast") if tutorialState == TutorialStates.THROUGHPATHS: tutorialState += 1
 	var result = scene.placeEntity(objectToPlace, placePosition, currentRotation, objectToPlace != UndergroundOutput)
 	if result is UndergroundInput:
 		undergroundsAvailable -= 1

@@ -47,7 +47,7 @@ layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("1_duhc1")
 theme_override_font_sizes/normal_font_size = 32
 bbcode_enabled = true
-text = "   [color=#9CDCFE] show_tutorial[/color]: [color=#4FC1FF] true[/color]"
+text = "   [color=#9CDCFE] show_controls_tutorial[/color]: [color=#4FC1FF] true[/color]"
 fit_content = true
 autowrap_mode = 0
 
@@ -55,8 +55,37 @@ autowrap_mode = 0
 layout_mode = 2
 theme = SubResource("Theme_14yi8")
 theme_override_icons/unchecked = ExtResource("3_0d2gn")
+button_pressed = true
 
 [node name="text2" type="RichTextLabel" parent="MarginContainer/VBoxContainer/showTutorial"]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("1_duhc1")
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = ","
+fit_content = true
+autowrap_mode = 0
+
+[node name="showTutorialEntities" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="text" type="RichTextLabel" parent="MarginContainer/VBoxContainer/showTutorialEntities"]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("1_duhc1")
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "   [color=#9CDCFE] show_entities_tutorial[/color]: [color=#4FC1FF] true[/color]"
+fit_content = true
+autowrap_mode = 0
+
+[node name="check" type="CheckBox" parent="MarginContainer/VBoxContainer/showTutorialEntities"]
+layout_mode = 2
+theme = SubResource("Theme_14yi8")
+theme_override_icons/unchecked = ExtResource("3_0d2gn")
+button_pressed = true
+
+[node name="text2" type="RichTextLabel" parent="MarginContainer/VBoxContainer/showTutorialEntities"]
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("1_duhc1")
 theme_override_font_sizes/normal_font_size = 32
@@ -99,4 +128,5 @@ fit_content = true
 autowrap_mode = 0
 
 [connection signal="toggled" from="MarginContainer/VBoxContainer/showTutorial/check" to="." method="_showTutorial_toggle"]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/showTutorialEntities/check" to="." method="_showTutorialEntities_toggle"]
 [connection signal="drag_ended" from="MarginContainer/VBoxContainer/uiScale/HSlider" to="." method="_uiScale_change"]
