@@ -240,7 +240,7 @@ func _input(event:InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
 			@warning_ignore("int_as_enum_without_cast") if tutorialState == TutorialStates.CAMERA_MOVE: tutorialState += 1
-			cameraPosition -= U.fxz(event.relative) * intendedCameraHeight * 0.00237
+			cameraPosition -= U.fxz(event.relative) * intendedCameraHeight * 0.00237 * menu.config.uiScale
 		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 			setCursorPosition()
 			heldClick(screenspaceToWorldspace(event.position - event.relative))
