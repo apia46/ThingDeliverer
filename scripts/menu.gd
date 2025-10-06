@@ -22,8 +22,8 @@ func _ready() -> void:
 	)
 
 func _process(_delta):
-	position.x = -increase.x
-	size = (get_viewport().size + increase) / config.uiScale
+	position.x = -increase.x * config.uiScale
+	size = (get_viewport().size) / config.uiScale + Vector2(increase)
 
 func togglePause(withoutConsole:bool=false) -> void:
 	if paused: retreat(withoutConsole)
