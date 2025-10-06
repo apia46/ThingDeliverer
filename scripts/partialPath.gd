@@ -7,7 +7,7 @@ var id:int
 var start:PathNode
 var end:PathNode
 
-var typeError:String = ""
+var typeError:String = "" # indicates if there is an error (since empty string is falsy), and is also used for the error text in hover
 
 enum STATES {INCOMPLETE, HAS_INPUT, HAS_OUTPUT, COMPLETE, ERROR}
 const STATES_NAMES:Array[String] = ["INCOMPLETE", "HAS_INPUT", "HAS_OUTPUT", "COMPLETE", "ERROR"]
@@ -42,6 +42,7 @@ func update() -> void:
 		if head.nextNode && head != end: head = head.nextNode
 		else: break		# in case of loops
 
+	# checking for errors
 	typeError = ""
 	if fridgeError(): typeError = H.specialName("TypeError") + ": item of type " + H.enumName("FRIDGE") + " cannot enter " + H.typeName("Underpaths") + " or " + H.typeName("Throughpaths")
 	if magnetError(adjacentPaths): typeError = H.specialName("TypeError") + ": item of type " + H.enumName("MAGNET") + " cannot be adjacent to " + H.typeName("Metallic") + " items"
@@ -54,6 +55,7 @@ func update() -> void:
 		for path in adjacentPaths:
 			if path.getItemType() == Items.TYPES.MAGNET: path.tryUpdate()
 	
+	# completeness
 	if start.entity is Inputter and start.entity.requestPair.itemType == Items.TYPES.PARTICLE:
 		var requestPair:InputOutput.RequestPair = start.entity.requestPair
 		if getState() == STATES.COMPLETE and !requestPair.completed:
@@ -72,15 +74,16 @@ func update() -> void:
 			game.pathComplete()
 		if start.entity is Inputter and getState() != STATES.COMPLETE:
 			start.entity.requestPair.completed = false
-		
+	
 	head = start
 
 	while true:
 		head.entity.loadVisuals()
 		if head.nextNode && head != end: head = head.nextNode
 		else: break		# in case of loops
-	
+
 func splitAt(pathNode:PathNode) -> void:
+	# split the path into two by removing a node
 	for side in pathNode.entity.getSidesOf(pathNode):
 		if side and side.partialPath.getItemType() == Items.TYPES.MAGNET: side.partialPath.tryUpdate()
 	var head:PathNode = pathNode
@@ -102,6 +105,7 @@ func splitAt(pathNode:PathNode) -> void:
 	tryUpdate()
 
 func joinAfter(pathNode:PathNode) -> void:
+	# join after a given pathnode
 	var toJoin = pathNode.partialPath
 	if toJoin == self:
 		# is a loop; could have left a broken lead if the loop was welded shut; regenerate from loop point
@@ -123,7 +127,7 @@ func getColor() -> Color: return STATES_COLOR[getState()]
 func mispairedError() -> Array[int]:
 	if start.entity is Inputter and end.entity is Outputter and start.entity.requestPair != end.entity.requestPair:
 		return [start.entity.requestPair.id, end.entity.requestPair.id]
-	else: return []
+	else: return [] # falsy
 
 func getState() -> STATES:
 	if !start or !end: return STATES.INCOMPLETE # possible during deletion or whatever; shouldnt matter..?

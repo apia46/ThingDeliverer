@@ -15,7 +15,7 @@ func _init(_entity:Entity, _position:Vector2i):
 	position = _position
 	partialPath = PartialPath.new(entity.game, self)
 
-func partialJoinAfter(node:PathNode) -> void:
+func partialJoinAfter(node:PathNode) -> void: # joins after the given node's partialpath
 	if previousNode == node: return
 	if previousNode:
 		previousNode.nextNode = null
@@ -27,7 +27,7 @@ func partialJoinAfter(node:PathNode) -> void:
 	previousNode.entity.checkNext()
 
 func delete() -> void:
-	if nextNode: nextNode.previousNode = null # is this necessary?
+	if nextNode: nextNode.previousNode = null
 	partialPath.splitAt(self)
 	if entity is Throughpath:
 		entity.updateNext()

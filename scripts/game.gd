@@ -23,7 +23,7 @@ var timeSinceStart:float = 0
 var objectToPlace:Object = Belt
 var undergroundInputStoredNode:PathNode
 var undergroundInputStoredNode2:PathNode
-var twicePlacing:bool = false
+var twicePlacing:bool = false # for entangled particles
 var undergroundsAvailable = 0:
 	set(value):
 		undergroundsAvailable = value
@@ -129,6 +129,8 @@ func settings(_timerExists:bool, _hardMode:bool, _mapType:SpaceGenType) -> void:
 
 func _process(delta:float) -> void:
 	var previousCursorPosition:Vector2i = cursorPosition
+
+	# camera movement
 	if !paused and !Input.is_key_pressed(KEY_SHIFT):
 		if Input.is_key_pressed(KEY_A):
 			cameraPosition.x -= delta * CAMERA_MOVE_SPEED * intendedCameraHeight
@@ -156,6 +158,7 @@ func _process(delta:float) -> void:
 	
 	FLOOR_MATERIAL.set_shader_parameter("interpolation", clamp(cameraPosition.y * 0.05 - 0.75, 0, 1))
 	
+	# manage cursor if placing underground output
 	setCursorPosition()
 	if objectToPlace == UndergroundOutput:
 		var inputPosition = undergroundInputStoredNode.position
@@ -169,6 +172,7 @@ func _process(delta:float) -> void:
 			else: cursorPosition.x = clamp(cursorPosition.x, inputPosition.x + 1, inputPosition.x + 5)
 	cursor.position = U.fxz(cursorPosition) + U.v3(0.5)
 
+	# items on belts animation cycle
 	if !trulyPaused:
 		if !paused: cycle += 4 * delta
 		else: cycle += delta
@@ -176,6 +180,7 @@ func _process(delta:float) -> void:
 		cycle -= Items.SPACES_PER_ITEM
 	scene.items.updateDisplays()
 	
+	# the big timer
 	if !paused and rounds > 1 and timerExists and !reviewing:
 		timeLeft -= delta
 		if timeLeft < 0: lose()
@@ -183,6 +188,7 @@ func _process(delta:float) -> void:
 
 	timeSinceStart += delta
 
+	# hover ui
 	var hovered:Entity = scene.getEntity(cursorPosition)
 	if hovered and !paused:
 		hoverPosition = cursorPosition
@@ -202,7 +208,7 @@ func _process(delta:float) -> void:
 	if objectToPlace == Throughpath: currentRotation = U.ROTATIONS.UP
 
 func setCursorPosition(placing:bool=false) -> void:
-	if objectToPlace == Throughpath and placing:
+	if objectToPlace == Throughpath and placing: # throughpath has an offsete center because it is 2x2
 		cursorPosition = floor(Vector2(0.5, -0.5) + U.xz(cameraPosition) + (get_viewport().get_mouse_position() / Vector2(get_viewport().size) - U.v2(0.5)) * effectiveScreenSize)
 	else: cursorPosition = screenspaceToWorldspace(get_viewport().get_mouse_position())
 

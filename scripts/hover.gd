@@ -16,6 +16,7 @@ func setHover(entity:Entity):
 		+ entity.hoverInfo() \
 	+ RBRACE
 	var diff = len(errors) - len(previousErrors)
+	# try to not create or destroy error things if unnecessary
 	if diff < 0:
 		for i in -diff: remove_child(get_child(-1))
 	if diff > 0:

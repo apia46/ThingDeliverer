@@ -24,6 +24,7 @@ var displayCounts = [32, 32, 32, 32, 32, 32, 32]
 
 func updateDisplays():
 	var i:int = 0
+	# too slow probably
 	for type:Array[Display] in displays:
 		var multimesh:MultiMesh = multiMeshInstances[i].multimesh
 		if len(type) >= displayCounts[i]:

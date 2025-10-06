@@ -59,6 +59,7 @@ func _process(delta:float) -> void:
 			dialogueTimer -= 0.005
 			cursorBlinkTimer = 0
 			while DIALOGUE[dialogueToRead][dialogueIndex] == "[":
+				# is a color thing; dont waste time on it
 				while true:
 					type()
 					dialogueIndex += 1
